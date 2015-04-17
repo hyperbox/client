@@ -31,7 +31,7 @@ import javax.swing.UIManager;
 /**
  * This class provides a minimal UI during load of the client, in case something breaks very early, even before the full UI is initialised.
  * 
- * @author noteirak
+ * @author max
  * 
  */
 public final class MiniUI implements _Front {

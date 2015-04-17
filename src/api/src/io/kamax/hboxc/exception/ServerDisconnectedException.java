@@ -26,7 +26,7 @@ import io.kamax.hbox.exception.HyperboxException;
 /**
  * If the server disconnected during a transaction
  * 
- * @author noteirak
+ * @author max
  * 
  */
 @SuppressWarnings("serial")
