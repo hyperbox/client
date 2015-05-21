@@ -32,8 +32,6 @@ import io.kamax.hbox.exception.HyperboxException;
 import io.kamax.hboxc.Hyperbox;
 import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.PreferencesManager;
-import io.kamax.hboxc.controller.MessageInput;
-import io.kamax.hboxc.controller._ClientMessageReceiver;
 import io.kamax.hboxc.controller.action._ClientControllerAction;
 import io.kamax.hboxc.core.ClientCore;
 import io.kamax.hboxc.core.CoreReader;
@@ -99,7 +97,7 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
    }
 
    private void loadFront() throws HyperboxException {
-      String classToLoad = Configuration.getSetting("view.class", "io.kamax.hboxc.front.gui.Gui");
+      String classToLoad = Configuration.getSetting("view.class", "io.kamax.hboxc.gui.Gui");
 
       Logger.info("Loading frontend class: " + classToLoad);
       front = HyperboxClient.loadClass(_Front.class, classToLoad);
