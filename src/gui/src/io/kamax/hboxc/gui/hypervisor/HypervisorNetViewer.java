@@ -31,6 +31,7 @@ import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.worker.receiver._NetModeListReceiver;
 import io.kamax.hboxc.gui.workers.NetModeListWorker;
+import io.kamax.tool.Validate;
 import io.kamax.tool.logging.Logger;
 import java.awt.Component;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
    private Map<String, HypervisorNetModeViewer> compModes = new HashMap<String, HypervisorNetModeViewer>();
 
    public HypervisorNetViewer(String srvId) {
+      Validate.notNull(srvId);
       this.srvId = srvId;
 
       status = new JLabel();
@@ -77,14 +79,14 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
 
    @Handler
    private void putHypervisorConnectionEvent(HypervisorConnectionStateEventOut ev) {
-      if (ev.getServerId().equals(srvId)) {
+      if (srvId.contentEquals(ev.getServerId())) {
          refresh();
       }
    }
 
    @Handler
    private void putConnectorConnectionStateEvent(ConnectorStateChangedEvent ev) {
-      if (ev.getConnector().getServerId().equals(srvId)) {
+      if (srvId.contentEquals(ev.getConnector().getServerId())) {
          refresh();
       }
    }
