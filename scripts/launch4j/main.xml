@@ -24,7 +24,7 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar>bin/hyperbox-client.jar</jar>
-  <icon>../../../media/img/hyperbox.ico</icon>
+  <icon>../../../hyperbox/media/img/hyperbox.ico</icon>
   <stayAlive>false</stayAlive>
   <classPath>
     <mainClass>io.kamax.hboxc.HyperboxClientApplicationStart</mainClass>
