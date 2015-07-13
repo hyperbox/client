@@ -20,12 +20,11 @@
  *  
 -->
 
-<project name="Hyperbox Client" default="client.build">
+<project name="Hyperbox Client" default="deploy">
 	
 	<property file="build.properties"/>
 	
 	<property name="hbox.api.base.dir"										location="../api" />
-	
 	<include file="${hbox.api.base.dir}/build.xml" as="hbox.api" />
 
 	<property name="hbox.client.base.dir"									location="." />
@@ -76,6 +75,28 @@
 		<echo message="Hyperbox Client Version:             ${hbox.client.version}" />
 	</target>
 	
+	<target name="configure.compile" depends="configure">
+		<mkdir dir="${hbox.client.out.build.class.dir}" />
+	</target>
+	
+	<target name="configure.build" depends="configure">
+		<mkdir dir="${hbox.client.out.build.jar.dir}" />
+		<mkdir dir="${hbox.client.out.bin.dir}" />
+	</target>
+	
+	<target name="configure.deploy" depends="configure">
+		<mkdir dir="${hbox.client.out.bin.dir}" />
+		<mkdir dir="${hbox.client.out.bin.dir}/${doc.dirname}" />
+		<mkdir dir="${hbox.client.out.bin.dir}/${doc.dirname}/manual" />
+		<mkdir dir="${hbox.client.out.bin.dir}/${doc.dirname}/legal" />
+		<mkdir dir="${hbox.client.out.bin.dir}/${lib.dirname}" />
+		<mkdir dir="${hbox.client.out.bin.dir}/${module.dirname}" />
+	</target>
+	
+	<target name="configure.dist" depends="configure">
+		<mkdir dir="${hbox.client.out.dist.dir}" />
+	</target>
+	
 	<!-- = Client API ======================================================================================================================== -->
 	
 	<property name="hbox.client.api.dir"									location="${hbox.client.dir}/${api.name}" />
@@ -91,41 +112,34 @@
 		<path refid="hbox.api.classpath"/>
 	</path>
 	
-	<target name="api.compile" depends="configure, hbox.api.compile">
+	<target name="api.compile" depends="configure.compile, hbox.api.compile">
 		<mkdir dir="${hbox.client.api.class.dir}" />
 		<javac source="1.6" target="1.6" debug="on" debuglevel="lines" includeantruntime="false" srcdir="${hbox.client.api.src.dir}" destdir="${hbox.client.api.class.dir}" classpathref="hbox.client.api.classpath" />
 	</target>
 	
-	<target name="api.build" depends="api.compile">
+	<target name="api.build" depends="configure.build, api.compile">
         <jar destfile="${hbox.client.api.jar.file}">
 			<fileset dir="${hbox.client.api.class.dir}" />
         </jar>
     </target>
 	
-	<target name="api.deploy" depends="api.build">
-		<mkdir dir="${hbox.client.out.bin.dir}/${bin.dirname}" />
+	<target name="api.deploy" depends="configure.deploy, api.build">
 		<copy todir="${hbox.client.out.bin.dir}/${bin.dirname}" flatten="true">
 			<fileset dir="${hbox.api.out.build.jar.dir}" includes="**/*.jar" />
 			<file file="${hbox.client.api.jar.file}" />
 		</copy>
-		
-		<mkdir dir="${hbox.client.out.bin.dir}/${doc.dirname}" />
-		<mkdir dir="${hbox.client.out.bin.dir}/${doc.dirname}/manual" />
-		<mkdir dir="${hbox.client.out.bin.dir}/${doc.dirname}/legal" />
-		<copy todir="${client.out.dir}/doc/legal">
+
+		<copy todir="${hbox.client.out.bin.dir}/doc/legal">
 			<fileset dir="${hbox.client.base.dir}/${doc.dirname}/legal" includes="**/*" />
 		</copy>
-		<copy todir="${client.out.dir}/doc/manual">
+		<copy todir="${hbox.client.out.bin.dir}/doc/manual">
 			<fileset dir="${hbox.client.base.dir}/${doc.dirname}/manual" includes="**/*" />
 		</copy>
 		
-		<mkdir dir="${hbox.client.out.bin.dir}/${lib.dirname}" />
 		<copy todir="${hbox.client.out.bin.dir}/${lib.dirname}" flatten="true">
 			<fileset dir="${hbox.api.core.lib.dir}" includes="**/*.jar"/>
 			<fileset dir="${hbox.client.api.lib.dir}" includes="**/*.jar" />
 		</copy>
-		
-		<mkdir dir="${hbox.client.out.bin.dir}/${module.dirname}" />
 	</target>
 	
 	<!-- ===================================================================================================================================== -->
@@ -136,6 +150,8 @@
 	<property name="hbox.client.core.src.dir"								location="${hbox.client.core.dir}/${src.dirname}" />
 	<property name="hbox.client.core.lib.dir"								location="${hbox.client.core.dir}/${lib.dirname}" />
 	<property name="hbox.client.core.class.dir"								location="${hbox.client.out.build.class.dir}/${client.name}-${core.name}" />
+	<property name="hbox.client.core.jar.filename"							value="${hbox.name}-${client.name}-${core.name}.jar" />
+	<property name="hbox.client.core.jar.file"								location="${hbox.client.out.build.jar.dir}/${hbox.client.core.jar.filename}" />
 	
 	<path id="hbox.client.core.classpath">
 		<pathelement location="${hbox.client.core.class.dir}"/>
@@ -150,16 +166,17 @@
     </target>
 	
 	<target name="core.build" depends="core.compile">
-        <jar destfile="${hbox.client.out.build.jar.dir}/${hbox.name}-${client.name}-${core.name}.jar">
+        <jar destfile="${hbox.client.core.jar.file}">
         	<fileset dir="${hbox.client.core.class.dir}" />
         </jar>
     </target>
 	
 	<target name="core.deploy" depends="api.deploy, core.build">
 		<copy todir="${hbox.client.out.bin.dir}/${bin.dirname}" flatten="true">
-			<file file="${hbox.client.out.build.jar.dir}/${hbox.name}-${client.name}-${core.name}.jar" />
+			<file file="${hbox.client.core.jar.file}" />
 		</copy>
 		<copy todir="${hbox.client.out.bin.dir}/${lib.dirname}" flatten="true">
+			<fileset dir="${hbox.api.kryo.lib.dir}" includes="**/*.jar" />
 			<fileset dir="${hbox.client.core.lib.dir}" includes="**/*.jar" />
 		</copy>
 	</target>
@@ -209,26 +226,22 @@
 	
 	<extension-point name="compile" depends="api.compile, core.compile, gui.compile" />
 	
-	<target name="build.win" if="ifWin">
+	<target name="build.win" if="ifWin" depends="configure.build">
 		<assertDirAvailable dir="${tools.launch4j.dir}" />
 		<mkdir dir="${hbox.client.out.bin.dir}" />
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${tools.launch4j.dir}/launch4j.jar:${tools.launch4j.dir}/lib/xstream.jar" />
 		<launch4j configFile="${hbox.client.base.dir}/scripts/launch4j/main.xml" outfile="${hbox.client.out.bin.dir}/${hbox.client.out.exe}" />
 	</target>
 	
-	<target name="build.linux" if="ifLinux">
+	<target name="build.linux" if="ifLinux" depends="configure.build">
 		<mkdir dir="${hbox.client.out.bin.dir}" />
 		<copy file="${hbox.client.base.dir}/scripts/hyperbox" tofile="${hbox.client.out.bin.dir}/hyperbox" />
-		<chmod file="${hbox.client.out.bin.dir}/hyperbox" perm="u+rx,g+rx,o+rx"/>
+		<chmod file="${hbox.client.out.bin.dir}/hyperbox" perm="a+rx"/>
 	</target>
 	
-	<extension-point name="build" depends="compile, api.build, core.build, gui.build, build.win, build.linux" />
+	<extension-point name="build" depends="api.build, core.build, gui.build, build.win, build.linux" />
 	
 	<extension-point name="deploy" depends="build, api.deploy, core.deploy, gui.deploy" />
-	
-	<target name="configure.dist" depends="configure">
-		<mkdir dir="${hbox.client.out.dist.dir}" />
-	</target>
 	
 	<target name="dist.win" if="ifWin" depends="configure.dist">
 		<echo message="NSIS Dir:           ${tools.nsis.dir}" />
@@ -246,7 +259,7 @@
 	<target name="dist.linux" if="ifLinux" depends="configure.dist">
 		<copy file="${client.dir}/hyperbox-client.desktop" tofile="${client.out.dir}/hyperbox-client.desktop" overwrite="true" />
 		<copy file="scripts/client/installer/client-installer.sh" tofile="${client.out.dir}/client-installer.sh" overwrite="true" />
-		<chmod file="${client.out.dir}/client-installer.sh" perm="ugo+rx" />
+		<chmod file="${client.out.dir}/client-installer.sh" perm="a+rx" />
 		<exec executable="makeself" failonerror="true">
 			<arg value="${client.out.dir}" />
 			<arg value="${dist.out.dir}/${client.out.dist.package}.run" />
