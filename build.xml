@@ -29,6 +29,9 @@
 
 	<property name="hbox.client.base.dir"									location="." />
 	<property name="hbox.client.dir"										location="${hbox.client.base.dir}/src" />
+	<condition property="hbox.client.out.dir" value="${hbox.out.dir}">
+			<isset property="hbox.out.dir" />
+	</condition>
 	<property name="hbox.client.out.dir"									location="${hbox.client.base.dir}/${out.dirname}" />
 	<property name="hbox.client.out.build.dir"								location="${hbox.client.out.dir}/${build.dirname}" />
 	<property name="hbox.client.out.build.class.dir"						location="${hbox.client.out.build.dir}/${class.dirname}" />
@@ -53,17 +56,6 @@
 	</target>
 	
 	<target name="configure" depends="hbox.api.configure, configure.win, configure.linux">
-		<echoproperties>
-			<propertyset>
-				<propertyref prefix="hbox."/>
-				<propertyref prefix="tools."/>
-				<propertyref prefix="platform"/>
-			</propertyset>
-		</echoproperties>
-		
-		<assertDirAvailable dir="${hbox.client.api.src.dir}" />
-		<assertDirAvailable dir="${hbox.client.core.src.dir}" />
-		
 		<property file="${hbox.client.base.dir}/tools/${platform}/build.properties" />
 		
 		<exec executable="git" outputProperty="hbox.client.version">
@@ -125,7 +117,7 @@
 	
 	<target name="api.deploy" depends="configure.deploy, api.build">
 		<copy todir="${hbox.client.out.bin.dir}/${bin.dirname}" flatten="true">
-			<fileset dir="${hbox.api.out.build.jar.dir}" includes="**/*.jar" />
+			<file file="${hbox.api.out.build.jar.file}" />
 			<file file="${hbox.client.api.jar.file}" />
 		</copy>
 
