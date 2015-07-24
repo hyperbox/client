@@ -115,7 +115,7 @@
         </jar>
     </target>
 	
-	<target name="api.deploy" depends="configure.deploy, api.build">
+	<target name="api.deploy" depends="hbox.api.build, configure.deploy, api.build">
 		<copy todir="${hbox.client.out.bin.dir}/${bin.dirname}" flatten="true">
 			<file file="${hbox.api.out.build.jar.file}" />
 			<file file="${hbox.client.api.jar.file}" />
@@ -249,12 +249,12 @@
 	</target>
 	
 	<target name="dist.linux" if="ifLinux" depends="configure.dist">
-		<copy file="${client.dir}/hyperbox-client.desktop" tofile="${client.out.dir}/hyperbox-client.desktop" overwrite="true" />
-		<copy file="scripts/client/installer/client-installer.sh" tofile="${client.out.dir}/client-installer.sh" overwrite="true" />
-		<chmod file="${client.out.dir}/client-installer.sh" perm="a+rx" />
+		<copy file="${hbox.client.core.dir}/hyperbox-client.desktop" tofile="${hbox.client.out.build.dir}/hyperbox-client.desktop" overwrite="true" />
+		<copy file="${hbox.client.base.dir}/scripts/installer/client-installer.sh" tofile="${hbox.client.out.build.dir}/client-installer.sh" overwrite="true" />
+		<chmod file="${hbox.client.out.build.dir}/client-installer.sh" perm="a+rx" />
 		<exec executable="makeself" failonerror="true">
-			<arg value="${client.out.dir}" />
-			<arg value="${dist.out.dir}/${client.out.dist.package}.run" />
+			<arg value="${hbox.client.out.build.dir}" />
+			<arg value="${hbox.client.out.dist.dir}/${hbox.client.out.dist.package}.run" />
 			<arg value="Hyperbox client" />
 			<arg value="./client-installer.sh" />
 		</exec>
