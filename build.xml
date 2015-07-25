@@ -55,10 +55,10 @@
 		<property name="hbox.client.install.dir"				location="${hbox.client.install.linux.dir}" />
 	</target>
 	
-	<target name="configure" depends="hbox.api.configure, configure.win, configure.linux">
+	<target name="configure" depends="configure.win, configure.linux">
 		<property file="${hbox.client.base.dir}/tools/${platform}/build.properties" />
 		
-		<exec executable="git" outputProperty="hbox.client.version">
+		<exec executable="git" dir="${hbox.client.base.dir}" outputProperty="hbox.client.version">
 			<arg line="describe --always"/>
 		</exec>
 		
@@ -104,7 +104,7 @@
 		<path refid="hbox.api.classpath"/>
 	</path>
 	
-	<target name="api.compile" depends="configure.compile, hbox.api.compile">
+	<target name="api.compile" depends="configure.compile">
 		<mkdir dir="${hbox.client.api.class.dir}" />
 		<javac source="1.6" target="1.6" debug="on" includeantruntime="false" srcdir="${hbox.client.api.src.dir}" destdir="${hbox.client.api.class.dir}" classpathref="hbox.client.api.classpath" />
 	</target>
@@ -154,7 +154,7 @@
 	<target name="core.compile" depends="api.compile">
     	<mkdir dir="${hbox.client.core.class.dir}" />
     	<javac source="1.6" target="1.6" debug="on" includeantruntime="false" srcdir="${hbox.client.core.src.dir}" destdir="${hbox.client.core.class.dir}" classpathref="hbox.client.core.classpath" />
-		<echo file="${hbox.client.core.class.dir}/client.build.properties" append="true">version=${hbox.client.version}${line.separator}</echo>
+		<echo file="${hbox.client.core.class.dir}/client.build.properties" append="false">version=${hbox.client.version}${line.separator}</echo>
     </target>
 	
 	<target name="core.build" depends="core.compile">
@@ -235,7 +235,7 @@
 	
 	<extension-point name="deploy" depends="build, api.deploy, core.deploy, gui.deploy" />
 	
-	<target name="dist.win" if="ifWin" depends="configure.dist">
+	<target name="dist.win" if="ifWin" depends="deploy, configure.dist">
 		<echo message="NSIS Dir:           ${tools.nsis.dir}" />
 		<copy file="${hbox.client.base.dir}/scripts/installer/client-installer.nsi" tofile="${hbox.client.out.build.dir}/client-installer.nsi" overwrite="true" />
 		<replace file="${hbox.client.out.build.dir}/client-installer.nsi" token="@CLIENT_INSTALLER_OUTPUT@" value="${hbox.client.out.dist.dir}/${hbox.client.out.dist.package}.exe" />
@@ -248,7 +248,7 @@
 		</exec>
 	</target>
 	
-	<target name="dist.linux" if="ifLinux" depends="configure.dist">
+	<target name="dist.linux" if="ifLinux" depends="deploy, configure.dist">
 		<copy file="${hbox.client.core.dir}/hyperbox-client.desktop" tofile="${hbox.client.out.build.dir}/hyperbox-client.desktop" overwrite="true" />
 		<copy file="${hbox.client.base.dir}/scripts/installer/client-installer.sh" tofile="${hbox.client.out.build.dir}/client-installer.sh" overwrite="true" />
 		<chmod file="${hbox.client.out.build.dir}/client-installer.sh" perm="a+rx" />
@@ -260,10 +260,10 @@
 		</exec>
 	</target>
 	
-	<target name="dist.zip">
+	<target name="dist.zip" depends="deploy, configure.dist">
 		<zip destfile="${hbox.client.out.dist.dir}/${hbox.client.out.dist.package}.zip" basedir="${hbox.client.out.bin.dir}" />
 	</target>
 	
-	<extension-point name="dist" depends="deploy, dist.win, dist.linux, dist.zip" />
+	<extension-point name="dist" depends="dist.win, dist.linux, dist.zip" />
 
 </project>
