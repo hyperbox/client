@@ -50,11 +50,7 @@ import io.kamax.hboxc.gui.action.machine.MachineStartAction;
 import io.kamax.hboxc.gui.action.machine.MachineStopAction;
 import io.kamax.hboxc.gui.action.machine.MachineUnlockAction;
 import io.kamax.hboxc.gui.action.machine.MachineUnregisterAction;
-import io.kamax.hboxc.gui.action.module.ModuleDisableAction;
-import io.kamax.hboxc.gui.action.module.ModuleEnableAction;
 import io.kamax.hboxc.gui.action.module.ModuleLoadAction;
-import io.kamax.hboxc.gui.action.module.ModuleUnloadAction;
-import io.kamax.hboxc.gui.action.module.ModuleUnregisterAction;
 import io.kamax.hboxc.gui.action.server.ServerConfigureAction;
 import io.kamax.hboxc.gui.action.server.ServerShutdownAction;
 import io.kamax.hboxc.gui.action.storage.HypervisorToolsMediumAttachAction;
@@ -173,25 +169,13 @@ public class PopupMenuBuilder {
    }
 
    public static JPopupMenu get(_ModuleSelector modSelect, ModuleOut modOut) {
-      Action disable = new ModuleDisableAction(modSelect);
-      disable.setEnabled(modOut.isEnabled());
-      Action enable = new ModuleEnableAction(modSelect);
-      enable.setEnabled(!modOut.isEnabled());
-      Action load = new ModuleLoadAction(modSelect);
-      load.setEnabled(!modOut.isLoaded());
-      Action unload = new ModuleUnloadAction(modSelect);
-      unload.setEnabled(modOut.isLoaded());
-      Action unregister = new ModuleUnregisterAction(modSelect);
-
-      JPopupMenu actions = new JPopupMenu();
-      actions.add(new JMenuItem(enable));
-      actions.add(new JMenuItem(disable));
-      actions.add(new JSeparator(SwingConstants.HORIZONTAL));
-      actions.add(new JMenuItem(load));
-      actions.add(new JMenuItem(unload));
-      actions.add(new JSeparator(SwingConstants.HORIZONTAL));
-      actions.add(new JMenuItem(unregister));
-      return actions;
+      if (modOut.isLoaded()) {
+         return null;
+      } else {
+         JPopupMenu actions = new JPopupMenu();
+         actions.add(new JMenuItem(new ModuleLoadAction(modSelect)));
+         return actions;
+      }
    }
 
 }

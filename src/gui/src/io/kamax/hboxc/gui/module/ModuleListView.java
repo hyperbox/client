@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui.module;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.ModuleOut;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.event.module.ModuleEvent;
@@ -47,6 +45,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleListReceiver {
 
@@ -156,7 +156,9 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
          if (ev.isPopupTrigger() && (itemList.getSelectedRow() > -1)) {
             JPopupMenu actions = PopupMenuBuilder.get(ModuleListView.this,
                   itemListModel.getObjectAtRow(itemList.convertRowIndexToModel(itemList.getSelectedRow())));
-            actions.show(ev.getComponent(), ev.getX(), ev.getY());
+            if (actions != null) {
+               actions.show(ev.getComponent(), ev.getX(), ev.getY());
+            }
          }
       }
 

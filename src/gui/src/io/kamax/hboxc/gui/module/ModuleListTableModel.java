@@ -28,7 +28,6 @@ public class ModuleListTableModel extends AbstractOutputListTableModel<ModuleOut
 
    private final String ID = "ID";
    private final String NAME = "Name";
-   private final String IS_ENABLED = "Enabled";
    private final String IS_LOADED = "Loaded";
    private final String DESCRIPTOR = "Descriptor";
 
@@ -36,7 +35,6 @@ public class ModuleListTableModel extends AbstractOutputListTableModel<ModuleOut
    protected void addColumns() {
       addColumn(ID);
       addColumn(NAME);
-      addColumn(IS_ENABLED);
       addColumn(IS_LOADED);
       addColumn(DESCRIPTOR);
    }
@@ -48,9 +46,6 @@ public class ModuleListTableModel extends AbstractOutputListTableModel<ModuleOut
       }
       if (NAME.equalsIgnoreCase(columnName)) {
          return obj.getName();
-      }
-      if (IS_ENABLED.equalsIgnoreCase(columnName)) {
-         return Boolean.toString(obj.isEnabled());
       }
       if (IS_LOADED.equalsIgnoreCase(columnName)) {
          return Boolean.toString(obj.isLoaded());
