@@ -20,8 +20,8 @@
 
 package io.kamax.hboxc.factory;
 
+import io.kamax.hbox.ClassManager;
 import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.back._Backend;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class BackendFactory {
       backends = new HashMap<String, String>();
 
       try {
-         Set<_Backend> backs = HyperboxClient.getAllOrFail(_Backend.class);
+         Set<_Backend> backs = ClassManager.getAllOrFail(_Backend.class);
          for (_Backend backend : backs) {
             backends.put(backend.getId(), backend.getClass().getName());
          }
@@ -48,7 +48,7 @@ public class BackendFactory {
 
    public static _Backend get(String id) {
       // TODO throw exception if not found
-      return HyperboxClient.loadClass(_Backend.class, backends.get(id));
+      return ClassManager.loadClass(_Backend.class, backends.get(id));
    }
 
    public static List<String> list() {

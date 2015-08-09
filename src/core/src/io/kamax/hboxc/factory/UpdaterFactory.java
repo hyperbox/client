@@ -20,8 +20,8 @@
 
 package io.kamax.hboxc.factory;
 
+import io.kamax.hbox.ClassManager;
 import io.kamax.hbox.Configuration;
-import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.updater.Updater;
 import io.kamax.hboxc.updater._Updater;
 
@@ -35,7 +35,7 @@ public class UpdaterFactory {
    }
 
    public static _Updater get() {
-      return HyperboxClient.loadClass(_Updater.class, Configuration.getSetting(CFGKEY_UPDATER_CLASS, CFGVAL_UPDATER_CLASS));
+      return ClassManager.loadClass(_Updater.class, Configuration.getSetting(CFGKEY_UPDATER_CLASS, CFGVAL_UPDATER_CLASS));
    }
 
 }

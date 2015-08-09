@@ -20,6 +20,7 @@
 
 package io.kamax.hboxc.controller;
 
+import io.kamax.hbox.ClassManager;
 import io.kamax.hbox.Configuration;
 import io.kamax.hbox.HyperboxAPI;
 import io.kamax.hbox.comm.Answer;
@@ -87,7 +88,7 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
 
       ShutdownAction.c = this;
 
-      for (_ClientControllerAction ac : HyperboxClient.getAllOrFail(_ClientControllerAction.class)) {
+      for (_ClientControllerAction ac : ClassManager.getAllOrFail(_ClientControllerAction.class)) {
          actionsMap.put(ac.getRegistration().toString(), ac);
       }
    }
@@ -100,7 +101,7 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
       String classToLoad = Configuration.getSetting("view.class", "io.kamax.hboxc.gui.Gui");
 
       Logger.info("Loading frontend class: " + classToLoad);
-      front = HyperboxClient.loadClass(_Front.class, classToLoad);
+      front = ClassManager.loadClass(_Front.class, classToLoad);
    }
 
    public void start() throws HyperboxException {

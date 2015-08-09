@@ -20,13 +20,12 @@
 
 package io.kamax.hboxc.gui;
 
-import net.engio.mbassy.listener.Handler;
+import io.kamax.hbox.ClassManager;
 import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm._RequestReceiver;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.controller.ClientTasks;
 import io.kamax.hboxc.controller.MessageInput;
 import io.kamax.hboxc.core._CoreReader;
@@ -53,6 +52,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import net.engio.mbassy.listener.Handler;
 
 public final class Gui implements _Front {
 
@@ -224,7 +224,7 @@ public final class Gui implements _Front {
    public static _HypervisorModel getHypervisorModel(String hypId) {
 
       try {
-         Set<_HypervisorModel> models = HyperboxClient.getAllOrFail(_HypervisorModel.class);
+         Set<_HypervisorModel> models = ClassManager.getAllOrFail(_HypervisorModel.class);
          for (_HypervisorModel model : models) {
             List<String> supported = model.getSupported();
             if (supported.contains(hypId)) {
