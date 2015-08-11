@@ -36,7 +36,7 @@
 	<property name="hbox.client.out.build.dir"								location="${hbox.client.out.dir}/${build.dirname}" />
 	<property name="hbox.client.out.build.class.dir"						location="${hbox.client.out.build.dir}/${class.dirname}" />
 	<property name="hbox.client.out.build.jar.dir"							location="${hbox.client.out.build.dir}/${jar.dirname}" />
-	<property name="hbox.client.out.bin.dir"								location="${hbox.client.out.dir}/${bin.dirname}" />
+	
 	<property name="hbox.client.out.dist.dir"								location="${hbox.client.out.dir}/${dist.dirname}" />
 
 	<property name="hbox.client.install.win.dir"							value="C:/Program Files/Hyperbox/Client" />
@@ -55,14 +55,15 @@
 		<property name="hbox.client.install.dir"				location="${hbox.client.install.linux.dir}" />
 	</target>
 	
-	<target name="configure" depends="configure.win, configure.linux">
+	<target name="configure" depends="hbox.api.configure, configure.win, configure.linux">
+		<property name="hbox.client.out.bin.dir"								location="${hbox.client.out.dir}/${bin.dirname}/${platform}" />
 		<property file="${hbox.client.base.dir}/tools/${platform}/build.properties" />
 		
 		<exec executable="git" dir="${hbox.client.base.dir}" outputProperty="hbox.client.version">
 			<arg line="describe --always"/>
 		</exec>
 		
-		<property name="hbox.client.out.dist.package"			value="${hbox.name}-${hbox.client.version}-${os.family}_${os.arch}-${client.name}" />
+		<property name="hbox.client.out.dist.package"			value="${hbox.name}-${hbox.client.version}-${platform}-${client.name}" />
 		
 		<echo message="Hyperbox Client Version:             ${hbox.client.version}" />
 	</target>
@@ -253,7 +254,7 @@
 		<copy file="${hbox.client.base.dir}/scripts/installer/client-installer.sh" tofile="${hbox.client.out.build.dir}/client-installer.sh" overwrite="true" />
 		<chmod file="${hbox.client.out.build.dir}/client-installer.sh" perm="a+rx" />
 		<exec executable="makeself" failonerror="true">
-			<arg value="${hbox.client.out.build.dir}" />
+			<arg value="${hbox.client.out.bin.dir}" />
 			<arg value="${hbox.client.out.dist.dir}/${hbox.client.out.dist.package}.run" />
 			<arg value="Hyperbox client" />
 			<arg value="./client-installer.sh" />
