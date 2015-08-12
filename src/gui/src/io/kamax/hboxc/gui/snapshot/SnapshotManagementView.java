@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui.snapshot;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.comm.out.hypervisor.SnapshotOut;
@@ -61,6 +59,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class SnapshotManagementView implements _SnapshotSelector, _Refreshable {
 
@@ -168,7 +168,7 @@ public class SnapshotManagementView implements _SnapshotSelector, _Refreshable {
          vmUuid = newVmOut.getUuid();
          refresh();
       } else {
-
+         // TODO refactor
       }
    }
 
