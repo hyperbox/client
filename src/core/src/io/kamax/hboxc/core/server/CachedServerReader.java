@@ -74,7 +74,7 @@ import io.kamax.hboxc.event.machine.MachineAddedEvent;
 import io.kamax.hboxc.event.machine.MachineDataChangedEvent;
 import io.kamax.hboxc.event.machine.MachineRemovedEvent;
 import io.kamax.hboxc.event.machine.MachineStateChangedEvent;
-import io.kamax.hboxc.event.module.ModuleEvent;
+import io.kamax.hboxc.event.module.ServerModuleEvent;
 import io.kamax.hboxc.event.snapshot.SnapshotDeletedEvent;
 import io.kamax.hboxc.event.snapshot.SnapshotModifiedEvent;
 import io.kamax.hboxc.event.snapshot.SnapshotRestoredEvent;
@@ -401,7 +401,7 @@ public class CachedServerReader implements _ServerReader {
 
    @Handler
    public void putModuleEventOutput(ModuleEventOut ev) {
-      EventManager.post(new ModuleEvent(HyperboxEvents.ModuleLoaded, ev.getServer(), ev.getModule()));
+      EventManager.post(new ServerModuleEvent(HyperboxEvents.ModuleLoaded, ev.getServer(), ev.getModule()));
    }
 
    private void refreshTask(TaskIn tIn) {

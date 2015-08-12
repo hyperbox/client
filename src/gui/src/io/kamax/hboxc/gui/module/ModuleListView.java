@@ -22,7 +22,7 @@ package io.kamax.hboxc.gui.module;
 
 import io.kamax.hbox.comm.out.ModuleOut;
 import io.kamax.hbox.comm.out.ServerOut;
-import io.kamax.hboxc.event.module.ModuleEvent;
+import io.kamax.hboxc.event.module.ServerModuleEvent;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.action.module.ModuleRefreshAction;
@@ -144,7 +144,7 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
    }
 
    @Handler
-   public void putModuleEvent(ModuleEvent ev) {
+   public void putModuleEvent(ServerModuleEvent ev) {
       if (srvId.equals(ev.getServer().getId())) {
          refresh();
       }

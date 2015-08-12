@@ -24,9 +24,9 @@ import io.kamax.hbox.comm.out.ModuleOut;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.event.server.ServerEvent;
 
-public class ModuleEvent extends ServerEvent {
+public class ServerModuleEvent extends ServerEvent {
 
-   public ModuleEvent(Enum<?> eventId, ServerOut srvOut, ModuleOut objOut) {
+   public ServerModuleEvent(Enum<?> eventId, ServerOut srvOut, ModuleOut objOut) {
       super(eventId, srvOut);
       set(ModuleOut.class, objOut);
    }
