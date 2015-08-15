@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.core;
 
-import net.engio.mbassy.listener.Handler;
 import io.kamax.hbox.comm.in.UserIn;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.constant.MachineAttribute;
@@ -29,8 +28,6 @@ import io.kamax.hboxc.back._Backend;
 import io.kamax.hboxc.comm.input.ConnectorInput;
 import io.kamax.hboxc.comm.io.factory.ConnectorIoFactory;
 import io.kamax.hboxc.comm.io.factory.ConsoleViewerIoFactory;
-import io.kamax.hboxc.core._ConsoleViewer;
-import io.kamax.hboxc.core._Core;
 import io.kamax.hboxc.core.connector._Connector;
 import io.kamax.hboxc.core.storage.UserProfileCoreStorage;
 import io.kamax.hboxc.core.storage._CoreStorage;
@@ -48,7 +45,9 @@ import io.kamax.hboxc.exception.ConsoleViewerNotFoundForType;
 import io.kamax.hboxc.factory.BackendFactory;
 import io.kamax.hboxc.factory.ConnectorFactory;
 import io.kamax.hboxc.factory.ConsoleViewerFactory;
+import io.kamax.hboxc.factory.ModuleManagerFactory;
 import io.kamax.hboxc.factory.UpdaterFactory;
+import io.kamax.hboxc.module._ModuleManager;
 import io.kamax.hboxc.server._Machine;
 import io.kamax.hboxc.server._Server;
 import io.kamax.hboxc.state.ConnectionState;
@@ -61,6 +60,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.engio.mbassy.listener.Handler;
 
 public class ClientCore implements _Core {
 
@@ -78,6 +78,7 @@ public class ClientCore implements _Core {
 
    private volatile CoreState state = CoreState.Stopped;
 
+   private _ModuleManager modMgr;
    private _CoreStorage storage;
 
    private ConnectorIdGenerator connectIdGen = new ConnectorIdGenerator();
@@ -133,6 +134,8 @@ public class ClientCore implements _Core {
    public void init() throws HyperboxException {
       EventManager.get().register(this);
 
+      modMgr = ModuleManagerFactory.get();
+
       storage = new UserProfileCoreStorage();
       storage.init();
 
@@ -148,6 +151,7 @@ public class ClientCore implements _Core {
       servers = new HashMap<String, _Server>();
 
       try {
+         modMgr.start();
          storage.start();
 
          loadViewers();

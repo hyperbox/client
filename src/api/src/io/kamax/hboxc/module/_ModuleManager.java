@@ -1,6 +1,6 @@
 /*
  * Hyperbox - Virtual Infrastructure Manager
- * Copyright (C) 2014 Maxime Dor
+ * Copyright (C) 2015 Maxime Dor
  * 
  * http://kamax.io/hbox/
  * 
