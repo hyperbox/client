@@ -17,4 +17,8 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-java -splash:icons/login-header.png -cp bin/*:lib/*:modules/* io.kamax.hboxc.HyperboxClientApplicationStart "$@"
+export HBOX_CLIENT_BASE_DIR=$(dirname $0)
+export HBOX_CLIENT_MODULE_DIR="$HBOX_CLIENT_BASE_DIR/modules"
+
+java -splash:$HBOX_CLIENT_BASE_DIR/icons/login-header.png -cp "$HBOX_CLIENT_BASE_DIR/bin/*":"$HBOX_CLIENT_BASE_DIR/lib/*" io.kamax.hboxc.HyperboxClientApplicationStart "$@"
+

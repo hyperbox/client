@@ -20,15 +20,18 @@
 
 package io.kamax.hboxc.gui.builder;
 
+import io.kamax.hbox.Configuration;
 import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.out.hypervisor.SnapshotOut;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hbox.constant.StorageControllerType;
 import io.kamax.hbox.states.MachineStates;
+import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.controller.ClientTasks;
 import io.kamax.tool.logging.Logger;
+import java.io.File;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,15 +39,14 @@ import javax.swing.ImageIcon;
 
 public class IconBuilder {
 
-   private final static String ICONS_PATH = "icons/";
-   private final static ImageIcon unknownElement = new ImageIcon(ICONS_PATH + "help.png");
+   private static ImageIcon unknownElement = new ImageIcon(getBasePath() + "help.png");
 
-   private static ImageIcon hbIcon = new ImageIcon(ICONS_PATH + "hyperbox-icon_16px.png");
-   private static ImageIcon hbLogo = new ImageIcon(ICONS_PATH + "hyperbox-logo.png");
-   private static ImageIcon loginHeader = new ImageIcon(ICONS_PATH + "login-header.png");
+   private static ImageIcon hbIcon = new ImageIcon(getBasePath() + "hyperbox-icon_16px.png");
+   private static ImageIcon hbLogo = new ImageIcon(getBasePath() + "hyperbox-logo.png");
+   private static ImageIcon loginHeader = new ImageIcon(getBasePath() + "login-header.png");
 
-   public static final ImageIcon AddIcon = new ImageIcon(ICONS_PATH + "add.png");
-   public static final ImageIcon DelIcon = new ImageIcon(ICONS_PATH + "delete.png");
+   public static final ImageIcon AddIcon = new ImageIcon(getBasePath() + "add.png");
+   public static final ImageIcon DelIcon = new ImageIcon(getBasePath() + "delete.png");
 
    private static Map<HypervisorTasks, ImageIcon> vbTasks;
    private static Map<HyperboxTasks, ImageIcon> hbTasks;
@@ -71,107 +73,111 @@ public class IconBuilder {
       initEntityTypes();
    }
 
+   private static String getBasePath() {
+      return Configuration.getSetting(HyperboxClient.CFGKEY_BASE_DIR, HyperboxClient.CFGVAL_BASE_DIR) + File.separator + "icons/";
+   }
+
    private static void initClientTasks() {
       clientTasks = new EnumMap<ClientTasks, ImageIcon>(ClientTasks.class);
-      clientTasks.put(ClientTasks.ConnectorConnect, new ImageIcon(ICONS_PATH + "server_connect.png"));
-      clientTasks.put(ClientTasks.ConnectorGet, new ImageIcon(ICONS_PATH + "details.png"));
-      clientTasks.put(ClientTasks.NotificationClose, new ImageIcon(ICONS_PATH + "cross.png"));
-      clientTasks.put(ClientTasks.Exit, new ImageIcon(ICONS_PATH + "exit.png"));
+      clientTasks.put(ClientTasks.ConnectorConnect, new ImageIcon(getBasePath() + "server_connect.png"));
+      clientTasks.put(ClientTasks.ConnectorGet, new ImageIcon(getBasePath() + "details.png"));
+      clientTasks.put(ClientTasks.NotificationClose, new ImageIcon(getBasePath() + "cross.png"));
+      clientTasks.put(ClientTasks.Exit, new ImageIcon(getBasePath() + "exit.png"));
    }
 
    private static void initHbTasks() {
       hbTasks = new EnumMap<HyperboxTasks, ImageIcon>(HyperboxTasks.class);
-      hbTasks.put(HyperboxTasks.UserCreate, new ImageIcon(ICONS_PATH + "user_create.png"));
-      hbTasks.put(HyperboxTasks.UserDelete, new ImageIcon(ICONS_PATH + "user_delete.png"));
-      hbTasks.put(HyperboxTasks.UserModify, new ImageIcon(ICONS_PATH + "user_edit.png"));
+      hbTasks.put(HyperboxTasks.UserCreate, new ImageIcon(getBasePath() + "user_create.png"));
+      hbTasks.put(HyperboxTasks.UserDelete, new ImageIcon(getBasePath() + "user_delete.png"));
+      hbTasks.put(HyperboxTasks.UserModify, new ImageIcon(getBasePath() + "user_edit.png"));
 
-      hbTasks.put(HyperboxTasks.StoreGet, new ImageIcon(ICONS_PATH + "store_browse.png"));
-      hbTasks.put(HyperboxTasks.StoreCreate, new ImageIcon(ICONS_PATH + "store_create.png"));
-      hbTasks.put(HyperboxTasks.StoreDelete, new ImageIcon(ICONS_PATH + "store_delete.png"));
-      hbTasks.put(HyperboxTasks.StoreRegister, new ImageIcon(ICONS_PATH + "store_register.png"));
-      hbTasks.put(HyperboxTasks.StoreUnregister, new ImageIcon(ICONS_PATH + "store_unregister.png"));
+      hbTasks.put(HyperboxTasks.StoreGet, new ImageIcon(getBasePath() + "store_browse.png"));
+      hbTasks.put(HyperboxTasks.StoreCreate, new ImageIcon(getBasePath() + "store_create.png"));
+      hbTasks.put(HyperboxTasks.StoreDelete, new ImageIcon(getBasePath() + "store_delete.png"));
+      hbTasks.put(HyperboxTasks.StoreRegister, new ImageIcon(getBasePath() + "store_register.png"));
+      hbTasks.put(HyperboxTasks.StoreUnregister, new ImageIcon(getBasePath() + "store_unregister.png"));
    }
 
    private static void initVbTasks() {
       vbTasks = new EnumMap<HypervisorTasks, ImageIcon>(HypervisorTasks.class);
-      vbTasks.put(HypervisorTasks.MachineAcpiPowerButton, new ImageIcon(ICONS_PATH + "control_power_blue.png"));
-      vbTasks.put(HypervisorTasks.MachineCreate, new ImageIcon(ICONS_PATH + "computer_add.png"));
-      vbTasks.put(HypervisorTasks.MachineDelete, new ImageIcon(ICONS_PATH + "computer_delete.png"));
-      vbTasks.put(HypervisorTasks.MachineModify, new ImageIcon(ICONS_PATH + "computer_edit.png"));
-      vbTasks.put(HypervisorTasks.MachineRegister, new ImageIcon(ICONS_PATH + "computer_link.png"));
-      vbTasks.put(HypervisorTasks.MachineReset, new ImageIcon(ICONS_PATH + "reload.png"));
-      vbTasks.put(HypervisorTasks.MachinePowerOn, new ImageIcon(ICONS_PATH + "control_play_blue.png"));
-      vbTasks.put(HypervisorTasks.MachinePowerOff, new ImageIcon(ICONS_PATH + "control_power.png"));
-      vbTasks.put(HypervisorTasks.MachineUnregister, new ImageIcon(ICONS_PATH + "computer_stop.png"));
+      vbTasks.put(HypervisorTasks.MachineAcpiPowerButton, new ImageIcon(getBasePath() + "control_power_blue.png"));
+      vbTasks.put(HypervisorTasks.MachineCreate, new ImageIcon(getBasePath() + "computer_add.png"));
+      vbTasks.put(HypervisorTasks.MachineDelete, new ImageIcon(getBasePath() + "computer_delete.png"));
+      vbTasks.put(HypervisorTasks.MachineModify, new ImageIcon(getBasePath() + "computer_edit.png"));
+      vbTasks.put(HypervisorTasks.MachineRegister, new ImageIcon(getBasePath() + "computer_link.png"));
+      vbTasks.put(HypervisorTasks.MachineReset, new ImageIcon(getBasePath() + "reload.png"));
+      vbTasks.put(HypervisorTasks.MachinePowerOn, new ImageIcon(getBasePath() + "control_play_blue.png"));
+      vbTasks.put(HypervisorTasks.MachinePowerOff, new ImageIcon(getBasePath() + "control_power.png"));
+      vbTasks.put(HypervisorTasks.MachineUnregister, new ImageIcon(getBasePath() + "computer_stop.png"));
 
-      vbTasks.put(HypervisorTasks.SnapshotDelete, new ImageIcon(ICONS_PATH + "camera_stop.png"));
-      vbTasks.put(HypervisorTasks.SnapshotGet, new ImageIcon(ICONS_PATH + "camera.png"));
-      vbTasks.put(HypervisorTasks.SnapshotGetRoot, new ImageIcon(ICONS_PATH + "camera.png"));
-      vbTasks.put(HypervisorTasks.SnapshotModify, new ImageIcon(ICONS_PATH + "camera_edit.png"));
-      vbTasks.put(HypervisorTasks.SnapshotRestore, new ImageIcon(ICONS_PATH + "camera_go.png"));
-      vbTasks.put(HypervisorTasks.SnapshotTake, new ImageIcon(ICONS_PATH + "camera_add.png"));
+      vbTasks.put(HypervisorTasks.SnapshotDelete, new ImageIcon(getBasePath() + "camera_stop.png"));
+      vbTasks.put(HypervisorTasks.SnapshotGet, new ImageIcon(getBasePath() + "camera.png"));
+      vbTasks.put(HypervisorTasks.SnapshotGetRoot, new ImageIcon(getBasePath() + "camera.png"));
+      vbTasks.put(HypervisorTasks.SnapshotModify, new ImageIcon(getBasePath() + "camera_edit.png"));
+      vbTasks.put(HypervisorTasks.SnapshotRestore, new ImageIcon(getBasePath() + "camera_go.png"));
+      vbTasks.put(HypervisorTasks.SnapshotTake, new ImageIcon(getBasePath() + "camera_add.png"));
 
-      vbTasks.put(HypervisorTasks.StorageControllerAdd, new ImageIcon(ICONS_PATH + "tab_add.png"));
-      vbTasks.put(HypervisorTasks.StorageControllerRemove, new ImageIcon(ICONS_PATH + "tab_delete.png"));
-      vbTasks.put(HypervisorTasks.StorageControllerMediumAttachmentAdd, new ImageIcon(ICONS_PATH + "drive_add.png"));
-      vbTasks.put(HypervisorTasks.StorageControllerMediumAttachmentRemove, new ImageIcon(ICONS_PATH + "drive_delete.png"));
+      vbTasks.put(HypervisorTasks.StorageControllerAdd, new ImageIcon(getBasePath() + "tab_add.png"));
+      vbTasks.put(HypervisorTasks.StorageControllerRemove, new ImageIcon(getBasePath() + "tab_delete.png"));
+      vbTasks.put(HypervisorTasks.StorageControllerMediumAttachmentAdd, new ImageIcon(getBasePath() + "drive_add.png"));
+      vbTasks.put(HypervisorTasks.StorageControllerMediumAttachmentRemove, new ImageIcon(getBasePath() + "drive_delete.png"));
 
-      vbTasks.put(HypervisorTasks.MediumMount, new ImageIcon(ICONS_PATH + "cd_add.png"));
-      vbTasks.put(HypervisorTasks.MediumUnmount, new ImageIcon(ICONS_PATH + "cd_delete.png"));
-      vbTasks.put(HypervisorTasks.MediumCreate, new ImageIcon(ICONS_PATH + "database_add.png"));
-      vbTasks.put(HypervisorTasks.MediumRegister, new ImageIcon(ICONS_PATH + "database_link.png"));
-      vbTasks.put(HypervisorTasks.MediumModify, new ImageIcon(ICONS_PATH + "cd_modify.png"));
+      vbTasks.put(HypervisorTasks.MediumMount, new ImageIcon(getBasePath() + "cd_add.png"));
+      vbTasks.put(HypervisorTasks.MediumUnmount, new ImageIcon(getBasePath() + "cd_delete.png"));
+      vbTasks.put(HypervisorTasks.MediumCreate, new ImageIcon(getBasePath() + "database_add.png"));
+      vbTasks.put(HypervisorTasks.MediumRegister, new ImageIcon(getBasePath() + "database_link.png"));
+      vbTasks.put(HypervisorTasks.MediumModify, new ImageIcon(getBasePath() + "cd_modify.png"));
 
-      vbTasks.put(HypervisorTasks.NetAdaptorAdd, new ImageIcon(ICONS_PATH + "add.png"));
-      vbTasks.put(HypervisorTasks.NetAdaptorModify, new ImageIcon(ICONS_PATH + "edit.png"));
-      vbTasks.put(HypervisorTasks.NetAdaptorRemove, new ImageIcon(ICONS_PATH + "cross.png"));
+      vbTasks.put(HypervisorTasks.NetAdaptorAdd, new ImageIcon(getBasePath() + "add.png"));
+      vbTasks.put(HypervisorTasks.NetAdaptorModify, new ImageIcon(getBasePath() + "edit.png"));
+      vbTasks.put(HypervisorTasks.NetAdaptorRemove, new ImageIcon(getBasePath() + "cross.png"));
    }
 
    private static void initMachineStates() {
       machineStates = new EnumMap<MachineStates, ImageIcon>(MachineStates.class);
 
-      machineStates.put(MachineStates.Aborted, new ImageIcon(ICONS_PATH + "cross.png"));
-      machineStates.put(MachineStates.Inaccessible, new ImageIcon(ICONS_PATH + "delete.png"));
-      machineStates.put(MachineStates.Paused, new ImageIcon(ICONS_PATH + "pause_blue.png"));
-      machineStates.put(MachineStates.PoweredOff, new ImageIcon(ICONS_PATH + "stop_red.png"));
-      machineStates.put(MachineStates.Restoring, new ImageIcon(ICONS_PATH + "disk_upload.png"));
-      machineStates.put(MachineStates.Starting, new ImageIcon(ICONS_PATH + "play_blue.png"));
-      machineStates.put(MachineStates.Running, new ImageIcon(ICONS_PATH + "play_green.png"));
-      machineStates.put(MachineStates.Saved, new ImageIcon(ICONS_PATH + "disk.png"));
-      machineStates.put(MachineStates.Saving, new ImageIcon(ICONS_PATH + "disk_download.png"));
-      machineStates.put(MachineStates.Stuck, new ImageIcon(ICONS_PATH + "delete.png"));
+      machineStates.put(MachineStates.Aborted, new ImageIcon(getBasePath() + "cross.png"));
+      machineStates.put(MachineStates.Inaccessible, new ImageIcon(getBasePath() + "delete.png"));
+      machineStates.put(MachineStates.Paused, new ImageIcon(getBasePath() + "pause_blue.png"));
+      machineStates.put(MachineStates.PoweredOff, new ImageIcon(getBasePath() + "stop_red.png"));
+      machineStates.put(MachineStates.Restoring, new ImageIcon(getBasePath() + "disk_upload.png"));
+      machineStates.put(MachineStates.Starting, new ImageIcon(getBasePath() + "play_blue.png"));
+      machineStates.put(MachineStates.Running, new ImageIcon(getBasePath() + "play_green.png"));
+      machineStates.put(MachineStates.Saved, new ImageIcon(getBasePath() + "disk.png"));
+      machineStates.put(MachineStates.Saving, new ImageIcon(getBasePath() + "disk_download.png"));
+      machineStates.put(MachineStates.Stuck, new ImageIcon(getBasePath() + "delete.png"));
    }
 
    private static void initStorageControllerTypes() {
       scTypes = new HashMap<String, ImageIcon>();
-      unknownScType = new ImageIcon(ICONS_PATH + "help.png");
+      unknownScType = new ImageIcon(getBasePath() + "help.png");
 
-      scTypes.put(StorageControllerType.Floppy.getId(), new ImageIcon(ICONS_PATH + "controller.png"));
-      scTypes.put(StorageControllerType.IDE.getId(), new ImageIcon(ICONS_PATH + "controller.png"));
-      scTypes.put(StorageControllerType.SAS.getId(), new ImageIcon(ICONS_PATH + "controller.png"));
-      scTypes.put(StorageControllerType.SATA.getId(), new ImageIcon(ICONS_PATH + "controller.png"));
-      scTypes.put(StorageControllerType.SCSI.getId(), new ImageIcon(ICONS_PATH + "controller.png"));
+      scTypes.put(StorageControllerType.Floppy.getId(), new ImageIcon(getBasePath() + "controller.png"));
+      scTypes.put(StorageControllerType.IDE.getId(), new ImageIcon(getBasePath() + "controller.png"));
+      scTypes.put(StorageControllerType.SAS.getId(), new ImageIcon(getBasePath() + "controller.png"));
+      scTypes.put(StorageControllerType.SATA.getId(), new ImageIcon(getBasePath() + "controller.png"));
+      scTypes.put(StorageControllerType.SCSI.getId(), new ImageIcon(getBasePath() + "controller.png"));
    }
 
    private static void initEntityTypes() {
       entTypes = new HashMap<String, ImageIcon>();
       entTypes.put(EntityType.Hyperbox.getId(), getHyperbox());
-      entTypes.put(EntityType.Guest.getId(), new ImageIcon(ICONS_PATH + "monitor.png"));
-      entTypes.put(EntityType.Machine.getId(), new ImageIcon(ICONS_PATH + "computer.png"));
-      entTypes.put(EntityType.DVD.getId(), new ImageIcon(ICONS_PATH + "cd.png"));
-      entTypes.put(EntityType.HardDisk.getId(), new ImageIcon(ICONS_PATH + "harddisk.png"));
-      entTypes.put(EntityType.Floppy.getId(), new ImageIcon(ICONS_PATH + "disk.png"));
-      entTypes.put(EntityType.Server.getId(), new ImageIcon(ICONS_PATH + "server.png"));
-      entTypes.put(EntityType.Display.getId(), new ImageIcon(ICONS_PATH + "monitor.png"));
-      entTypes.put(EntityType.CPU.getId(), new ImageIcon(ICONS_PATH + "shape_shadow.png"));
-      entTypes.put(EntityType.Audio.getId(), new ImageIcon(ICONS_PATH + "sound.png"));
-      entTypes.put(EntityType.Network.getId(), new ImageIcon(ICONS_PATH + "network.png"));
-      entTypes.put(EntityType.DiskDrive.getId(), new ImageIcon(ICONS_PATH + "drive.png"));
-      entTypes.put(EntityType.DvdDrive.getId(), new ImageIcon(ICONS_PATH + "drive_cd.png"));
-      entTypes.put(EntityType.FloppyDrive.getId(), new ImageIcon(ICONS_PATH + "drive_disk.png"));
-      entTypes.put(EntityType.User.getId(), new ImageIcon(ICONS_PATH + "user.png"));
-      entTypes.put(EntityType.Store.getId(), new ImageIcon(ICONS_PATH + "store.png"));
-      entTypes.put(EntityType.Task.getId(), new ImageIcon(ICONS_PATH + "task.png"));
+      entTypes.put(EntityType.Guest.getId(), new ImageIcon(getBasePath() + "monitor.png"));
+      entTypes.put(EntityType.Machine.getId(), new ImageIcon(getBasePath() + "computer.png"));
+      entTypes.put(EntityType.DVD.getId(), new ImageIcon(getBasePath() + "cd.png"));
+      entTypes.put(EntityType.HardDisk.getId(), new ImageIcon(getBasePath() + "harddisk.png"));
+      entTypes.put(EntityType.Floppy.getId(), new ImageIcon(getBasePath() + "disk.png"));
+      entTypes.put(EntityType.Server.getId(), new ImageIcon(getBasePath() + "server.png"));
+      entTypes.put(EntityType.Display.getId(), new ImageIcon(getBasePath() + "monitor.png"));
+      entTypes.put(EntityType.CPU.getId(), new ImageIcon(getBasePath() + "shape_shadow.png"));
+      entTypes.put(EntityType.Audio.getId(), new ImageIcon(getBasePath() + "sound.png"));
+      entTypes.put(EntityType.Network.getId(), new ImageIcon(getBasePath() + "network.png"));
+      entTypes.put(EntityType.DiskDrive.getId(), new ImageIcon(getBasePath() + "drive.png"));
+      entTypes.put(EntityType.DvdDrive.getId(), new ImageIcon(getBasePath() + "drive_cd.png"));
+      entTypes.put(EntityType.FloppyDrive.getId(), new ImageIcon(getBasePath() + "drive_disk.png"));
+      entTypes.put(EntityType.User.getId(), new ImageIcon(getBasePath() + "user.png"));
+      entTypes.put(EntityType.Store.getId(), new ImageIcon(getBasePath() + "store.png"));
+      entTypes.put(EntityType.Task.getId(), new ImageIcon(getBasePath() + "task.png"));
    }
 
    public static ImageIcon getHyperbox() {
@@ -264,26 +270,26 @@ public class IconBuilder {
 
    public static ImageIcon getSnapshot(SnapshotOut snapOut) {
       if (snapOut.isOnline()) {
-         return new ImageIcon(ICONS_PATH + "camera_start.png");
+         return new ImageIcon(getBasePath() + "camera_start.png");
       } else {
-         return new ImageIcon(ICONS_PATH + "camera_stop.png");
+         return new ImageIcon(getBasePath() + "camera_stop.png");
       }
    }
 
    public static ImageIcon getConnector(ConnectorOutput conOut) {
       if (conOut.isConnected()) {
          if (conOut.getServer().isHypervisorConnected()) {
-            return new ImageIcon(ICONS_PATH + "server_start.png");
+            return new ImageIcon(getBasePath() + "server_start.png");
          } else {
-            return new ImageIcon(ICONS_PATH + "server_stop.png");
+            return new ImageIcon(getBasePath() + "server_stop.png");
          }
       } else {
-         return new ImageIcon(ICONS_PATH + "disconnect.png");
+         return new ImageIcon(getBasePath() + "disconnect.png");
       }
    }
 
    public static ImageIcon getSettings() {
-      return new ImageIcon(ICONS_PATH + "computer_wrench.png");
+      return new ImageIcon(getBasePath() + "computer_wrench.png");
    }
 
 }
