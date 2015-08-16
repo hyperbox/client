@@ -26,7 +26,6 @@ import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.StoreOut;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
-import io.kamax.hbox.constant.EntityType;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.gui.action.connector.ConnectorConnectAction;
 import io.kamax.hboxc.gui.action.connector.ConnectorDisconnectAction;
@@ -39,8 +38,6 @@ import io.kamax.hboxc.gui.action.machine.MachineAcpiPowerAction;
 import io.kamax.hboxc.gui.action.machine.MachineCreateAction;
 import io.kamax.hboxc.gui.action.machine.MachineDeleteAction;
 import io.kamax.hboxc.gui.action.machine.MachineEditAction;
-import io.kamax.hboxc.gui.action.machine.MachineLockAction;
-import io.kamax.hboxc.gui.action.machine.MachineLogGetAction;
 import io.kamax.hboxc.gui.action.machine.MachinePauseAction;
 import io.kamax.hboxc.gui.action.machine.MachineRegisterAction;
 import io.kamax.hboxc.gui.action.machine.MachineResetAction;
@@ -48,7 +45,6 @@ import io.kamax.hboxc.gui.action.machine.MachineResumeAction;
 import io.kamax.hboxc.gui.action.machine.MachineSaveStateAction;
 import io.kamax.hboxc.gui.action.machine.MachineStartAction;
 import io.kamax.hboxc.gui.action.machine.MachineStopAction;
-import io.kamax.hboxc.gui.action.machine.MachineUnlockAction;
 import io.kamax.hboxc.gui.action.machine.MachineUnregisterAction;
 import io.kamax.hboxc.gui.action.module.ModuleLoadAction;
 import io.kamax.hboxc.gui.action.server.ServerConfigureAction;
@@ -83,37 +79,21 @@ public class PopupMenuBuilder {
 
    public static JPopupMenu get(_MachineSelector select, MachineOut mOut) {
 
-      JMenu machineMenu = new JMenu("Machine");
-      machineMenu.setIcon(IconBuilder.getEntityType(EntityType.Machine));
+      JPopupMenu machineMenu = new JPopupMenu();
       machineMenu.add(new JMenuItem(new MachineStartAction(select)));
       machineMenu.add(new JMenuItem(new MachineStopAction(select)));
       machineMenu.add(new JMenuItem(new MachineResetAction(select)));
       machineMenu.add(new JMenuItem(new MachineAcpiPowerAction(select)));
-      machineMenu.add(new JMenuItem(new MachineLogGetAction(mOut.getServerId(), mOut.getId())));
       machineMenu.add(new JSeparator());
       machineMenu.add(new JMenuItem(new MachineSaveStateAction(select)));
       machineMenu.add(new JMenuItem(new MachinePauseAction(select)));
       machineMenu.add(new JMenuItem(new MachineResumeAction(select)));
       machineMenu.add(new JSeparator());
+      machineMenu.add(new JMenuItem(new MachineEditAction(select)));
       machineMenu.add(new JMenuItem(new MachineUnregisterAction(select)));
       machineMenu.add(new JMenuItem(new MachineDeleteAction(select)));
-      machineMenu.add(new JSeparator());
-      machineMenu.add(new JMenuItem(new MachineLockAction(select)));
-      machineMenu.add(new JMenuItem(new MachineUnlockAction(select)));
 
-      /*
-      JMenu guestMenu = new JMenu("Guest");
-      machineMenu.setIcon(IconBuilder.getEntityType(EntityTypes.Guest));
-      guestMenu.add(new JMenuItem(new GuestRestartAction(select)));
-      guestMenu.add(new JMenuItem(new GuestShutdownAction(select)));
-       */
-
-      JPopupMenu vmPopupMenu = new JPopupMenu();
-      vmPopupMenu.add(machineMenu);
-      //vmPopupMenu.add(guestMenu);
-      vmPopupMenu.add(new JMenuItem(new MachineEditAction(select)));
-
-      return vmPopupMenu;
+      return machineMenu;
    }
 
    public static JPopupMenu get(ServerOut srvOut) {
