@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui.hypervisor;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorConnectionStateEventOut;
 import io.kamax.hbox.comm.out.event.net.NetAdaptorEventOut;
 import io.kamax.hbox.comm.out.network.NetModeOut;
@@ -31,7 +29,7 @@ import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.worker.receiver._NetModeListReceiver;
 import io.kamax.hboxc.gui.workers.NetModeListWorker;
-import io.kamax.tool.Validate;
+import io.kamax.tool.AxStrings;
 import io.kamax.tool.logging.Logger;
 import java.awt.Component;
 import java.util.HashMap;
@@ -41,6 +39,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
 
@@ -53,7 +53,6 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
    private Map<String, HypervisorNetModeViewer> compModes = new HashMap<String, HypervisorNetModeViewer>();
 
    public HypervisorNetViewer(String srvId) {
-      Validate.notNull(srvId);
       this.srvId = srvId;
 
       status = new JLabel();
@@ -72,6 +71,11 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
       return panel;
    }
 
+   public void refresh(String srvId) {
+      this.srvId = srvId;
+      refresh();
+   }
+
    @Override
    public void refresh() {
       NetModeListWorker.execute(this, srvId);
@@ -79,14 +83,14 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
 
    @Handler
    private void putHypervisorConnectionEvent(HypervisorConnectionStateEventOut ev) {
-      if (srvId.contentEquals(ev.getServerId())) {
+      if (AxStrings.equals(srvId, ev.getServerId())) {
          refresh();
       }
    }
 
    @Handler
    private void putConnectorConnectionStateEvent(ConnectorStateChangedEvent ev) {
-      if (srvId.contentEquals(ev.getConnector().getServerId())) {
+      if (AxStrings.equals(srvId, ev.getConnector().getServerId())) {
          refresh();
       }
    }

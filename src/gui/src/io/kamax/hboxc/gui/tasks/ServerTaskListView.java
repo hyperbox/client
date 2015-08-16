@@ -21,8 +21,6 @@
 
 package io.kamax.hboxc.gui.tasks;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.TaskOut;
 import io.kamax.hboxc.event.connector.ConnectorStateChangedEvent;
 import io.kamax.hboxc.event.task.TaskAddedEvent;
@@ -34,6 +32,7 @@ import io.kamax.hboxc.gui.action.task.TaskCancelAction;
 import io.kamax.hboxc.gui.worker.receiver._TaskListReceiver;
 import io.kamax.hboxc.gui.workers.TaskListWorker;
 import io.kamax.helper.swing.MouseWheelController;
+import io.kamax.tool.AxStrings;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -50,10 +49,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class ServerTaskListView implements _TaskSelector, _Refreshable {
 
-   private final String srvId;
+   private String srvId;
 
    private JLabel loadingLabel = new JLabel("Loading...");
    private ServerTaskListTableModel itemListModel;
@@ -136,12 +137,16 @@ public class ServerTaskListView implements _TaskSelector, _Refreshable {
 
    @Override
    public List<TaskOut> getSelection() {
-
       List<TaskOut> listSelectedItems = new ArrayList<TaskOut>();
       for (int row : itemList.getSelectedRows()) {
          listSelectedItems.add(itemListModel.getObjectAtRow(itemList.convertRowIndexToModel(row)));
       }
       return listSelectedItems;
+   }
+
+   public void refresh(String srvId) {
+      this.srvId = srvId;
+      refresh();
    }
 
    @Override
@@ -184,7 +189,7 @@ public class ServerTaskListView implements _TaskSelector, _Refreshable {
 
    @Handler
    private void putConnectorStateEvent(ConnectorStateChangedEvent ev) {
-      if (srvId.equals(ev.getConnector().getServerId())) {
+      if (AxStrings.equals(srvId, ev.getConnector().getServerId())) {
          refresh();
       }
    }

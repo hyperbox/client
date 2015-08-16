@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui.host;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorConnectedEventOut;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorDisconnectedEventOut;
 import io.kamax.hbox.comm.out.host.HostOut;
@@ -31,16 +29,19 @@ import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.worker.receiver._HostReceiver;
 import io.kamax.hboxc.gui.workers.HostGetWorker;
 import io.kamax.helper.swing.JTextFieldUtils;
+import io.kamax.tool.AxStrings;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class HostViewer implements _Refreshable, _HostReceiver {
 
-   private final String srvId;
+   private String srvId;
 
    private JLabel hostnameLabel;
    private JTextField hostnameValue;
@@ -96,6 +97,11 @@ public class HostViewer implements _Refreshable, _HostReceiver {
       ViewEventManager.register(this);
    }
 
+   public void refresh(String srvId) {
+      this.srvId = srvId;
+      refresh();
+   }
+
    @Override
    public void refresh() {
       HostGetWorker.execute(this, srvId);
@@ -144,14 +150,14 @@ public class HostViewer implements _Refreshable, _HostReceiver {
 
    @Handler
    public void putHypervisorConnected(HypervisorConnectedEventOut ev) {
-      if (srvId.contentEquals(ev.getServerId())) {
+      if (AxStrings.equals(srvId, ev.getServerId())) {
          refresh();
       }
    }
 
    @Handler
    public void putHypervisorDisconnected(HypervisorDisconnectedEventOut ev) {
-      if (srvId.contentEquals(ev.getServerId())) {
+      if (AxStrings.equals(srvId, ev.getServerId())) {
          refresh();
       }
    }

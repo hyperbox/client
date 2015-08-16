@@ -21,8 +21,6 @@
 
 package io.kamax.hboxc.gui.connector;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.event.connector.ConnectorStateChangedEvent;
@@ -43,6 +41,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class ConnectorDetailedView implements _Refreshable {
 
@@ -100,9 +100,9 @@ public class ConnectorDetailedView implements _Refreshable {
       tabs.setEnabledAt(tabs.indexOfTab("Modules"), conOut.isConnected());
 
       if (conOut.isConnected()) {
-         hostViewer.refresh();
-         netViewer.refresh();
-         taskViewer.refresh();
+         hostViewer.refresh(conOut.getServerId());
+         netViewer.refresh(conOut.getServerId());
+         taskViewer.refresh(conOut.getServerId());
          storeView.show(conOut.getServer());
          userView.show(conOut.getServer());
          modView.show(conOut.getServer());
