@@ -196,7 +196,9 @@ public class ClientCore implements _Core {
 
    @Override
    public void destroy() {
-      storage.destroy();
+      if (storage != null) {
+         storage.destroy();
+      }
    }
 
    @Override
