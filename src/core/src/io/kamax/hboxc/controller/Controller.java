@@ -97,17 +97,8 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
       return HyperboxAPI.getLogHeader(Hyperbox.getVersion().toString());
    }
 
-   private void loadFront() throws HyperboxException {
-      String classToLoad = Configuration.getSetting("view.class", "io.kamax.hboxc.gui.Gui");
-
-      Logger.info("Loading frontend class: " + classToLoad);
-      front = ClassManager.loadClass(_Front.class, classToLoad);
-   }
-
    public void start() throws HyperboxException {
       try {
-         loadFront();
-
          Logger.verbose("-------- Environment variables -------");
          for (String name : System.getenv().keySet()) {
             if (name.startsWith(Configuration.CFG_ENV_PREFIX + Configuration.CFG_ENV_SEPERATOR)) {
@@ -131,8 +122,13 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
          msgWorker = new RequestWorker();
          msgWorker.start();
 
+         String classToLoad = Configuration.getSetting("view.class", "io.kamax.hboxc.gui.Gui");
+         Logger.info("Loading frontend class: " + classToLoad);
+         _Front front = ClassManager.loadClass(_Front.class, classToLoad);
          front.start();
          front.setRequestReceiver(this);
+
+         this.front = front;
 
          core = new ClientCore();
          core.init();
@@ -142,7 +138,12 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
          HyperboxClient.initView(front);
       } catch (Throwable t) {
          Logger.exception(t);
-         front.postError(t, "Fatal error when starting: " + t.getMessage());
+         try {
+            front.postError(t);
+         } catch (Throwable t1) {
+            t.printStackTrace();
+            t1.printStackTrace();
+         }
          stop();
       }
    }
@@ -153,16 +154,23 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
             core.stop();
             core.destroy();
          }
+         Logger.debug("Core was stopped");
          if (front != null) {
             front.stop();
          }
+         Logger.debug("Front-end was stopped");
          if (msgWorker != null) {
             msgWorker.stop();
          }
+         Logger.debug("Message Worker was stopped");
 
          EventManager.get().stop();
+         Logger.debug("EventManager was stopped");
+         Logger.info("Exiting");
          System.exit(0);
       } catch (Throwable t) {
+         Logger.warning("Exception while stopping the client", t);
+         Logger.info("Exiting");
          System.exit(1);
       }
    }

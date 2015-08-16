@@ -48,18 +48,18 @@ public final class MiniUI implements _Front {
 
    @Override
    public void postError(String description, Throwable t) {
-      System.out.println("Fatal error occured during startup: " + t.getMessage());
       try {
          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
          JOptionPane.showMessageDialog(null, "Fatal error occured during startup: " + t.getMessage(), "Fatal error", JOptionPane.ERROR_MESSAGE);
       } catch (Throwable t1) {
-         // we don't care, we just tried in case of
+         System.out.println("Fatal error occured during startup: " + description);
+         t.printStackTrace();
       }
    }
 
    @Override
    public void postError(Throwable t) {
-      // stub
+      postError(t.getMessage(), t);
    }
 
    @Override
@@ -69,7 +69,7 @@ public final class MiniUI implements _Front {
 
    @Override
    public void postError(Throwable t, String s) {
-      // stub
+      postError(s, t);
    }
 
    @Override
