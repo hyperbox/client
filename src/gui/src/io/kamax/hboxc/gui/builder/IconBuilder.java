@@ -39,6 +39,7 @@ import javax.swing.ImageIcon;
 
 public class IconBuilder {
 
+   private static String basePath;
    private static ImageIcon unknownElement = new ImageIcon(getBasePath() + "help.png");
 
    private static ImageIcon hbIcon = new ImageIcon(getBasePath() + "hyperbox-icon_16px.png");
@@ -74,7 +75,11 @@ public class IconBuilder {
    }
 
    private static String getBasePath() {
-      return Configuration.getSetting(HyperboxClient.CFGKEY_BASE_DIR, HyperboxClient.CFGVAL_BASE_DIR) + File.separator + "icons/";
+      if (basePath == null) {
+         basePath = Configuration.getSetting(HyperboxClient.CFGKEY_BASE_DIR, HyperboxClient.CFGVAL_BASE_DIR) + File.separator + "icons/";
+      }
+
+      return basePath;
    }
 
    private static void initClientTasks() {
