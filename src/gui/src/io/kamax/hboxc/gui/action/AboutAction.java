@@ -31,7 +31,7 @@ public class AboutAction extends AbstractAction {
    private static final long serialVersionUID = 4303313451932704011L;
 
    public AboutAction() {
-      super("About Hyperbox", IconBuilder.getHyperbox());
+      super("About", IconBuilder.getHyperbox());
    }
 
    @Override
