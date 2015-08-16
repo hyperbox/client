@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.hypervisor;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.HypervisorIn;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.hypervisor.HypervisorLoaderOut;
@@ -31,12 +30,15 @@ import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
+import io.kamax.hboxc.gui.utils.HypervisorLoaderOutComparator;
+import io.kamax.tool.KxCollections;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class HypervisorConnectView implements _Saveable, _Cancelable {
 
@@ -83,7 +85,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
    }
 
    public void show() {
-      for (HypervisorLoaderOut hypOut : Gui.getServer(srvOut).listHypervisors()) {
+      for (HypervisorLoaderOut hypOut : KxCollections.sort(Gui.getServer(srvOut).listHypervisors(), new HypervisorLoaderOutComparator())) {
          loaderData.addItem(hypOut);
       }
       dialog.pack();
