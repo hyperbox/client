@@ -29,8 +29,6 @@ import io.kamax.hboxc.event.updater.UpdaterUpdateAvailableEvent;
 import io.kamax.hboxc.exception.UpdaterNoNewUpdateException;
 import io.kamax.hboxc.exception.UpdaterRepositoryInvalidFormatException;
 import io.kamax.hboxc.exception.UpdaterScheduleException;
-import io.kamax.hboxc.updater._Release;
-import io.kamax.hboxc.updater._Updater;
 import io.kamax.tool.AxBooleans;
 import io.kamax.tool.AxStrings;
 import io.kamax.tool.Version;
@@ -166,79 +164,82 @@ public class Updater implements _Updater {
 
       @Override
       public void run() {
-         if (!isRunning) {
-            isRunning = true;
-            EventManager.post(new UpdaterCheckStarted());
-            String rep_base = Configuration.getSetting(CFGKEY_UPDATER_REPOSITORY_LOCATION, CFGVAL_UPDATER_REPOSITORY_LOCATION);
-            String repo_channel = getChannel().toLowerCase();
-            String repo_extension = Configuration.getSetting(CFGKEY_UPDATER_REPOSITORY_EXTENSION, CFGVAL_UPDATER_REPOSITORY_EXTENSION);
-            String repoUrlRaw = rep_base + repo_channel + repo_extension;
-            try {
-               URL repoUrl = new URL(repoUrlRaw);
-               URLConnection repoUrlConn = repoUrl.openConnection();
-               BufferedReader in = new BufferedReader(new InputStreamReader(repoUrlConn.getInputStream()));
-               String line = in.readLine();
-               if (line == null) {
-                  throw new UpdaterRepositoryInvalidFormatException("Update data is empty");
-
-               }
-               String releaseRaw[] = line.split(" ");
-               if (releaseRaw.length < 4) {
-                  throw new UpdaterRepositoryInvalidFormatException("Invalid update data - expected at least 4 values, got " + releaseRaw.length);
-               }
-
-               Date releaseDate = null;
-               URL downloadUrl;
-               URL changeLogUrl = null;
-
-               Version version = new Version(releaseRaw[0]);
-               if (!version.isValid()) {
-                  throw new UpdaterRepositoryInvalidFormatException("Invalid version number: " + releaseRaw[1]);
-               }
-
-               // String revision = releaseRaw[1]; // Currently ignored
-
-               try {
-                  downloadUrl = new URL(releaseRaw[3]);
-               } catch (MalformedURLException e) {
-                  throw new UpdaterRepositoryInvalidFormatException("Invalid download URL: " + releaseRaw[3]);
-               }
-
-               try {
-                  releaseDate = new Date(Long.parseLong(releaseRaw[2]) * 1000l);
-               } catch (NumberFormatException e) {
-                  Logger.warning("Invalid timestamp: " + releaseRaw[2]);
-               }
-
-               try {
-                  changeLogUrl = new URL(releaseRaw[4]);
-               } catch (MalformedURLException e) {
-                  Logger.warning("Invalid changelog URL: " + releaseRaw[4]);
-               }
-
-               update = new Release(getChannel(), version, releaseDate, downloadUrl, changeLogUrl);
-               isLastScheduleSuccessful = true;
-               Logger.verbose("Advertised version: " + update.getVersion());
-               if (hasUpdate()) {
-                  Logger.info("New update is available: " + getUpdate().getVersion());
-                  EventManager.post(new UpdaterUpdateAvailableEvent());
-               } else {
-                  Logger.info("No update was found");
-               }
-            } catch (Throwable t) {
-               Logger.exception(t);
-               Logger.warning("Updater check to [ " + repoUrlRaw + " ] failed with " + t.getClass().getSimpleName() + ": " + t.getMessage());
-               errors.add(t.getMessage());
-               isLastScheduleSuccessful = false;
-               EventManager.post(new UpdaterCheckStopped());
-               setScheduleEnable(false);
-            } finally {
-               scheduleLastDate = new Date();
-               isRunning = false;
-               EventManager.post(new UpdaterCheckStopped());
-            }
-         } else {
+         if (isRunning) {
             Logger.debug("Updater working is already running, skipping");
+         }
+
+         isRunning = true;
+         EventManager.post(new UpdaterCheckStarted());
+         String rep_base = Configuration.getSetting(CFGKEY_UPDATER_REPOSITORY_LOCATION, CFGVAL_UPDATER_REPOSITORY_LOCATION);
+         String repo_channel = getChannel().toLowerCase();
+         String repo_extension = Configuration.getSetting(CFGKEY_UPDATER_REPOSITORY_EXTENSION, CFGVAL_UPDATER_REPOSITORY_EXTENSION);
+         String repoUrlRaw = rep_base + repo_channel + repo_extension;
+         try {
+            URL repoUrl = new URL(repoUrlRaw);
+            URLConnection repoUrlConn = repoUrl.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(repoUrlConn.getInputStream()));
+            String line = in.readLine();
+            if (line == null) {
+               throw new UpdaterRepositoryInvalidFormatException("Update data is empty");
+
+            }
+            String releaseRaw[] = line.split(" ");
+            if (releaseRaw.length < 4) {
+               Logger.debug(line);
+               throw new UpdaterRepositoryInvalidFormatException("Invalid update data - expected at least 4 values, got " + releaseRaw.length);
+            }
+
+            Date releaseDate = null;
+            URL downloadUrl;
+            URL changeLogUrl = null;
+
+            Version version = new Version(releaseRaw[0]);
+            if (!version.isValid()) {
+               Logger.debug(line);
+               throw new UpdaterRepositoryInvalidFormatException("Invalid version number: " + releaseRaw[1]);
+            }
+
+            // String revision = releaseRaw[1]; // Currently ignored
+
+            try {
+               releaseDate = new Date(Long.parseLong(releaseRaw[2]) * 1000l);
+            } catch (NumberFormatException e) {
+               Logger.warning("Invalid timestamp: " + releaseRaw[2]);
+            }
+
+            try {
+               downloadUrl = new URL(releaseRaw[3]);
+            } catch (MalformedURLException e) {
+               Logger.debug(line);
+               throw new UpdaterRepositoryInvalidFormatException("Invalid download URL: " + releaseRaw[3]);
+            }
+
+            try {
+               changeLogUrl = new URL(releaseRaw[4]);
+            } catch (MalformedURLException e) {
+               Logger.warning("Invalid changelog URL: " + releaseRaw[4]);
+            }
+
+            update = new Release(getChannel(), version, releaseDate, downloadUrl, changeLogUrl);
+            isLastScheduleSuccessful = true;
+            Logger.verbose("Advertised version: " + update.getVersion());
+            if (hasUpdate()) {
+               Logger.info("New update is available: " + getUpdate().getVersion());
+               EventManager.post(new UpdaterUpdateAvailableEvent());
+            } else {
+               Logger.info("No update was found");
+            }
+         } catch (Throwable t) {
+            Logger.exception(t);
+            Logger.warning("Updater check to [ " + repoUrlRaw + " ] failed with " + t.getClass().getSimpleName() + ": " + t.getMessage());
+            errors.add(t.getMessage());
+            isLastScheduleSuccessful = false;
+            EventManager.post(new UpdaterCheckStopped());
+            setScheduleEnable(false);
+         } finally {
+            scheduleLastDate = new Date();
+            isRunning = false;
+            EventManager.post(new UpdaterCheckStopped());
          }
       }
 
