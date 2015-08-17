@@ -1,1 +1,5 @@
 /out/
+
+src/api/.settings/
+src/core/.settings/
+src/gui/.settings/
