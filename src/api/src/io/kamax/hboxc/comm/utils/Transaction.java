@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.comm.utils;
 
-import net.engio.mbassy.listener.Handler;
 import io.kamax.hbox.comm.Answer;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm._AnswerReceiver;
@@ -34,11 +33,13 @@ import io.kamax.hboxc.back._Backend;
 import io.kamax.hboxc.event.EventManager;
 import io.kamax.hboxc.event.backend.BackendStateEvent;
 import io.kamax.hboxc.exception.ServerDisconnectedException;
+import io.kamax.tool.AxStrings;
 import io.kamax.tool.logging.Logger;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import net.engio.mbassy.listener.Handler;
 
 public final class Transaction implements _AnswerReceiver, _EventReceiver {
 
@@ -194,7 +195,7 @@ public final class Transaction implements _AnswerReceiver, _EventReceiver {
    @Override
    public void putAnswer(Answer ans) {
 
-      if (ans.getExchangeId().contentEquals(request.getExchangeId())) {
+      if (AxStrings.isEmpty(ans.getExchangeId()) || ans.getExchangeId().contentEquals(request.getExchangeId())) {
          lastMessageTime = System.currentTimeMillis();
          if (ans.isExchangeStarted()) {
             Logger.debug("Got start message for ExchangeID " + ans.getExchangeId());

@@ -21,10 +21,10 @@
 
 package io.kamax.hboxc.core.server;
 
-import net.engio.mbassy.listener.Handler;
 import io.kamax.hbox.Configuration;
 import io.kamax.hbox.HyperboxAPI;
 import io.kamax.hbox.comm.Answer;
+import io.kamax.hbox.comm.AnswerType;
 import io.kamax.hbox.comm.CommObjets;
 import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.HyperboxTasks;
@@ -96,6 +96,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.engio.mbassy.listener.Handler;
 
 public class Server implements _Server, _AnswerReceiver {
 
@@ -704,20 +705,24 @@ public class Server implements _Server, _AnswerReceiver {
 
          Transaction helloTrans = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.Hello));
          if (!helloTrans.sendAndWait()) {
-            throw new HyperboxException("Unable to welcome the server : " + helloTrans.getError());
+            if (AnswerType.INVALID_PROTOCOL.equals(helloTrans.getFooter().getType())) {
+               throw new HyperboxException("Incompatible protocol version. Make sure client and server are at the same version.");
+            } else {
+               throw new HyperboxException("Error occured during initial handshake with the server.");
+            }
          }
 
          if (AxBooleans.get(Configuration.getSetting(CFGKEY_SERVER_VALIDATE, CFGVAL_SERVER_VALIDATE))) {
             HelloOut helloOut = helloTrans.extractItem(HelloOut.class);
             if (helloOut == null) {
-               throw new HyperboxException("Server did not present itself, will disconnect");
+               throw new HyperboxException("Incompatible protocol version. Make sure client and server are at the same version.");
             }
             Logger.info("Server Network Protocol Version: " + helloOut.getProtocolVersion());
 
             if (AxBooleans.get(Configuration.getSetting(CFGKEY_SERVER_VALIDATE_VERSION, CFGVAL_SERVER_VALIDATE_VERSION))) {
                if (!HyperboxAPI.getProtocolVersion().isCompatible(helloOut.getProtocolVersion())) {
                   throw new HyperboxException("Client and Server Network protocol do not match, cannot connect: Client version is "
-                        + HyperboxAPI.getProtocolVersion() + " and Server version is " + helloOut.getProtocolVersion());
+                        + HyperboxAPI.getProtocolVersion() + " but Server version is " + helloOut.getProtocolVersion());
                }
             }
          }

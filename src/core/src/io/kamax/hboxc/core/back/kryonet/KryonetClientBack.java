@@ -36,11 +36,8 @@ import io.kamax.hboxc.event.backend.BackendStateEvent;
 import io.kamax.hboxc.state.BackendConnectionState;
 import io.kamax.hboxc.state.BackendStates;
 import io.kamax.tool.logging.Logger;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.KryoNetException;
@@ -52,9 +49,6 @@ public final class KryonetClientBack implements _Backend {
    private Client client;
    private volatile BackendStates state = BackendStates.Stopped;
    private volatile BackendConnectionState connState = BackendConnectionState.Disconnected;
-
-   private Thread mainThread = Thread.currentThread();
-   private Queue<Throwable> updateThreadEx = new LinkedList<Throwable>();
 
    @Override
    public String getId() {
@@ -92,7 +86,6 @@ public final class KryonetClientBack implements _Backend {
                KryonetDefaultSettings.CFGVAL_KRYO_NET_OBJECT_BUFFER_SIZE));
          client = new Client(netBufferWriteSize, netBufferObjectSize);
          client.start();
-         client.getUpdateThread().setUncaughtExceptionHandler(new KryoUncaughtExceptionHandler());
          client.addListener(new MainListener());
          KryoRegister.register(client.getKryo());
          Logger.info("Backend Init Sequence completed");
@@ -150,17 +143,12 @@ public final class KryonetClientBack implements _Backend {
          client.connect(5000, host, port);
          setState(BackendConnectionState.Connected);
       } catch (Throwable e) {
-         try {
-            if (!updateThreadEx.isEmpty()) {
-               e = updateThreadEx.poll();
-               if (e instanceof KryoNetException) {
-                  throw new HyperboxException("Server is using an incompatible network protocol version", e);
-               }
-            }
+         disconnect();
+
+         if (e instanceof KryoNetException) {
+            throw new HyperboxException("Server is using an incompatible network protocol version", e);
+         } else {
             throw new HyperboxException(e);
-         } finally {
-            Logger.debug(e.getMessage());
-            disconnect();
          }
       }
    }
@@ -224,22 +212,14 @@ public final class KryonetClientBack implements _Backend {
 
       @Override
       public void disconnected(Connection connection) {
+         if (connection.getLastProtocolError() != null) {
+            for (_AnswerReceiver ar : ansReceivers.values()) {
+               ar.putAnswer(Answer.INVALID_PROTOCOL);
+            }
+         }
+
          Logger.info("Disconnected from Hyperbox server");
          disconnect();
-      }
-   }
-
-   private class KryoUncaughtExceptionHandler implements UncaughtExceptionHandler {
-
-      @Override
-      public void uncaughtException(Thread arg0, Throwable arg1) {
-         Logger.error("Uncaught exception in Kryonet Update Thread: " + arg1.getMessage());
-         try {
-            updateThreadEx.add(arg1);
-            mainThread.interrupt();
-         } catch (Throwable t) {
-            Logger.error("Failed to insert exception of update thread: " + t.getMessage());
-         }
       }
    }
 
