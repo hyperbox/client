@@ -73,8 +73,8 @@ public class DefaultModuleManager implements _ModuleManager {
          File baseDirFile = new File(baseDir).getAbsoluteFile();
          Logger.info("Searching in " + baseDirFile.getAbsolutePath() + " for modules...");
          if (!baseDirFile.isDirectory() || !baseDirFile.canRead()) {
-            Logger.error("Unable to refresh modules for Base Directory " + baseDirFile + ": either not a directory or cannot be read");
-
+            Logger.warning("Unable to refresh modules for Base Directory " + baseDirFile + ": either not a directory or cannot be read");
+            continue;
          }
 
          Logger.debug(baseDirFile.getAbsolutePath() + " is a readable directory, processing...");
