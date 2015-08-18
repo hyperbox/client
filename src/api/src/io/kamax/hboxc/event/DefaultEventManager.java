@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.event;
 
-import net.engio.mbassy.bus.MBassador;
-import net.engio.mbassy.bus.config.BusConfiguration;
 import io.kamax.hbox.exception.HyperboxException;
 import io.kamax.tool.logging.Logger;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -29,6 +27,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.bus.config.BusConfiguration;
 
 public class DefaultEventManager implements _EventManager, Runnable, UncaughtExceptionHandler {
 

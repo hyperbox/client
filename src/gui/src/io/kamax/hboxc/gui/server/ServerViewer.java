@@ -21,8 +21,6 @@
 
 package io.kamax.hboxc.gui.server;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.event.server.ServerEvent;
 import io.kamax.hboxc.gui.Gui;
@@ -37,6 +35,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class ServerViewer implements _Refreshable, _ServerReceiver {
 

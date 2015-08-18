@@ -11,17 +11,15 @@
  * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package io.kamax.hboxc.gui.vm.edit;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.ConsoleIn;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.io.BooleanSettingIO;
@@ -37,6 +35,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class OutputVmEdit {
 
@@ -107,7 +106,6 @@ public class OutputVmEdit {
       displayPanel.add(accel2dBox, "growx,pushx,wrap");
       displayPanel.add(accel3dLabel);
       displayPanel.add(accel3dBox, "growx,pushx,wrap");
-
 
       consolePanel = new JPanel(new MigLayout());
       consolePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Console"));

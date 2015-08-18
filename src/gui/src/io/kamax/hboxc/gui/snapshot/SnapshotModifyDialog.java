@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.snapshot;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.Request;
@@ -40,6 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class SnapshotModifyDialog implements _Saveable, _Cancelable {
 

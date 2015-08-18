@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.hypervisor;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.network.NetAdaptorOut;
 import io.kamax.hbox.comm.out.network.NetModeOut;
 import io.kamax.hboxc.gui.ViewEventManager;
@@ -35,6 +34,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class HypervisorNetModeViewer implements _Refreshable, _NetAdaptorListReceiver {
 

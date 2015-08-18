@@ -1,6 +1,5 @@
 package io.kamax.hboxc.gui.action.machine;
 
-
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.vm.MachineLogFileViewer;

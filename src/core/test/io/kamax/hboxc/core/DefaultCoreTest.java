@@ -23,8 +23,6 @@ package io.kamax.hboxc.core;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.UserIn;
 import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.hboxc.core.ClientCore;
-import io.kamax.hboxc.core.CoreTest;
 import io.kamax.hboxc.event.EventManager;
 import org.junit.BeforeClass;
 

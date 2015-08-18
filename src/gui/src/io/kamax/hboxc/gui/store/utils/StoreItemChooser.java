@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.store.utils;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.StoreIn;
 import io.kamax.hbox.comm.in.StoreItemIn;
 import io.kamax.hbox.comm.out.StoreItemOut;
@@ -63,6 +62,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
+import net.miginfocom.swing.MigLayout;
 
 public class StoreItemChooser implements _Saveable, _Cancelable {
 

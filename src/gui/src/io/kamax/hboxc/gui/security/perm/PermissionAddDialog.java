@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.security.perm;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.SecurityAccess;
 import io.kamax.hbox.comm.SecurityAction;
 import io.kamax.hbox.comm.SecurityItem;
@@ -41,6 +40,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class PermissionAddDialog implements _Saveable, _Cancelable, _MachineListReceiver {
 

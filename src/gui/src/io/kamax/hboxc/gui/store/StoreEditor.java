@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.store;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.StoreIn;
 import io.kamax.hbox.comm.out.StoreItemOut;
 import io.kamax.hbox.comm.out.StoreOut;
@@ -43,6 +42,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import net.miginfocom.swing.MigLayout;
 
 public class StoreEditor implements _Saveable, _Cancelable {
 

@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.tasks;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.TaskOut;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hboxc.gui.Gui;
@@ -34,6 +33,7 @@ import io.kamax.helper.swing.JTextFieldUtils;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class TaskView implements _Cancelable {
 

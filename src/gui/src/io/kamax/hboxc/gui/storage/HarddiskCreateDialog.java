@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.storage;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.MediumIn;
 import io.kamax.hbox.comm.in.StoreItemIn;
 import io.kamax.hbox.comm.out.ServerOut;
@@ -42,6 +41,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class HarddiskCreateDialog implements _Saveable, _Cancelable {
 

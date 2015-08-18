@@ -21,11 +21,9 @@
 
 package io.kamax.hboxc.core.connector;
 
-import net.engio.mbassy.listener.Handler;
 import io.kamax.hbox.comm.in.UserIn;
 import io.kamax.hbox.exception.HyperboxException;
 import io.kamax.hboxc.comm.io.factory.ConnectorIoFactory;
-import io.kamax.hboxc.core.connector._Connector;
 import io.kamax.hboxc.event.EventManager;
 import io.kamax.hboxc.event.connector.ConnectorConnectedEvent;
 import io.kamax.hboxc.event.connector.ConnectorDisconnectedEvent;
@@ -36,6 +34,7 @@ import io.kamax.hboxc.server._Server;
 import io.kamax.hboxc.state.ConnectionState;
 import io.kamax.tool.AxStrings;
 import io.kamax.tool.logging.Logger;
+import net.engio.mbassy.listener.Handler;
 
 public class Connector implements _Connector {
 

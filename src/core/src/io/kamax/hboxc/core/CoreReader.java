@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.core;
 
-import net.engio.mbassy.listener.Handler;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.comm.input.ConnectorInput;
 import io.kamax.hboxc.comm.io.factory.BackendIoFactory;
@@ -31,8 +30,6 @@ import io.kamax.hboxc.comm.io.factory.ServerIoFactory;
 import io.kamax.hboxc.comm.output.BackendOutput;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.comm.output.ConsoleViewerOutput;
-import io.kamax.hboxc.core._Core;
-import io.kamax.hboxc.core._CoreReader;
 import io.kamax.hboxc.core.server.CachedServerReader;
 import io.kamax.hboxc.event.EventManager;
 import io.kamax.hboxc.event.server.ServerDisconnectedEvent;
@@ -43,6 +40,7 @@ import io.kamax.hboxc.updater._Updater;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import net.engio.mbassy.listener.Handler;
 
 public class CoreReader implements _CoreReader {
 

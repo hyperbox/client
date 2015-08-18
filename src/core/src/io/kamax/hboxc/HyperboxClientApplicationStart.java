@@ -21,7 +21,6 @@
 package io.kamax.hboxc;
 
 import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.hboxc.Hyperbox;
 import io.kamax.hboxc.controller.Controller;
 import java.util.Arrays;
 import java.util.HashSet;

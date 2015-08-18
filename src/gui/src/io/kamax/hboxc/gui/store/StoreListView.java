@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui.store;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.StoreOut;
 import io.kamax.hbox.comm.out.event.store.StoreEventOut;
@@ -49,6 +47,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public final class StoreListView implements _StoreSelector, _Refreshable, _SingleServerSelector, _StoreListReceiver {
 

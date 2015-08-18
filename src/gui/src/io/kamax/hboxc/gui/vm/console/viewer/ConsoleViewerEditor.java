@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.vm.console.viewer;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hboxc.comm.input.ConsoleViewerInput;
 import io.kamax.hboxc.comm.output.ConsoleViewerOutput;
@@ -37,6 +36,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class ConsoleViewerEditor implements _Saveable, _Cancelable {
 

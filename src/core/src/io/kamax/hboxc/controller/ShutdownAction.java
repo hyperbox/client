@@ -22,7 +22,6 @@ package io.kamax.hboxc.controller;
 
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm._AnswerReceiver;
-import io.kamax.hboxc.controller.ClientTasks;
 import io.kamax.hboxc.controller.action.AbstractClientControllerSingleAction;
 import io.kamax.hboxc.core._Core;
 import io.kamax.hboxc.front._Front;

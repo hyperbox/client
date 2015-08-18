@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.storage;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.StorageControllerIn;
 import io.kamax.hbox.comm.in.StorageControllerTypeIn;
 import io.kamax.hbox.comm.io.BooleanSettingIO;
@@ -33,6 +32,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public final class StorageControllerViewer {
 

@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hboxc.event.updater.UpdaterUpdateAvailableEvent;
 import io.kamax.hboxc.gui.notification.UpdateAvailableNotification;
 import io.kamax.tool.logging.Logger;
@@ -29,6 +27,8 @@ import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class NotificationPanel extends JPanel {

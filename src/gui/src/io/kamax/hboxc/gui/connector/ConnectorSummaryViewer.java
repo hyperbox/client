@@ -21,8 +21,6 @@
 
 package io.kamax.hboxc.gui.connector;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.event.connector.ConnectorEvent;
 import io.kamax.hboxc.gui.ViewEventManager;
@@ -35,6 +33,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class ConnectorSummaryViewer implements _Refreshable, _ConnectorReceiver {
 

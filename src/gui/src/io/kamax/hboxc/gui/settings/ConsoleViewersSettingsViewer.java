@@ -21,8 +21,6 @@
 
 package io.kamax.hboxc.gui.settings;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hboxc.comm.output.ConsoleViewerOutput;
 import io.kamax.hboxc.event.consoleviewer.ConsoleViewerEvent;
 import io.kamax.hboxc.gui.Gui;
@@ -41,6 +39,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
 

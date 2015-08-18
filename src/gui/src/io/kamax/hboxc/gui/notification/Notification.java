@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.notification;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hboxc.controller.ClientTasks;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import java.awt.Color;
@@ -30,6 +29,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class Notification extends JPanel {

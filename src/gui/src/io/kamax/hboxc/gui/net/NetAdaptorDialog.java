@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.net;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.NetAdaptorIn;
 import io.kamax.hbox.comm.out.network.NetAdaptorOut;
 import io.kamax.hbox.exception.HyperboxException;
@@ -37,6 +36,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
+import net.miginfocom.swing.MigLayout;
 
 public class NetAdaptorDialog implements _Saveable, _Cancelable {
 

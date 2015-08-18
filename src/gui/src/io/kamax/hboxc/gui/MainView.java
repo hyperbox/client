@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hboxc.PreferencesManager;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.tasks.TaskListView;
@@ -34,6 +33,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import net.miginfocom.swing.MigLayout;
 
 public final class MainView {
 

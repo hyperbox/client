@@ -20,8 +20,8 @@
 
 package io.kamax.hboxc.gui.storage;
 
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public abstract class StorageDeviceViewer {
 

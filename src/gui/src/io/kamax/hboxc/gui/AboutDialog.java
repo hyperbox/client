@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.HyperboxAPI;
 import io.kamax.hboxc.Hyperbox;
 import io.kamax.hboxc.gui.builder.IconBuilder;
@@ -33,6 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import net.miginfocom.swing.MigLayout;
 
 public class AboutDialog {
 

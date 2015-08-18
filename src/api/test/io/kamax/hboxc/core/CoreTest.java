@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.UserIn;
 import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.hboxc.core._Core;
 import io.kamax.hboxc.state.CoreState;
 import io.kamax.tool.logging.LogLevel;
 import io.kamax.tool.logging.Logger;

@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.net;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.io.NetService_NAT_IO;
 import io.kamax.hbox.comm.io.NetService_NAT_IP4_IO;
 import io.kamax.hbox.comm.io.NetService_NAT_IP6_IO;
@@ -43,6 +42,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
+import net.miginfocom.swing.MigLayout;
 
 public class NATNetworkNATRulesDialog implements _Saveable, _Cancelable, _Refreshable {
 

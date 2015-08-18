@@ -29,7 +29,6 @@ import io.kamax.hboxc.core._ConsoleViewer;
 import io.kamax.hboxc.core.connector.Connector;
 import io.kamax.hboxc.core.connector._Connector;
 import io.kamax.hboxc.core.console.viewer.ConsoleViewer;
-import io.kamax.hboxc.core.storage._CoreStorage;
 import io.kamax.tool.logging.Logger;
 import java.io.File;
 import java.io.FileOutputStream;

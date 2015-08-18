@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.vm.edit;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.in.NetworkInterfaceIn;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import net.miginfocom.swing.MigLayout;
 
 public final class NetworkVmEdit {
 

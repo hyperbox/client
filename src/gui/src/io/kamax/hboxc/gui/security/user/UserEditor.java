@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.security.user;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.UserIn;
 import io.kamax.hbox.comm.out.security.UserOut;
 import io.kamax.hbox.exception.HyperboxException;
@@ -38,6 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class UserEditor implements _Saveable, _Cancelable {
 

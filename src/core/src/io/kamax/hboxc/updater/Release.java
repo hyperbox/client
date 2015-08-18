@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.updater;
 
-import io.kamax.hboxc.updater._Release;
 import io.kamax.tool.Version;
 import java.net.URL;
 import java.util.Date;

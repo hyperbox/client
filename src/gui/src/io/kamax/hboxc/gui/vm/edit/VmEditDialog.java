@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.vm.edit;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.Request;
@@ -52,6 +51,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import net.miginfocom.swing.MigLayout;
 
 public class VmEditDialog {
 

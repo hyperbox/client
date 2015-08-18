@@ -39,7 +39,6 @@ import io.kamax.hbox.comm.out.storage.MediumOut;
 import io.kamax.hbox.comm.output.MachineOutputTest;
 import io.kamax.hbox.comm.output.MediumOutputTest;
 import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.hboxc.back._Backend;
 import io.kamax.hboxc.comm.utils.Transaction;
 import io.kamax.hboxc.event.EventManager;
 import io.kamax.tool.logging.LogLevel;

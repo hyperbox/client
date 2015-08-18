@@ -21,8 +21,6 @@
 
 package io.kamax.hboxc.gui.security.user;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.event.security.UserEventOut;
@@ -52,6 +50,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class UserListView implements _UserSelector, _Refreshable, _SingleServerSelector, _UserListReceiver {
 

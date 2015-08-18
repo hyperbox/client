@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui.vm.view;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hboxc.event.machine.MachineDataChangedEvent;
 import io.kamax.hboxc.event.machine.MachineRemovedEvent;
@@ -34,6 +32,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public final class VmDetailedView implements _MachineReceiver, _Refreshable {
 

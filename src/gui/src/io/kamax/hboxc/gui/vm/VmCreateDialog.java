@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.vm;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.Request;
@@ -47,6 +46,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
+import net.miginfocom.swing.MigLayout;
 
 public class VmCreateDialog implements _Saveable, _Cancelable {
 

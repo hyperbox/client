@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.storage;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.MediumIn;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.storage.MediumOut;
@@ -28,6 +27,7 @@ import io.kamax.hbox.constant.MediumAttribute;
 import io.kamax.hboxc.gui.Gui;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public final class MediumViewer {
 

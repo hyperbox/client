@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.vm.edit;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.in.Action;
 import io.kamax.hbox.comm.in.MachineIn;
@@ -69,6 +68,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import net.miginfocom.swing.MigLayout;
 
 public class StorageVmEdit {
 

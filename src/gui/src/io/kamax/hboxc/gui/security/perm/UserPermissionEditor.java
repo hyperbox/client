@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.security.perm;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
@@ -49,6 +48,7 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import net.miginfocom.swing.MigLayout;
 
 public class UserPermissionEditor implements _Refreshable {
 

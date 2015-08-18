@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.server;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.constant.EntityType;
@@ -37,6 +36,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class ServerEditorDialog implements _Saveable, _Cancelable {
 

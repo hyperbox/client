@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.core;
 
-import io.kamax.hboxc.core._Entity;
 import io.kamax.setting.SettingManager;
 import io.kamax.setting._Setting;
 import java.util.ArrayList;

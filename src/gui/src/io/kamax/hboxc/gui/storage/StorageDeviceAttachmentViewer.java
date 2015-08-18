@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.storage;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.MediumIn;
 import io.kamax.hbox.comm.in.StorageControllerTypeIn;
 import io.kamax.hbox.comm.in.StorageDeviceAttachmentIn;
@@ -35,6 +34,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class StorageDeviceAttachmentViewer {
 

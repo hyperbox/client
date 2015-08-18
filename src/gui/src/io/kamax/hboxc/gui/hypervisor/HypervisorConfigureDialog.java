@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.hypervisor;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.HypervisorIn;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hbox.exception.HyperboxException;
@@ -35,6 +34,7 @@ import io.kamax.hboxc.gui.builder.JDialogBuilder;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class HypervisorConfigureDialog implements _Saveable, _Cancelable {
 

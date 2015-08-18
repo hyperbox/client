@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.connector;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.UserIn;
 import io.kamax.hboxc.comm.input.ConnectorInput;
@@ -40,6 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
 

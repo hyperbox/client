@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.builder;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hboxc.gui.MainView;
 import io.kamax.hboxc.gui.utils.JDialogUtils;
 import java.awt.Dialog.ModalityType;
@@ -29,6 +28,7 @@ import java.awt.Image;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.WindowConstants;
+import net.miginfocom.swing.MigLayout;
 
 public class JDialogBuilder {
 

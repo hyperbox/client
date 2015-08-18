@@ -20,9 +20,9 @@
 
 package io.kamax.hboxc.gui.session;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.exception.HyperboxException;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public final class SessionView {
 

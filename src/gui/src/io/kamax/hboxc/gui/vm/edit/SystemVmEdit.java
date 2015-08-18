@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.vm.edit;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.io.BooleanSettingIO;
 import io.kamax.hbox.comm.io.PositiveNumberSettingIO;
@@ -37,6 +36,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class SystemVmEdit {
 

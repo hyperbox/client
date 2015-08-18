@@ -20,14 +20,14 @@
 
 package io.kamax.hboxc.gui;
 
-import net.engio.mbassy.IPublicationErrorHandler;
-import net.engio.mbassy.PublicationError;
 import java.awt.Dimension;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import net.engio.mbassy.IPublicationErrorHandler;
+import net.engio.mbassy.PublicationError;
 
 public class ErrorDisplay implements IPublicationErrorHandler {
 

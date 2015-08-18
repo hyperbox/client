@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.net;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.hypervisor.GuestNetworkInterfaceOut;
 import io.kamax.hbox.comm.out.network.NetworkInterfaceOut;
 import io.kamax.hboxc.gui.worker.receiver._GuestNetworkInterfaceReceiver;
@@ -30,6 +29,7 @@ import io.kamax.tool.AxStrings;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class NetworkInterfaceSummary extends JPanel implements _GuestNetworkInterfaceReceiver {
 

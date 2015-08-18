@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui.tasks;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.TaskOut;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.event.server.ServerConnectedEvent;
@@ -49,6 +47,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class TaskListView implements _TaskSelector, _Refreshable, _TaskListReceiver {
 

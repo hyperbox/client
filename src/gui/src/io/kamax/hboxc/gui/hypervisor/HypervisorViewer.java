@@ -21,8 +21,6 @@
 
 package io.kamax.hboxc.gui.hypervisor;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorConnectedEventOut;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorDisconnectedEventOut;
 import io.kamax.hbox.comm.out.hypervisor.HypervisorOut;
@@ -34,6 +32,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public class HypervisorViewer implements _Refreshable {
 

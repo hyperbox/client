@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.vm.view;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.comm.out.hypervisor.ScreenshotOut;
 import io.kamax.hboxc.gui._Refreshable;
@@ -37,6 +36,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.event.AncestorEvent;
+import net.miginfocom.swing.MigLayout;
 
 public class VmConsoleView implements _Refreshable, _MachineScreenshotReceiver {
 

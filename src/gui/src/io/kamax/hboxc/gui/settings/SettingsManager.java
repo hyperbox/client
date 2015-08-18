@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.settings;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hboxc.gui.MainView;
@@ -47,6 +46,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import net.miginfocom.swing.MigLayout;
 
 public class SettingsManager implements _Saveable, _Cancelable {
 

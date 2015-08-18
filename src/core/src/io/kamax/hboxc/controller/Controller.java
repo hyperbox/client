@@ -186,6 +186,7 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
    }
 
    private class RequestWorker implements _ClientMessageReceiver, Runnable {
+
       private boolean running;
       private Thread thread;
       private BlockingQueue<MessageInput> queue;

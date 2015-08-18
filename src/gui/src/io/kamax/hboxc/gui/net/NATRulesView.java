@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.net;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.io.NATRuleIO;
 import io.kamax.hbox.hypervisor.net._NATRule;
 import io.kamax.hboxc.gui.builder.IconBuilder;
@@ -35,6 +34,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import net.miginfocom.swing.MigLayout;
 
 public class NATRulesView {
 
