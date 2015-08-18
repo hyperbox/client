@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.net;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.io.NetService_NAT_IO;
 import io.kamax.hbox.comm.io.NetService_NAT_IP4_IO;
 import io.kamax.hbox.exception.HyperboxException;
@@ -36,12 +35,15 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class MachineNATRulesDialog implements _Saveable, _Cancelable, _Refreshable {
 
+   /*
    private String srvId;
    private String vmId;
    private String adaptId;
+    */
 
    private JDialog dialog;
    private NATRulesView ip4;
@@ -57,9 +59,11 @@ public class MachineNATRulesDialog implements _Saveable, _Cancelable, _Refreshab
    }
 
    public MachineNATRulesDialog(String srvId, String vmId, String adaptId) {
+      /*
       this.srvId = srvId;
       this.vmId = vmId;
       this.adaptId = adaptId;
+       */
 
       ip4 = new NATRulesView();
       RefreshUtil.set(ip4.getComponent(), new _Refreshable() {
