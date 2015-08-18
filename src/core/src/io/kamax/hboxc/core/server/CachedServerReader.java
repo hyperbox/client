@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.core.server;
 
-import net.engio.mbassy.listener.Handler;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.in.MediumIn;
 import io.kamax.hbox.comm.in.NetworkAttachModeIn;
@@ -44,6 +43,7 @@ import io.kamax.hbox.comm.out.event.machine.MachineRegistrationEventOut;
 import io.kamax.hbox.comm.out.event.machine.MachineSnapshotDataChangedEventOut;
 import io.kamax.hbox.comm.out.event.machine.MachineStateEventOut;
 import io.kamax.hbox.comm.out.event.module.ModuleEventOut;
+import io.kamax.hbox.comm.out.event.server.ServerConnectionStateEventOut;
 import io.kamax.hbox.comm.out.event.snapshot.SnapshotDeletedEventOut;
 import io.kamax.hbox.comm.out.event.snapshot.SnapshotModifiedEventOut;
 import io.kamax.hbox.comm.out.event.snapshot.SnapshotRestoredEventOut;
@@ -96,6 +96,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import net.engio.mbassy.listener.Handler;
 
 public class CachedServerReader implements _ServerReader {
 
@@ -124,6 +125,7 @@ public class CachedServerReader implements _ServerReader {
 
    private void reset() {
       mOutListCache = new ConcurrentHashMap<String, MachineOut>();
+      mOutListCacheUpdate = -1L;
       mOutCache = new ConcurrentHashMap<String, MachineOut>();
       invalidMachineUuidSet = new LinkedHashSet<String>();
 
@@ -277,6 +279,14 @@ public class CachedServerReader implements _ServerReader {
       }
    }
 
+   @Handler
+   private void putServerConnectionStateEventOut(ServerConnectionStateEventOut ev) {
+      if (AxStrings.equals(getId(), ev.getServerId())) {
+         Logger.verbose("Clearing cache for server " + toString());
+         reset();
+      }
+   }
+
    private void insertMachine(String vmId) {
       insertMachine(reader.getMachine(vmId));
    }
@@ -369,7 +379,7 @@ public class CachedServerReader implements _ServerReader {
 
    @Override
    public List<MachineOut> listMachines() {
-      if (mOutListCacheUpdate == null) {
+      if (mOutListCacheUpdate <= 0L) {
          updateMachineList();
       }
 
