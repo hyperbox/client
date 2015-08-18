@@ -20,8 +20,6 @@
 
 package io.kamax.hboxc.gui;
 
-import net.engio.mbassy.listener.Handler;
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorConnectionStateEventOut;
@@ -85,6 +83,8 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
+import net.engio.mbassy.listener.Handler;
+import net.miginfocom.swing.MigLayout;
 
 public final class ServerMachineView implements _MachineSelector, _ServerSelector, _ConnectorSelector, _Refreshable {
 
@@ -372,13 +372,15 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
    }
 
    private void refresh(ServerOut srvOut) {
-
       DefaultMutableTreeNode srvNode = srvNodes.get(srvOut.getId());
       srvNode.removeAllChildren();
       vmNodes.get(srvOut.getId()).clear();
       treeModel.reload(srvNode);
       if (srvOut.isHypervisorConnected()) {
+         Logger.debug(srvOut.getName() + " is now connected to an hypervisor, refreshing list of VMs");
          MachineListWorker.execute(new MachineListReceiver(), srvOut.getId());
+      } else {
+         Logger.debug(srvOut.getName() + " is not connected to an hypervisor, skipping list of VMs");
       }
    }
 

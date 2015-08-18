@@ -218,6 +218,7 @@ public final class Gui implements _Front {
    }
 
    public static void exit() {
+      Logger.info("Got exit signal from user");
       post(new MessageInput(new Request(Command.CUSTOM, ClientTasks.Exit)));
    }
 
