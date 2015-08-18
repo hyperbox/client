@@ -20,7 +20,6 @@
 
 package io.kamax.hboxc.gui.net;
 
-import net.miginfocom.swing.MigLayout;
 import io.kamax.hbox.comm.in.NetworkInterfaceIn;
 import io.kamax.hbox.comm.out.network.NetworkAttachModeOut;
 import io.kamax.hbox.comm.out.network.NetworkAttachNameOut;
@@ -42,6 +41,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 
 public class NetworkInterfaceViewer {
 
@@ -137,7 +137,7 @@ public class NetworkInterfaceViewer {
          if (enableNicValue.isEnabled()) {
             nicIn.setCableConnected(connectedValue.isSelected());
             nicIn.setAttachMode(attachModeValue.getSelectedItem().toString());
-            nicIn.setAttachName(attachNameValue.getSelectedItem().toString());
+            nicIn.setAttachName(AxStrings.get(attachNameValue.getSelectedItem()));
             nicIn.setAdapterType(adapterTypeValue.getSelectedItem().toString());
             nicIn.setMacAddress(macAddrValue.getText());
          }
