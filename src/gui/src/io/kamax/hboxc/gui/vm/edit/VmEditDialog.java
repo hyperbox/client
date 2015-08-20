@@ -27,16 +27,18 @@ import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hboxc.gui.Gui;
-import io.kamax.hboxc.gui.MainView;
+import io.kamax.hboxc.gui._Cancelable;
+import io.kamax.hboxc.gui._Saveable;
+import io.kamax.hboxc.gui.action.CancelAction;
+import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
+import io.kamax.hboxc.gui.builder.JDialogBuilder;
 import io.kamax.hboxc.gui.worker.receiver._MachineReceiver;
 import io.kamax.hboxc.gui.workers.MachineGetWorker;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -48,12 +50,11 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
 
-public class VmEditDialog {
+public class VmEditDialog implements _Saveable, _Cancelable {
 
    private final String GENERAL = "General";
    private final String SYSTEM = "System";
@@ -97,11 +98,6 @@ public class VmEditDialog {
       audioEdit = new AudioVmEdit();
       networkEdit = new NetworkVmEdit();
 
-      mainDialog = new JDialog(MainView.getMainFrame());
-      mainDialog.setIconImage(IconBuilder.getTask(HypervisorTasks.MachineModify).getImage());
-      mainDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
-      mainDialog.setSize(1000, 600);
-
       layout = new CardLayout();
       sectionPanels = new JPanel(layout);
 
@@ -136,8 +132,8 @@ public class VmEditDialog {
       split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, rightPane);
       split.setBorder(null);
 
-      saveButton = new JButton(new SaveAction());
-      cancelButton = new JButton(new CancelAction());
+      saveButton = new JButton(new SaveAction(this));
+      cancelButton = new JButton(new CancelAction(this));
       refreshProgress = new JProgressBar();
       refreshProgress.setVisible(false);
 
@@ -146,6 +142,10 @@ public class VmEditDialog {
       buttonsPanel.add(cancelButton);
       buttonsPanel.add(refreshProgress, "growx,pushx");
 
+      mainDialog = JDialogBuilder.get(saveButton);
+      mainDialog.setIconImage(IconBuilder.getTask(HypervisorTasks.MachineModify).getImage());
+      mainDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
+      mainDialog.setSize(1000, 600);
       mainDialog.getContentPane().setLayout(new MigLayout());
       mainDialog.getContentPane().add(split, "grow,push,wrap");
       mainDialog.getContentPane().add(buttonsPanel, "grow x");
@@ -171,6 +171,7 @@ public class VmEditDialog {
       mIn = null;
    }
 
+   @Override
    public void save() {
       generalEdit.save();
       systemEdit.save();
@@ -184,38 +185,9 @@ public class VmEditDialog {
       hide();
    }
 
+   @Override
    public void cancel() {
       hide();
-   }
-
-   @SuppressWarnings("serial")
-   private class SaveAction extends AbstractAction {
-
-      public SaveAction() {
-         super("Save");
-         setEnabled(true);
-      }
-
-      @Override
-      public void actionPerformed(ActionEvent arg0) {
-         VmEditDialog.this.save();
-      }
-
-   }
-
-   @SuppressWarnings("serial")
-   private class CancelAction extends AbstractAction {
-
-      public CancelAction() {
-         super("Cancel");
-         setEnabled(true);
-      }
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         VmEditDialog.this.cancel();
-      }
-
    }
 
    private class ListSelect implements ListSelectionListener {
@@ -273,23 +245,12 @@ public class VmEditDialog {
 
       @Override
       public void put(final MachineOut mOut) {
-         if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-               @Override
-               public void run() {
-                  put(mOut);
-               }
-            });
-         } else {
-            generalEdit.update(mOut, mIn);
-            systemEdit.update(mOut, mIn);
-            outputEdit.update(mOut, mIn);
-            storageEdit.update(mOut, mIn);
-            audioEdit.update(mOut, mIn);
-            networkEdit.update(mOut, mIn);
-         }
-
+         generalEdit.update(mOut, mIn);
+         systemEdit.update(mOut, mIn);
+         outputEdit.update(mOut, mIn);
+         storageEdit.update(mOut, mIn);
+         audioEdit.update(mOut, mIn);
+         networkEdit.update(mOut, mIn);
       }
 
    }
