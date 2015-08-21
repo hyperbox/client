@@ -223,19 +223,22 @@ public final class Gui implements _Front {
    }
 
    public static _HypervisorModel getHypervisorModel(String hypId) {
-
-      try {
-         Set<_HypervisorModel> models = ClassManager.getAllOrFail(_HypervisorModel.class);
-         for (_HypervisorModel model : models) {
-            List<String> supported = model.getSupported();
-            if (supported.contains(hypId)) {
-               return model;
-            }
+      Set<_HypervisorModel> models = ClassManager.getAllOrFail(_HypervisorModel.class);
+      for (_HypervisorModel model : models) {
+         if (model.getSupported().contains(hypId)) {
+            return model;
          }
-         throw new HyperboxException("No hypervisor model for " + hypId);
-      } catch (HyperboxException e) {
-         throw new HyperboxException(e);
       }
+
+      for (_HypervisorModel model : models) {
+         for (String supportId : model.getSupported()) {
+            if (hypId.contains(supportId)) {
+               return model;
+            }  
+         }
+      }
+
+      throw new HyperboxException("No hypervisor model for " + hypId);
 
    }
 
