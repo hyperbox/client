@@ -29,9 +29,9 @@ import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
+import io.kamax.hboxc.gui.builder.JDialogBuilder;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -43,7 +43,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
@@ -83,12 +82,6 @@ public class SettingsManager implements _Saveable, _Cancelable {
         viewerEdit = new ConsoleViewersSettingsViewer();
         viewerEdit.load();
 
-        mainDialog = new JDialog(MainView.getMainFrame());
-        mainDialog.setIconImage(IconBuilder.getTask(HypervisorTasks.MachineModify).getImage());
-        mainDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        mainDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
-        mainDialog.setSize(1000, 600);
-
         layout = new CardLayout();
         sectionPanels = new JPanel(layout);
 
@@ -122,6 +115,9 @@ public class SettingsManager implements _Saveable, _Cancelable {
         buttonsPanel.add(saveButton);
         buttonsPanel.add(cancelButton);
 
+        mainDialog = new JDialog(MainView.getMainFrame());
+        mainDialog = JDialogBuilder.get("Configuration", IconBuilder.getTask(HypervisorTasks.MachineModify).getImage(), saveButton);
+        mainDialog.setSize(1000, 600);
         mainDialog.getContentPane().setLayout(new MigLayout());
         mainDialog.getContentPane().add(split, "grow,push,wrap");
         mainDialog.getContentPane().add(buttonsPanel, "grow x");
@@ -150,12 +146,9 @@ public class SettingsManager implements _Saveable, _Cancelable {
 
     }
 
-    
+
     private class LabelCellRenderer extends DefaultListCellRenderer {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = -3013644638595005392L;
 
         @Override
