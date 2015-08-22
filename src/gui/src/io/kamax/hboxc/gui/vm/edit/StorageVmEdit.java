@@ -45,6 +45,7 @@ import io.kamax.hboxc.gui.storage.HarddiskCreateDialog;
 import io.kamax.hboxc.gui.storage.MediumBrowser;
 import io.kamax.hboxc.gui.storage.StorageControllerViewer;
 import io.kamax.hboxc.gui.storage.StorageDeviceAttachmentViewer;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
 import io.kamax.tool.logging.Logger;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -116,7 +117,7 @@ public class StorageVmEdit {
 
    private JPanel panel;
 
-   public StorageVmEdit() {
+   public StorageVmEdit(_WorkerTracker tracker) {
       scInToNode = new HashMap<StorageControllerIn, DefaultMutableTreeNode>();
       matInToNode = new HashMap<StorageDeviceAttachmentIn, DefaultMutableTreeNode>();
 

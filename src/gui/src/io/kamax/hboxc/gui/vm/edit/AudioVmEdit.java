@@ -27,6 +27,7 @@ import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.constant.AudioController;
 import io.kamax.hbox.constant.AudioDriver;
 import io.kamax.hbox.constant.MachineAttribute;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
 import io.kamax.tool.logging.Logger;
 import java.awt.Component;
 import javax.swing.JCheckBox;
@@ -48,7 +49,7 @@ public final class AudioVmEdit {
    private JComboBox driverBox;
    private JComboBox controllerBox;
 
-   public AudioVmEdit() {
+   public AudioVmEdit(_WorkerTracker tracker) {
       audioEnableLabel = new JLabel("Audio Enabled");
       audioEnableBox = new JCheckBox();
 

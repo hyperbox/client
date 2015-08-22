@@ -21,16 +21,11 @@
 package io.kamax.hboxc.gui.net;
 
 import io.kamax.hbox.comm.in.NetworkInterfaceIn;
-import io.kamax.hbox.comm.out.network.NetworkAttachModeOut;
 import io.kamax.hbox.comm.out.network.NetworkAttachNameOut;
 import io.kamax.hbox.comm.out.network.NetworkInterfaceOut;
-import io.kamax.hbox.comm.out.network.NetworkInterfaceTypeOut;
-import io.kamax.hboxc.gui.worker.receiver._NetworkAttachModeReceiver;
 import io.kamax.hboxc.gui.worker.receiver._NetworkAttachNameReceiver;
-import io.kamax.hboxc.gui.worker.receiver._NetworkInterfaceTypeReceiver;
-import io.kamax.hboxc.gui.workers.NetworkAttachModeListWorker;
 import io.kamax.hboxc.gui.workers.NetworkAttachNameListWorker;
-import io.kamax.hboxc.gui.workers.NetworkInterfaceTypeListWorker;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
 import io.kamax.tool.AxStrings;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
@@ -45,38 +40,40 @@ import net.miginfocom.swing.MigLayout;
 
 public class NetworkInterfaceViewer {
 
+   private _WorkerTracker tracker;
+
    private String srvId;
-   private NetworkInterfaceOut nicOut;
+   public NetworkInterfaceOut nicOut;
    private NetworkInterfaceIn nicIn;
 
-   private String loadingItem = "Loading...";
-
    private JLabel enableNicLabel = new JLabel();
-   private JCheckBox enableNicValue = new JCheckBox();
+   public JCheckBox enableNicValue = new JCheckBox();
    private JLabel connectedLabel = new JLabel();
-   private JCheckBox connectedValue = new JCheckBox();
+   public JCheckBox connectedValue = new JCheckBox();
    private JLabel attachToLabel = new JLabel();
-   private JComboBox attachModeValue = new JComboBox();
+   public JComboBox attachModeValue = new JComboBox();
    private JLabel attachNameLabel = new JLabel();
-   private JComboBox attachNameValue = new JComboBox();
+   public JComboBox attachNameValue = new JComboBox();
    private JLabel adapterTypeLabel = new JLabel();
-   private JComboBox adapterTypeValue = new JComboBox();
+   public JComboBox adapterTypeValue = new JComboBox();
    private JLabel macAddrLabel = new JLabel();
-   private JTextField macAddrValue = new JTextField(30);
+   public JTextField macAddrValue = new JTextField(30);
 
    private JPanel mainPanel = new JPanel(new MigLayout());
 
-   public static NetworkInterfaceViewer show(String srvId, NetworkInterfaceOut nicOut) {
-      NetworkInterfaceViewer viewer = new NetworkInterfaceViewer(srvId, nicOut);
+   public static NetworkInterfaceViewer show(_WorkerTracker tracker, String srvId, NetworkInterfaceOut nicOut) {
+      NetworkInterfaceViewer viewer = new NetworkInterfaceViewer(tracker, srvId, nicOut);
       return viewer;
    }
 
-   public static NetworkInterfaceViewer show(String srvId, NetworkInterfaceOut nicOut, NetworkInterfaceIn nicIn) {
-      NetworkInterfaceViewer viewer = new NetworkInterfaceViewer(srvId, nicOut, nicIn);
+   public static NetworkInterfaceViewer show(_WorkerTracker tracker, String srvId, NetworkInterfaceOut nicOut, NetworkInterfaceIn nicIn) {
+      NetworkInterfaceViewer viewer = new NetworkInterfaceViewer(tracker, srvId, nicOut, nicIn);
       return viewer;
    }
 
-   public NetworkInterfaceViewer(String srvId, NetworkInterfaceOut nicOut) {
+   public NetworkInterfaceViewer(_WorkerTracker tracker, String srvId, NetworkInterfaceOut nicOut) {
+      this.tracker = tracker;
+
       this.srvId = srvId;
       this.nicOut = nicOut;
 
@@ -107,18 +104,14 @@ public class NetworkInterfaceViewer {
       enableNicValue.setSelected(nicOut.isEnabled());
       connectedValue.setSelected(nicOut.isCableConnected());
       macAddrValue.setText(nicOut.getMacAddress());
-
-      NetworkAttachModeListWorker.execute(new NetworkModeReceiver(), srvId);
-      NetworkInterfaceTypeListWorker.execute(new NetworkInterfaceTypeReceiver(), srvId);
    }
 
-   public NetworkInterfaceViewer(String srvId, NetworkInterfaceOut nicOut, NetworkInterfaceIn nicIn) {
-      this(srvId, nicOut);
+   public NetworkInterfaceViewer(_WorkerTracker tracker, String srvId, NetworkInterfaceOut nicOut, NetworkInterfaceIn nicIn) {
+      this(tracker, srvId, nicOut);
       this.nicIn = nicIn;
    }
 
    private void setLabels() {
-      loadingItem = "Loading...";
       enableNicLabel.setText("Enabled");
       connectedLabel.setText("Cable Connected");
       attachToLabel.setText("Attach Mode");
@@ -129,6 +122,14 @@ public class NetworkInterfaceViewer {
 
    public JPanel getPanel() {
       return mainPanel;
+   }
+
+   public JComboBox getAadapterTypeList() {
+      return adapterTypeValue;
+   }
+
+   public JComboBox getAttachModeList() {
+      return attachModeValue;
    }
 
    public NetworkInterfaceIn save() {
@@ -154,10 +155,6 @@ public class NetworkInterfaceViewer {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-         if (attachModeValue.getSelectedItem() == loadingItem) {
-            return;
-         }
-
          String attachTypeId = attachModeValue.getSelectedItem().toString();
          if (AxStrings.isEmpty(attachTypeId)) {
             Logger.info("Selected attach mode value is empty, skipping listing of attach type");
@@ -165,70 +162,8 @@ public class NetworkInterfaceViewer {
          }
 
          Logger.info(attachTypeId + " was selected as attachment type, fetching list of attachment names");
-         NetworkAttachNameListWorker.execute(new NetworkAttachNameReceiver(), srvId, attachTypeId);
+         NetworkAttachNameListWorker.execute(tracker, new NetworkAttachNameReceiver(), srvId, attachTypeId);
       }
-   }
-
-   private class NetworkInterfaceTypeReceiver implements _NetworkInterfaceTypeReceiver {
-
-      @Override
-      public void loadingStarted() {
-         adapterTypeValue.setEnabled(false);
-         adapterTypeValue.removeAllItems();
-         adapterTypeValue.addItem(loadingItem);
-         adapterTypeValue.setSelectedItem(loadingItem);
-      }
-
-      @Override
-      public void loadingFinished(boolean isSuccessful, String message) {
-         if (isSuccessful) {
-            adapterTypeValue.removeItem(loadingItem);
-            adapterTypeValue.setSelectedItem(nicOut.getAdapterType());
-         } else {
-            adapterTypeValue.removeAllItems();
-            adapterTypeValue.addItem("Error loading network interface types: " + message);
-         }
-         adapterTypeValue.setEnabled(true);
-      }
-
-      @Override
-      public void add(List<NetworkInterfaceTypeOut> objOutList) {
-         for (NetworkInterfaceTypeOut adapterType : objOutList) {
-            adapterTypeValue.addItem(adapterType.getId());
-         }
-      }
-
-   }
-
-   private class NetworkModeReceiver implements _NetworkAttachModeReceiver {
-
-      @Override
-      public void loadingStarted() {
-         attachModeValue.setEnabled(false);
-         attachModeValue.removeAllItems();
-         attachModeValue.addItem(loadingItem);
-         attachModeValue.setSelectedItem(loadingItem);
-      }
-
-      @Override
-      public void loadingFinished(boolean isSuccessful, String message) {
-         if (isSuccessful) {
-            attachModeValue.removeItem(loadingItem);
-            attachModeValue.setSelectedItem(nicOut.getAttachMode());
-         } else {
-            attachModeValue.removeAllItems();
-            attachModeValue.addItem("Error loading attach modes: " + message);
-         }
-         attachModeValue.setEnabled(true);
-      }
-
-      @Override
-      public void add(List<NetworkAttachModeOut> attachModes) {
-         for (NetworkAttachModeOut attachMode : attachModes) {
-            attachModeValue.addItem(attachMode.getId());
-         }
-      }
-
    }
 
    private class NetworkAttachNameReceiver implements _NetworkAttachNameReceiver {
@@ -238,14 +173,11 @@ public class NetworkInterfaceViewer {
          attachModeValue.setEnabled(false);
          attachNameValue.setEnabled(false);
          attachNameValue.removeAllItems();
-         attachNameValue.addItem(loadingItem);
-         attachNameValue.setSelectedItem(loadingItem);
       }
 
       @Override
       public void loadingFinished(boolean isSuccessful, String message) {
          if (isSuccessful) {
-            attachNameValue.removeItem(loadingItem);
             if (attachModeValue.getSelectedItem().equals(nicOut.getAttachMode())) {
                attachNameValue.setSelectedItem(nicOut.getAttachName());
             } else {

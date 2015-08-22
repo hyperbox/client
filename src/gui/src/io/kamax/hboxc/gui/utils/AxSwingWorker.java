@@ -36,6 +36,7 @@ import javax.swing.SwingWorker;
 public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends SwingWorker<T, V> {
 
    private K recv;
+   private boolean failed = false;
 
    public AxSwingWorker(K recv) {
       setReceiver(recv);
@@ -65,14 +66,20 @@ public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends
          innerDone();
          recv.loadingFinished(true, null);
       } catch (ExecutionException e) {
+         failed = true;
          recv.loadingFinished(false, e.getCause().getMessage());
       } catch (Throwable t) {
+         failed = true;
          recv.loadingFinished(false, t.getMessage());
       }
    }
 
    protected void innerDone() throws InterruptedException, ExecutionException {
       get();
+   }
+
+   public boolean hasFailed() {
+      return failed;
    }
 
 }

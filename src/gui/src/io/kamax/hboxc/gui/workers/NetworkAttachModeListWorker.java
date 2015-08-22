@@ -49,8 +49,8 @@ public class NetworkAttachModeListWorker extends AxSwingWorker<_NetworkAttachMod
       getReceiver().add(ostOutList);
    }
 
-   public static void execute(_NetworkAttachModeReceiver recv, String serverId) {
-      (new NetworkAttachModeListWorker(recv, serverId)).execute();
+   public static void execute(_WorkerTracker tracker, _NetworkAttachModeReceiver recv, String serverId) {
+      tracker.register(new NetworkAttachModeListWorker(recv, serverId)).execute();
    }
 
 }

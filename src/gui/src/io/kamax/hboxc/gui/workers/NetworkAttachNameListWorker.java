@@ -52,8 +52,8 @@ public class NetworkAttachNameListWorker extends AxSwingWorker<_NetworkAttachNam
       getReceiver().add(nanOut);
    }
 
-   public static void execute(_NetworkAttachNameReceiver recv, String srvId, String netAttachModeId) {
-      (new NetworkAttachNameListWorker(recv, srvId, netAttachModeId)).execute();
+   public static void execute(_WorkerTracker tracker, _NetworkAttachNameReceiver recv, String srvId, String netAttachModeId) {
+      tracker.register(new NetworkAttachNameListWorker(recv, srvId, netAttachModeId)).execute();
    }
 
 }

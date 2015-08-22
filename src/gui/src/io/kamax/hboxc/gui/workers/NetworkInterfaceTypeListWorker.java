@@ -49,8 +49,8 @@ public class NetworkInterfaceTypeListWorker extends AxSwingWorker<_NetworkInterf
       getReceiver().add(nicTypeOut);
    }
 
-   public static void execute(_NetworkInterfaceTypeReceiver recv, String srvId) {
-      (new NetworkInterfaceTypeListWorker(recv, srvId)).execute();
+   public static void execute(_WorkerTracker tracker, _NetworkInterfaceTypeReceiver recv, String srvId) {
+      tracker.register(new NetworkInterfaceTypeListWorker(recv, srvId)).execute();
    }
 
 }

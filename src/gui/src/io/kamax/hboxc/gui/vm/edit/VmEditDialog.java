@@ -33,12 +33,19 @@ import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
+import io.kamax.hboxc.gui.utils.AxSwingWorker;
 import io.kamax.hboxc.gui.worker.receiver._MachineReceiver;
 import io.kamax.hboxc.gui.workers.MachineGetWorker;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
+import io.kamax.tool.logging.Logger;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -50,11 +57,12 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
 
-public class VmEditDialog implements _Saveable, _Cancelable {
+public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
 
    private final String GENERAL = "General";
    private final String SYSTEM = "System";
@@ -65,6 +73,9 @@ public class VmEditDialog implements _Saveable, _Cancelable {
 
    private JDialog mainDialog;
    private JProgressBar refreshProgress;
+   private boolean loadingFailed = false;
+   private List<SwingWorker<?, ?>> remainingWorkers = new ArrayList<SwingWorker<?, ?>>();
+   private List<SwingWorker<?, ?>> finishedWorkers = new ArrayList<SwingWorker<?, ?>>();
 
    private JSplitPane split;
 
@@ -91,12 +102,12 @@ public class VmEditDialog implements _Saveable, _Cancelable {
    private MachineIn mIn;
 
    public VmEditDialog() {
-      generalEdit = new GeneralVmEdit();
-      systemEdit = new SystemVmEdit();
-      outputEdit = new OutputVmEdit();
-      storageEdit = new StorageVmEdit();
-      audioEdit = new AudioVmEdit();
-      networkEdit = new NetworkVmEdit();
+      generalEdit = new GeneralVmEdit(this);
+      systemEdit = new SystemVmEdit(this);
+      outputEdit = new OutputVmEdit(this);
+      storageEdit = new StorageVmEdit(this);
+      audioEdit = new AudioVmEdit(this);
+      networkEdit = new NetworkVmEdit(this);
 
       layout = new CardLayout();
       sectionPanels = new JPanel(layout);
@@ -133,6 +144,7 @@ public class VmEditDialog implements _Saveable, _Cancelable {
       split.setBorder(null);
 
       saveButton = new JButton(new SaveAction(this));
+      saveButton.setEnabled(false);
       cancelButton = new JButton(new CancelAction(this));
       refreshProgress = new JProgressBar();
       refreshProgress.setVisible(false);
@@ -154,7 +166,7 @@ public class VmEditDialog implements _Saveable, _Cancelable {
 
    private void show(MachineOut mOut) {
       mIn = new MachineIn(mOut);
-      MachineGetWorker.execute(new MachineReceiver(), mOut);
+      MachineGetWorker.execute(this, new MachineReceiver(), mOut);
       mainDialog.setTitle(mOut.getName() + " - Settings");
       mainDialog.setLocationRelativeTo(mainDialog.getParent());
       mainDialog.setVisible(true);
@@ -233,13 +245,16 @@ public class VmEditDialog implements _Saveable, _Cancelable {
 
       @Override
       public void loadingStarted() {
+         saveButton.setEnabled(false);
          refreshProgress.setIndeterminate(true);
          refreshProgress.setVisible(true);
       }
 
       @Override
       public void loadingFinished(boolean isFinished, String message) {
-         refreshProgress.setVisible(false);
+         refreshProgress.setMinimum(0);
+         refreshProgress.setMaximum(100);
+         refreshProgress.setValue(0);
          refreshProgress.setIndeterminate(false);
       }
 
@@ -255,4 +270,51 @@ public class VmEditDialog implements _Saveable, _Cancelable {
 
    }
 
+   private void refreshLoadingStatus() {
+      int remaining = remainingWorkers.size();
+      int finished = finishedWorkers.size();
+      int total = remaining + finished;
+
+      refreshProgress.setMinimum(0);
+      refreshProgress.setMaximum(total);
+      if (remainingWorkers.isEmpty()) {
+         finishedWorkers.clear();
+         refreshProgress.setValue(refreshProgress.getMaximum());
+      } else {
+         if (finishedWorkers.isEmpty()) {
+            refreshProgress.setIndeterminate(true);
+         } else {
+            refreshProgress.setValue(finished);
+         }
+      }
+      refreshProgress.setVisible(!remainingWorkers.isEmpty());
+      saveButton.setEnabled(remainingWorkers.isEmpty() && !loadingFailed);
+   }
+
+   @Override
+   public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker) {
+      if (worker.isDone()) {
+         Logger.debug("Skipping registration of already finished worker: " + worker);
+      }
+
+      worker.addPropertyChangeListener(new PropertyChangeListener() {
+
+         @Override
+         public void propertyChange(PropertyChangeEvent ev) {
+            AxSwingWorker<?, ?, ?> worker = AxSwingWorker.class.cast(ev.getSource());
+
+            if (worker.hasFailed()) {
+               loadingFailed = true;
+            }
+            if ("state".equals(ev.getPropertyName()) && (SwingWorker.StateValue.DONE == ev.getNewValue())) {
+               remainingWorkers.remove(ev.getSource());
+               finishedWorkers.add((SwingWorker<?, ?>) ev.getSource());
+               refreshLoadingStatus();
+            }
+         }
+      });
+
+      remainingWorkers.add(worker);
+      return worker;
+   }
 }

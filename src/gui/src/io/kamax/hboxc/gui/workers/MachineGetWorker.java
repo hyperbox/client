@@ -48,8 +48,8 @@ public class MachineGetWorker extends AxSwingWorker<_MachineReceiver, MachineOut
       getReceiver().put(mOut);
    }
 
-   public static void execute(_MachineReceiver recv, MachineOut mOut) {
-      (new MachineGetWorker(recv, mOut)).execute();
+   public static void execute(_WorkerTracker tracker, _MachineReceiver recv, MachineOut mOut) {
+      tracker.register(new MachineGetWorker(recv, mOut)).execute();
    }
 
 }

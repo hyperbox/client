@@ -28,6 +28,7 @@ import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.snapshot.SnapshotManagementView;
 import io.kamax.hboxc.gui.worker.receiver._MachineReceiver;
 import io.kamax.hboxc.gui.workers.MachineGetWorker;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -143,7 +144,7 @@ public final class VmDetailedView implements _MachineReceiver, _Refreshable {
 
    @Override
    public void refresh() {
-      MachineGetWorker.execute(this, mOut);
+      MachineGetWorker.execute(_WorkerTracker.EMPTY, this, mOut);
    }
 
 }

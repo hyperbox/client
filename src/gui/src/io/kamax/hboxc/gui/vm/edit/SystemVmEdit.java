@@ -28,6 +28,7 @@ import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.constant.Chipsets;
 import io.kamax.hbox.constant.Firmware;
 import io.kamax.hbox.constant.MachineAttribute;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.BorderFactory;
@@ -71,7 +72,7 @@ public class SystemVmEdit {
    private MachineIn mIn;
    private MachineOut mOut;
 
-   public SystemVmEdit() {
+   public SystemVmEdit(_WorkerTracker tracker) {
       cpuNbField = new JTextField(5);
       cpuExecCapField = new JTextField(10);
       ramField = new JTextField(15);

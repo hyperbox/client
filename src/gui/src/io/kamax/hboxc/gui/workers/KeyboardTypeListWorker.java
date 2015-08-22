@@ -51,8 +51,8 @@ public class KeyboardTypeListWorker extends AxSwingWorker<_KeyboardTypeListRecei
       getReceiver().add(typeList);
    }
 
-   public static void execute(_KeyboardTypeListReceiver recv, String serverId, String machineId) {
-      (new KeyboardTypeListWorker(recv, serverId, machineId)).execute();
+   public static void execute(_WorkerTracker tracker, _KeyboardTypeListReceiver recv, String serverId, String machineId) {
+      tracker.register(new KeyboardTypeListWorker(recv, serverId, machineId)).execute();
    }
 
 }

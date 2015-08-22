@@ -31,6 +31,7 @@ import io.kamax.hboxc.gui.worker.receiver._KeyboardTypeListReceiver;
 import io.kamax.hboxc.gui.worker.receiver._OsTypeListReceiver;
 import io.kamax.hboxc.gui.workers.KeyboardTypeListWorker;
 import io.kamax.hboxc.gui.workers.OsTypeListWorker;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
 import java.awt.Component;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -41,6 +42,8 @@ import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
 public class GeneralVmEdit {
+
+   private _WorkerTracker tracker;
 
    private JPanel panel;
    private JLabel nameLabel;
@@ -59,7 +62,9 @@ public class GeneralVmEdit {
    private MachineOut mOut;
    private MachineIn mIn;
 
-   public GeneralVmEdit() {
+   public GeneralVmEdit(_WorkerTracker tracker) {
+      this.tracker = tracker;
+
       nameLabel = new JLabel("Name");
       nameField = new JTextField();
 
@@ -104,7 +109,7 @@ public class GeneralVmEdit {
       nameField.setText(mOut.getName());
       descArea.setText(mOut.getSetting(MachineAttribute.Description).getString());
 
-      KeyboardTypeListWorker.execute(new KeyboardListReceiver(), mOut.getServerId(), mOut.getUuid());
+      KeyboardTypeListWorker.execute(tracker, new KeyboardListReceiver(), mOut.getServerId(), mOut.getUuid());
 
       try {
          mouseTypeBox.removeAllItems();
@@ -115,7 +120,7 @@ public class GeneralVmEdit {
       } catch (Throwable t) {
          HyperboxClient.getView().postError("Unable to retrieve list of Mouse modes", t);
       }
-      OsTypeListWorker.execute(new OsTypeLoader(), mOut);
+      OsTypeListWorker.execute(tracker, new OsTypeLoader(), mOut);
    }
 
    public void save() {
@@ -149,7 +154,6 @@ public class GeneralVmEdit {
       @Override
       public void loadingFinished(boolean isSuccess, String message) {
          osTypeField.setEnabled(true);
-
          if (isSuccess) {
             osTypeField.setSelectedItem(mOut.getSetting(MachineAttribute.OsType).getRawValue());
             osTypeField.removeItem("Loading...");
@@ -172,24 +176,19 @@ public class GeneralVmEdit {
 
       @Override
       public void loadingStarted() {
-
          keyboardTypeBox.setEnabled(false);
          keyboardTypeBox.removeAllItems();
          keyboardTypeBox.addItem("Loading...");
          keyboardTypeBox.setSelectedItem("Loading...");
-
       }
 
       @Override
       public void loadingFinished(boolean isSuccessful, String message) {
-
          keyboardTypeBox.removeItem("Loading...");
          keyboardTypeBox.setEnabled(isSuccessful);
          if (isSuccessful) {
-
             keyboardTypeBox.setSelectedItem(mOut.getSetting(MachineAttribute.KeyboardMode).getRawValue());
          } else {
-
             keyboardTypeBox.removeAllItems();
             keyboardTypeBox.addItem("Failed to load Keyboard Types list: " + message);
          }
@@ -198,9 +197,7 @@ public class GeneralVmEdit {
 
       @Override
       public void add(List<String> keyboardList) {
-
          for (String keyboard : keyboardList) {
-
             keyboardTypeBox.addItem(keyboard);
          }
 

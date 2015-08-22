@@ -28,6 +28,7 @@ import io.kamax.hbox.comm.io.StringSettingIO;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.constant.MachineAttribute;
 import io.kamax.hboxc.gui.Gui;
+import io.kamax.hboxc.gui.workers._WorkerTracker;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.BorderFactory;
@@ -70,7 +71,7 @@ public class OutputVmEdit {
    private JCheckBox accel2dBox;
    private JCheckBox accel3dBox;
 
-   public OutputVmEdit() {
+   public OutputVmEdit(_WorkerTracker tracker) {
       enableLabel = new JLabel("Enabled");
       portLabel = new JLabel("Port");
       addressLabel = new JLabel("Address");
