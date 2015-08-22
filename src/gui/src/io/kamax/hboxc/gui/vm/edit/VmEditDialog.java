@@ -148,6 +148,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
       cancelButton = new JButton(new CancelAction(this));
       refreshProgress = new JProgressBar();
       refreshProgress.setVisible(false);
+      refreshProgress.setStringPainted(true);
 
       buttonsPanel = new JPanel(new MigLayout());
       buttonsPanel.add(saveButton);
