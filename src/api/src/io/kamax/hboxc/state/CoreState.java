@@ -22,9 +22,9 @@ package io.kamax.hboxc.state;
 
 public enum CoreState {
 
-   Starting,
-   Started,
-   Stopping,
-   Stopped
+    Starting,
+    Started,
+    Stopping,
+    Stopped
 
 }

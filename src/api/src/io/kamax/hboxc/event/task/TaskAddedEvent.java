@@ -26,8 +26,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class TaskAddedEvent extends TaskEvent {
 
-   public TaskAddedEvent(ServerOut srvOut, TaskOut taskOut) {
-      super(ClientEvents.TaskAdded, srvOut, taskOut);
-   }
+    public TaskAddedEvent(ServerOut srvOut, TaskOut taskOut) {
+        super(ClientEvents.TaskAdded, srvOut, taskOut);
+    }
 
 }

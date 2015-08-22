@@ -29,30 +29,30 @@ import java.util.concurrent.ExecutionException;
 
 public class GuestNetworkInterfaceWorker extends AxSwingWorker<_GuestNetworkInterfaceReceiver, GuestNetworkInterfaceOut, Void> {
 
-   private String srvId;
-   private String vmId;
-   private NetworkInterfaceOut nicOut;
+    private String srvId;
+    private String vmId;
+    private NetworkInterfaceOut nicOut;
 
-   public GuestNetworkInterfaceWorker(_GuestNetworkInterfaceReceiver recv, String srvId, String vmId, NetworkInterfaceOut nicOut) {
-      super(recv);
-      this.srvId = srvId;
-      this.vmId = vmId;
-      this.nicOut = nicOut;
-   }
+    public GuestNetworkInterfaceWorker(_GuestNetworkInterfaceReceiver recv, String srvId, String vmId, NetworkInterfaceOut nicOut) {
+        super(recv);
+        this.srvId = srvId;
+        this.vmId = vmId;
+        this.nicOut = nicOut;
+    }
 
-   @Override
-   protected GuestNetworkInterfaceOut doInBackground() throws Exception {
-      return Gui.getServer(srvId).getGuest(vmId).findNetworkInterface(nicOut.getMacAddress());
-   }
+    @Override
+    protected GuestNetworkInterfaceOut doInBackground() throws Exception {
+        return Gui.getServer(srvId).getGuest(vmId).findNetworkInterface(nicOut.getMacAddress());
+    }
 
-   @Override
-   protected void innerDone() throws InterruptedException, ExecutionException {
-      GuestNetworkInterfaceOut gNicOut = get();
-      getReceiver().put(gNicOut);
-   }
+    @Override
+    protected void innerDone() throws InterruptedException, ExecutionException {
+        GuestNetworkInterfaceOut gNicOut = get();
+        getReceiver().put(gNicOut);
+    }
 
-   public static void execute(_GuestNetworkInterfaceReceiver recv, String srvId, String vmId, NetworkInterfaceOut nicOut) {
-      (new GuestNetworkInterfaceWorker(recv, srvId, vmId, nicOut)).execute();
-   }
+    public static void execute(_GuestNetworkInterfaceReceiver recv, String srvId, String vmId, NetworkInterfaceOut nicOut) {
+        (new GuestNetworkInterfaceWorker(recv, srvId, vmId, nicOut)).execute();
+    }
 
 }

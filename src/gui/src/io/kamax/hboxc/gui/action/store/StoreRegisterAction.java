@@ -33,27 +33,27 @@ import io.kamax.hboxc.gui.store.StoreEditor;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class StoreRegisterAction extends AbstractAction {
 
-   private _SingleServerSelector select;
+    private static final long serialVersionUID = 2570216069504356093L;
+    private _SingleServerSelector select;
 
-   public StoreRegisterAction(_SingleServerSelector select) {
-      this(select, "Register");
-   }
+    public StoreRegisterAction(_SingleServerSelector select) {
+        this(select, "Register");
+    }
 
-   public StoreRegisterAction(_SingleServerSelector select, String label) {
-      super(label, IconBuilder.getTask(HyperboxTasks.StoreRegister));
-      putValue(SHORT_DESCRIPTION, "Register the target as a new Store\nThe target MUST exist.");
-      this.select = select;
-   }
+    public StoreRegisterAction(_SingleServerSelector select, String label) {
+        super(label, IconBuilder.getTask(HyperboxTasks.StoreRegister));
+        putValue(SHORT_DESCRIPTION, "Register the target as a new Store\nThe target MUST exist.");
+        this.select = select;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      StoreIn stoIn = StoreEditor.getInputRegister(select.getServer().getId());
-      if (stoIn != null) {
-         Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreRegister, new ServerIn(select.getServer().getId()), stoIn));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        StoreIn stoIn = StoreEditor.getInputRegister(select.getServer().getId());
+        if (stoIn != null) {
+            Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreRegister, new ServerIn(select.getServer().getId()), stoIn));
+        }
+    }
 
 }

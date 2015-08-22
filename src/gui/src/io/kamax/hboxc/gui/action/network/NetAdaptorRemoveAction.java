@@ -26,23 +26,23 @@ import io.kamax.hboxc.gui.builder.IconBuilder;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class NetAdaptorRemoveAction extends AbstractAction {
 
-   private String srvId;
-   private String modeId;
-   private String adaptorId;
+    private static final long serialVersionUID = 134882332950872916L;
+    private String srvId;
+    private String modeId;
+    private String adaptorId;
 
-   public NetAdaptorRemoveAction(String srvId, String modeId, String adaptorId) {
-      super("Remove", IconBuilder.getTask(HypervisorTasks.NetAdaptorRemove));
-      this.srvId = srvId;
-      this.modeId = modeId;
-      this.adaptorId = adaptorId;
-   }
+    public NetAdaptorRemoveAction(String srvId, String modeId, String adaptorId) {
+        super("Remove", IconBuilder.getTask(HypervisorTasks.NetAdaptorRemove));
+        this.srvId = srvId;
+        this.modeId = modeId;
+        this.adaptorId = adaptorId;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Gui.getServer(srvId).getHypervisor().removeAdaptor(modeId, adaptorId);
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Gui.getServer(srvId).getHypervisor().removeAdaptor(modeId, adaptorId);
+    }
 
 }

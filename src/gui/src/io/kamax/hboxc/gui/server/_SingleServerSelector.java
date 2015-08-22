@@ -25,6 +25,6 @@ import io.kamax.hbox.comm.out.ServerOut;
 
 public interface _SingleServerSelector {
 
-   public ServerOut getServer();
+    public ServerOut getServer();
 
 }

@@ -27,23 +27,23 @@ import io.kamax.hboxc.state.ConnectionState;
 
 public class ConnectorStateChangedEvent extends ConnectorEvent {
 
-   public ConnectorStateChangedEvent(ConnectorOutput conOut, ConnectionState state) {
-      super(ClientEvents.ConnectorStateChanged, conOut);
-      set(state);
-   }
+    public ConnectorStateChangedEvent(ConnectorOutput conOut, ConnectionState state) {
+        super(ClientEvents.ConnectorStateChanged, conOut);
+        set(state);
+    }
 
-   public ConnectorStateChangedEvent(Enum<?> id, ConnectorOutput conOut, ConnectionState state) {
-      super(id, conOut);
-      set(state);
-   }
+    public ConnectorStateChangedEvent(Enum<?> id, ConnectorOutput conOut, ConnectionState state) {
+        super(id, conOut);
+        set(state);
+    }
 
-   public ConnectionState getState() {
-      return get(ConnectionState.class);
-   }
+    public ConnectionState getState() {
+        return get(ConnectionState.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Connector " + getConnector().getLabel() + " state changed to " + getState() + " @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Connector " + getConnector().getLabel() + " state changed to " + getState() + " @ " + getTime();
+    }
 
 }

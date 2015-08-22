@@ -32,39 +32,39 @@ import javax.swing.JTextArea;
 
 public class MachineLogFileViewer {
 
-   private String _srvId;
-   private String _vmId;
+    private String _srvId;
+    private String _vmId;
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   public MachineLogFileViewer(String srvId, String vmId) {
-      _srvId = srvId;
-      _vmId = vmId;
+    public MachineLogFileViewer(String srvId, String vmId) {
+        _srvId = srvId;
+        _vmId = vmId;
 
-      List<String> logIdList = Gui.getServer(_srvId).getHypervisor().getLogFileList(_vmId);
+        List<String> logIdList = Gui.getServer(_srvId).getHypervisor().getLogFileList(_vmId);
 
-      dialog = JDialogBuilder.get("VM Log viewer");
-      JTabbedPane tabs = new JTabbedPane();
-      for (String logId : logIdList) {
-         _MachineLogFile logIo = Gui.getServer(_srvId).getHypervisor().getLogFile(_vmId, logId);
-         JTextArea text = new JTextArea();
-         for (String line : logIo.getLog()) {
-            text.append(line + "\n");
-         }
-         tabs.addTab((new File(logIo.getFileName())).getName(), new JScrollPane(text));
-      }
+        dialog = JDialogBuilder.get("VM Log viewer");
+        JTabbedPane tabs = new JTabbedPane();
+        for (String logId : logIdList) {
+            _MachineLogFile logIo = Gui.getServer(_srvId).getHypervisor().getLogFile(_vmId, logId);
+            JTextArea text = new JTextArea();
+            for (String line : logIo.getLog()) {
+                text.append(line + "\n");
+            }
+            tabs.addTab((new File(logIo.getFileName())).getName(), new JScrollPane(text));
+        }
 
-      dialog.getContentPane().add(tabs, "grow,push");
-      dialog.setSize(800, 600);
-      dialog.setLocationRelativeTo(dialog.getParent());
-   }
+        dialog.getContentPane().add(tabs, "grow,push");
+        dialog.setSize(800, 600);
+        dialog.setLocationRelativeTo(dialog.getParent());
+    }
 
-   public void show() {
-      dialog.setVisible(true);
-   }
+    public void show() {
+        dialog.setVisible(true);
+    }
 
-   public static void show(String srvId, String vmId) {
-      (new MachineLogFileViewer(srvId, vmId)).show();
-   }
+    public static void show(String srvId, String vmId) {
+        (new MachineLogFileViewer(srvId, vmId)).show();
+    }
 
 }

@@ -25,19 +25,19 @@ import io.kamax.hboxc.gui.snapshot._SnapshotSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class SnapshotModifyAction extends AbstractAction {
 
-   private _SnapshotSelector selector;
+    private static final long serialVersionUID = -8034899849992860305L;
+    private _SnapshotSelector selector;
 
-   public SnapshotModifyAction(_SnapshotSelector selector) {
-      this.selector = selector;
-      putValue(SHORT_DESCRIPTION, "View/edit details of the selected snapshot");
-   }
+    public SnapshotModifyAction(_SnapshotSelector selector) {
+        this.selector = selector;
+        putValue(SHORT_DESCRIPTION, "View/edit details of the selected snapshot");
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      SnapshotModifyDialog.show(selector.getMachine(), selector.getSelection().get(0));
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        SnapshotModifyDialog.show(selector.getMachine(), selector.getSelection().get(0));
+    }
 
 }

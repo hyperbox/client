@@ -25,13 +25,13 @@ import io.kamax.hbox.event.HyperboxEvents;
 
 public class MachineStateChangedEvent extends MachineUpdatedEvent {
 
-   public MachineStateChangedEvent(String srvId, MachineOut mOut) {
-      super(HyperboxEvents.MachineState, srvId, mOut);
-   }
+    public MachineStateChangedEvent(String srvId, MachineOut mOut) {
+        super(HyperboxEvents.MachineState, srvId, mOut);
+    }
 
-   @Override
-   public String toString() {
-      return "Machine " + getUuid() + " | State changed to " + getMachine().getState() + " @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Machine " + getUuid() + " | State changed to " + getMachine().getState() + " @ " + getTime();
+    }
 
 }

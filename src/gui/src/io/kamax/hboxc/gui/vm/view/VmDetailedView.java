@@ -38,113 +38,113 @@ import net.miginfocom.swing.MigLayout;
 
 public final class VmDetailedView implements _MachineReceiver, _Refreshable {
 
-   private MachineOut mOut;
+    private MachineOut mOut;
 
-   private VmSummaryView summaryTab;
-   private SnapshotManagementView snapTab;
-   private JTabbedPane tabs;
-   private JLabel loadingLabel;
-   private JPanel panel;
-   private JLabel errorLabel;
+    private VmSummaryView summaryTab;
+    private SnapshotManagementView snapTab;
+    private JTabbedPane tabs;
+    private JLabel loadingLabel;
+    private JPanel panel;
+    private JLabel errorLabel;
 
-   public VmDetailedView(MachineOut mOut) {
+    public VmDetailedView(MachineOut mOut) {
 
-      this.mOut = mOut;
+        this.mOut = mOut;
 
-      summaryTab = new VmSummaryView();
-      snapTab = new SnapshotManagementView();
+        summaryTab = new VmSummaryView();
+        snapTab = new SnapshotManagementView();
 
-      tabs = new JTabbedPane();
-      tabs.addTab("Summary", summaryTab.getComponent());
-      tabs.addTab("Snapshots", snapTab.getComponent());
+        tabs = new JTabbedPane();
+        tabs.addTab("Summary", summaryTab.getComponent());
+        tabs.addTab("Snapshots", snapTab.getComponent());
 
-      loadingLabel = new JLabel("Loading...");
-      errorLabel = new JLabel();
+        loadingLabel = new JLabel("Loading...");
+        errorLabel = new JLabel();
 
-      panel = new JPanel(new MigLayout("ins 0"));
-      panel.add(loadingLabel, "growx, pushx, wrap, hidemode 3");
-      panel.add(errorLabel, "growx, pushx, wrap, hidemode 3");
-      panel.add(tabs, "grow, push, wrap, hidemode 3");
+        panel = new JPanel(new MigLayout("ins 0"));
+        panel.add(loadingLabel, "growx, pushx, wrap, hidemode 3");
+        panel.add(errorLabel, "growx, pushx, wrap, hidemode 3");
+        panel.add(tabs, "grow, push, wrap, hidemode 3");
 
-      ViewEventManager.register(this);
+        ViewEventManager.register(this);
 
-      refresh();
-   }
+        refresh();
+    }
 
-   private void update() {
+    private void update() {
 
-      if (mOut.isAvailable()) {
-         summaryTab.show(mOut, true);
-         tabs.setEnabledAt(tabs.indexOfComponent(summaryTab.getComponent()), true);
-         snapTab.show(mOut);
-         tabs.setEnabledAt(tabs.indexOfComponent(snapTab.getComponent()), true);
-      }
-   }
+        if (mOut.isAvailable()) {
+            summaryTab.show(mOut, true);
+            tabs.setEnabledAt(tabs.indexOfComponent(summaryTab.getComponent()), true);
+            snapTab.show(mOut);
+            tabs.setEnabledAt(tabs.indexOfComponent(snapTab.getComponent()), true);
+        }
+    }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+    public JComponent getComponent() {
+        return panel;
+    }
 
-   @Handler
-   public void getMachineUpdate(MachineDataChangedEvent ev) {
+    @Handler
+    public void getMachineUpdate(MachineDataChangedEvent ev) {
 
-      if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
+        if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
 
-         put(ev.getMachine());
-      }
-   }
+            put(ev.getMachine());
+        }
+    }
 
-   @Handler
-   public void getMachineRemove(MachineRemovedEvent ev) {
+    @Handler
+    public void getMachineRemove(MachineRemovedEvent ev) {
 
-      if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
+        if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
 
-         clear();
-      }
-   }
+            clear();
+        }
+    }
 
-   private void clear() {
+    private void clear() {
 
-      errorLabel.setVisible(false);
-      tabs.setVisible(false);
-      summaryTab.clear();
-   }
+        errorLabel.setVisible(false);
+        tabs.setVisible(false);
+        summaryTab.clear();
+    }
 
-   @Override
-   public void loadingStarted() {
-      clear();
-      loadingLabel.setVisible(true);
-      if (tabs.indexOfComponent(summaryTab.getComponent()) > -1) {
-         tabs.setEnabledAt(tabs.indexOfComponent(summaryTab.getComponent()), false);
-      }
-      if (tabs.indexOfComponent(snapTab.getComponent()) > -1) {
-         tabs.setEnabledAt(tabs.indexOfComponent(snapTab.getComponent()), false);
-      }
-   }
+    @Override
+    public void loadingStarted() {
+        clear();
+        loadingLabel.setVisible(true);
+        if (tabs.indexOfComponent(summaryTab.getComponent()) > -1) {
+            tabs.setEnabledAt(tabs.indexOfComponent(summaryTab.getComponent()), false);
+        }
+        if (tabs.indexOfComponent(snapTab.getComponent()) > -1) {
+            tabs.setEnabledAt(tabs.indexOfComponent(snapTab.getComponent()), false);
+        }
+    }
 
-   @Override
-   public void loadingFinished(final boolean isSuccessful, final String message) {
+    @Override
+    public void loadingFinished(final boolean isSuccessful, final String message) {
 
-      loadingLabel.setVisible(false);
-      tabs.setEnabled(isSuccessful);
-      if (!isSuccessful) {
-         errorLabel.setText("Unable to retrieve VM information: " + message);
-         errorLabel.setVisible(true);
-      } else {
-         tabs.setVisible(mOut.isAvailable());
-      }
-   }
+        loadingLabel.setVisible(false);
+        tabs.setEnabled(isSuccessful);
+        if (!isSuccessful) {
+            errorLabel.setText("Unable to retrieve VM information: " + message);
+            errorLabel.setVisible(true);
+        } else {
+            tabs.setVisible(mOut.isAvailable());
+        }
+    }
 
-   @Override
-   public void put(MachineOut mOut) {
+    @Override
+    public void put(MachineOut mOut) {
 
-      this.mOut = mOut;
-      update();
-   }
+        this.mOut = mOut;
+        update();
+    }
 
-   @Override
-   public void refresh() {
-      MachineGetWorker.execute(_WorkerTracker.EMPTY, this, mOut);
-   }
+    @Override
+    public void refresh() {
+        MachineGetWorker.execute(_WorkerTracker.EMPTY, this, mOut);
+    }
 
 }

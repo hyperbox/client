@@ -23,32 +23,33 @@ package io.kamax.hboxc.gui.store;
 import io.kamax.hbox.comm.out.StoreOut;
 import io.kamax.hboxc.gui.utils.AbstractOutputListTableModel;
 
-@SuppressWarnings("serial")
+
 public final class StoreListTableModel extends AbstractOutputListTableModel<StoreOut> {
 
-   private final String ID = "ID";
-   private final String LABEL = "Label";
-   private final String LOC = "Location";
+    private static final long serialVersionUID = 7772589603382903388L;
+    private final String ID = "ID";
+    private final String LABEL = "Label";
+    private final String LOC = "Location";
 
-   @Override
-   protected void addColumns() {
-      addColumn(ID);
-      addColumn(LABEL);
-      addColumn(LOC);
-   }
+    @Override
+    protected void addColumns() {
+        addColumn(ID);
+        addColumn(LABEL);
+        addColumn(LOC);
+    }
 
-   @Override
-   protected Object getValueAt(StoreOut obj, String columnName) {
-      if (ID.equalsIgnoreCase(columnName)) {
-         return obj.getId();
-      }
-      if (LABEL.equalsIgnoreCase(columnName)) {
-         return obj.getLabel();
-      }
-      if (LOC.equalsIgnoreCase(columnName)) {
-         return obj.getLocation();
-      }
-      return null;
-   }
+    @Override
+    protected Object getValueAt(StoreOut obj, String columnName) {
+        if (ID.equalsIgnoreCase(columnName)) {
+            return obj.getId();
+        }
+        if (LABEL.equalsIgnoreCase(columnName)) {
+            return obj.getLabel();
+        }
+        if (LOC.equalsIgnoreCase(columnName)) {
+            return obj.getLocation();
+        }
+        return null;
+    }
 
 }

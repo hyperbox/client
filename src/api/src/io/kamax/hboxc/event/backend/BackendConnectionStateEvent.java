@@ -26,18 +26,18 @@ import io.kamax.hboxc.state.BackendConnectionState;
 
 public final class BackendConnectionStateEvent extends BackendEvent {
 
-   public BackendConnectionStateEvent(_Backend backend, BackendConnectionState state) {
-      super(ClientEventTypes.BackendConnState, backend);
-      set(state);
-   }
+    public BackendConnectionStateEvent(_Backend backend, BackendConnectionState state) {
+        super(ClientEventTypes.BackendConnState, backend);
+        set(state);
+    }
 
-   public BackendConnectionState getState() {
-      return get(BackendConnectionState.class);
-   }
+    public BackendConnectionState getState() {
+        return get(BackendConnectionState.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Backend ID " + getBackend().getId() + " changed connection state to " + getState() + " @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Backend ID " + getBackend().getId() + " changed connection state to " + getState() + " @ " + getTime();
+    }
 
 }

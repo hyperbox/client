@@ -24,14 +24,14 @@ import io.kamax.hboxc.gui.worker.receiver._WorkerDataReceiver;
 
 public abstract class WorkerDataReceiver implements _WorkerDataReceiver {
 
-   @Override
-   public void loadingStarted() {
-      // stub
-   }
+    @Override
+    public void loadingStarted() {
+        // stub
+    }
 
-   @Override
-   public void loadingFinished(boolean isSuccessful, String message) {
-      // stub
-   }
+    @Override
+    public void loadingFinished(boolean isSuccessful, String message) {
+        // stub
+    }
 
 }

@@ -32,21 +32,21 @@ import io.kamax.hboxc.gui.module._ModuleSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class ModuleLoadAction extends AbstractAction {
 
-   private _ModuleSelector selector;
+    private static final long serialVersionUID = -3141029261282534092L;
+    private _ModuleSelector selector;
 
-   public ModuleLoadAction(_ModuleSelector selector) {
-      super("Load", IconBuilder.getTask(HyperboxTasks.ModuleLoad));
-      this.selector = selector;
-   }
+    public ModuleLoadAction(_ModuleSelector selector) {
+        super("Load", IconBuilder.getTask(HyperboxTasks.ModuleLoad));
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      for (ModuleOut mod : selector.getModuleSelection()) {
-         Gui.post(new Request(Command.HBOX, HyperboxTasks.ModuleLoad, new ServerIn(selector.getServerId()), new ModuleIn(mod.getId())));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        for (ModuleOut mod : selector.getModuleSelection()) {
+            Gui.post(new Request(Command.HBOX, HyperboxTasks.ModuleLoad, new ServerIn(selector.getServerId()), new ModuleIn(mod.getId())));
+        }
+    }
 
 }

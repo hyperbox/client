@@ -32,15 +32,15 @@ import io.kamax.hboxc.front._Front;
 
 public class ConnectorDisconnectAction extends AbstractClientControllerSingleAction {
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.ConnectorDisconnect;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.ConnectorDisconnect;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
-      ConnectorInput conIn = req.get(ConnectorInput.class);
-      core.disconnect(conIn.getId());
-   }
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
+        ConnectorInput conIn = req.get(ConnectorInput.class);
+        core.disconnect(conIn.getId());
+    }
 
 }

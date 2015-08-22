@@ -32,26 +32,26 @@ import java.util.List;
 
 public interface _CoreReader {
 
-   public CoreState getCoreState();
+    public CoreState getCoreState();
 
-   public List<ConnectorOutput> listConnectors();
+    public List<ConnectorOutput> listConnectors();
 
-   public ConnectorOutput getConnector(ConnectorInput srvIn);
+    public ConnectorOutput getConnector(ConnectorInput srvIn);
 
-   public ConnectorOutput getConnector(String id);
+    public ConnectorOutput getConnector(String id);
 
-   public ConnectorOutput getConnectorForServer(String srvId);
+    public ConnectorOutput getConnectorForServer(String srvId);
 
-   public ServerOut getServer(ConnectorInput conIn);
+    public ServerOut getServer(ConnectorInput conIn);
 
-   public ServerOut getServerInfo(String id);
+    public ServerOut getServerInfo(String id);
 
-   public _ServerReader getServerReader(String id);
+    public _ServerReader getServerReader(String id);
 
-   public List<ConsoleViewerOutput> listConsoleViewers();
+    public List<ConsoleViewerOutput> listConsoleViewers();
 
-   public List<BackendOutput> listBackends();
+    public List<BackendOutput> listBackends();
 
-   public _Updater getUpdater();
+    public _Updater getUpdater();
 
 }

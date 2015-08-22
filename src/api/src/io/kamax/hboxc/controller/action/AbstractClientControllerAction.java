@@ -22,19 +22,19 @@ package io.kamax.hboxc.controller.action;
 
 public abstract class AbstractClientControllerAction implements _ClientControllerAction {
 
-   @Override
-   public Class<?>[] getRequiredClasses() {
-      return new Class[0];
-   }
+    @Override
+    public Class<?>[] getRequiredClasses() {
+        return new Class[0];
+    }
 
-   @Override
-   public Enum<?>[] getRequiredEnums() {
-      return new Enum[0];
-   }
+    @Override
+    public Enum<?>[] getRequiredEnums() {
+        return new Enum[0];
+    }
 
-   @Override
-   public String[] getRequiredData() {
-      return new String[0];
-   }
+    @Override
+    public String[] getRequiredData() {
+        return new String[0];
+    }
 
 }

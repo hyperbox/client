@@ -41,145 +41,145 @@ import net.miginfocom.swing.MigLayout;
 
 public class UserEditor implements _Saveable, _Cancelable {
 
-   private UserPermissionEditor permEditor;
+    private UserPermissionEditor permEditor;
 
-   private JLabel domainLabel;
-   private JTextField domainValue;
-   private JLabel usernameLabel;
-   private JTextField usernameValue;
-   private JLabel firstPassLabel;
-   private JPasswordField firstPassValue;
-   private JLabel secondPassLabel;
-   private JPasswordField secondPassValue;
+    private JLabel domainLabel;
+    private JTextField domainValue;
+    private JLabel usernameLabel;
+    private JTextField usernameValue;
+    private JLabel firstPassLabel;
+    private JPasswordField firstPassValue;
+    private JLabel secondPassLabel;
+    private JPasswordField secondPassValue;
 
-   private JPanel buttonPanel;
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JPanel buttonPanel;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   private UserIn usrIn;
-   private UserOut usrOut;
+    private UserIn usrIn;
+    private UserOut usrOut;
 
-   public UserEditor() {
-      permEditor = new UserPermissionEditor();
+    public UserEditor() {
+        permEditor = new UserPermissionEditor();
 
-      domainValue = new JTextField();
-      domainLabel = new JLabel("Domain");
-      domainLabel.setLabelFor(domainValue);
+        domainValue = new JTextField();
+        domainLabel = new JLabel("Domain");
+        domainLabel.setLabelFor(domainValue);
 
-      usernameValue = new JTextField();
-      usernameLabel = new JLabel("Username");
-      usernameLabel.setLabelFor(usernameValue);
+        usernameValue = new JTextField();
+        usernameLabel = new JLabel("Username");
+        usernameLabel.setLabelFor(usernameValue);
 
-      firstPassValue = new JPasswordField();
-      firstPassLabel = new JLabel("Enter New Password");
-      firstPassLabel.setLabelFor(firstPassValue);
+        firstPassValue = new JPasswordField();
+        firstPassLabel = new JLabel("Enter New Password");
+        firstPassLabel.setLabelFor(firstPassValue);
 
-      secondPassValue = new JPasswordField();
-      secondPassLabel = new JLabel("Confirm New Password");
-      secondPassLabel.setLabelFor(secondPassValue);
+        secondPassValue = new JPasswordField();
+        secondPassLabel = new JLabel("Confirm New Password");
+        secondPassLabel.setLabelFor(secondPassValue);
 
-      saveButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
+        saveButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
 
-      buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(saveButton);
-      buttonPanel.add(cancelButton);
+        buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
 
-      dialog = JDialogBuilder.get(saveButton);
-      dialog.add(usernameLabel);
-      dialog.add(usernameValue, "growx, pushx, wrap");
-      dialog.add(firstPassLabel);
-      dialog.add(firstPassValue, "growx, pushx, wrap");
-      dialog.add(secondPassLabel);
-      dialog.add(secondPassValue, "growx, pushx, wrap");
-      dialog.add(permEditor.getComponent(), "hidemode 3,span 2, growx, pushx, wrap");
-      dialog.add(buttonPanel, "span 2, center, bottom");
-   }
+        dialog = JDialogBuilder.get(saveButton);
+        dialog.add(usernameLabel);
+        dialog.add(usernameValue, "growx, pushx, wrap");
+        dialog.add(firstPassLabel);
+        dialog.add(firstPassValue, "growx, pushx, wrap");
+        dialog.add(secondPassLabel);
+        dialog.add(secondPassValue, "growx, pushx, wrap");
+        dialog.add(permEditor.getComponent(), "hidemode 3,span 2, growx, pushx, wrap");
+        dialog.add(buttonPanel, "span 2, center, bottom");
+    }
 
-   public UserIn create() {
+    public UserIn create() {
 
-      dialog.setTitle("Create new User");
-      permEditor.getComponent().setVisible(false);
-      show();
-      return usrIn;
-   }
+        dialog.setTitle("Create new User");
+        permEditor.getComponent().setVisible(false);
+        show();
+        return usrIn;
+    }
 
-   public UserIn edit(String serverId, UserOut usrOut) {
+    public UserIn edit(String serverId, UserOut usrOut) {
 
-      dialog.setTitle("Editing user " + usrOut.getDomainLogonName());
-      this.usrOut = usrOut;
+        dialog.setTitle("Editing user " + usrOut.getDomainLogonName());
+        this.usrOut = usrOut;
 
-      domainValue.setText(usrOut.getDomain());
-      usernameValue.setText(usrOut.getUsername());
+        domainValue.setText(usrOut.getDomain());
+        usernameValue.setText(usrOut.getUsername());
 
-      permEditor.show(serverId, usrOut);
+        permEditor.show(serverId, usrOut);
 
-      show();
-      return usrIn;
-   }
+        show();
+        return usrIn;
+    }
 
-   public static UserIn getInput() {
+    public static UserIn getInput() {
 
-      return new UserEditor().create();
-   }
+        return new UserEditor().create();
+    }
 
-   public static UserIn getInput(String serverId, UserOut usrOut) {
+    public static UserIn getInput(String serverId, UserOut usrOut) {
 
-      return new UserEditor().edit(serverId, usrOut);
-   }
+        return new UserEditor().edit(serverId, usrOut);
+    }
 
-   private void show() {
+    private void show() {
 
-      dialog.pack();
-      dialog.setSize(375, dialog.getHeight());
-      dialog.setLocationRelativeTo(dialog.getParent());
-      dialog.setVisible(true);
-   }
+        dialog.pack();
+        dialog.setSize(375, dialog.getHeight());
+        dialog.setLocationRelativeTo(dialog.getParent());
+        dialog.setVisible(true);
+    }
 
-   private void hide() {
+    private void hide() {
 
-      dialog.setVisible(false);
-   }
+        dialog.setVisible(false);
+    }
 
-   @Override
-   public void cancel() {
+    @Override
+    public void cancel() {
 
-      hide();
-   }
+        hide();
+    }
 
-   @Override
-   public void save() {
+    @Override
+    public void save() {
 
-      if (usrOut != null) {
-         usrIn = new UserIn(usrOut.getId());
-         permEditor.save();
-      } else {
-         usrIn = new UserIn();
+        if (usrOut != null) {
+            usrIn = new UserIn(usrOut.getId());
+            permEditor.save();
+        } else {
+            usrIn = new UserIn();
 
-         if (!domainValue.getText().isEmpty()) {
-            usrIn.setDomain(domainValue.getText());
-         }
+            if (!domainValue.getText().isEmpty()) {
+                usrIn.setDomain(domainValue.getText());
+            }
 
-         if ((firstPassValue.getPassword().length == 0) || (secondPassValue.getPassword().length == 0)) {
-            throw new HyperboxException("Password cannot be empty");
-         }
-      }
+            if ((firstPassValue.getPassword().length == 0) || (secondPassValue.getPassword().length == 0)) {
+                throw new HyperboxException("Password cannot be empty");
+            }
+        }
 
-      if (usernameValue.getText().isEmpty()) {
-         throw new HyperboxException("Username cannot be empty");
-      }
-      usrIn.setUsername(usernameValue.getText());
+        if (usernameValue.getText().isEmpty()) {
+            throw new HyperboxException("Username cannot be empty");
+        }
+        usrIn.setUsername(usernameValue.getText());
 
-      if ((firstPassValue.getPassword().length > 0) || (secondPassValue.getPassword().length > 0)) {
-         if (!Arrays.equals(firstPassValue.getPassword(), secondPassValue.getPassword())) {
-            throw new HyperboxException("Password do not match");
-         }
-         usrIn.setPassword(firstPassValue.getPassword());
-      }
+        if ((firstPassValue.getPassword().length > 0) || (secondPassValue.getPassword().length > 0)) {
+            if (!Arrays.equals(firstPassValue.getPassword(), secondPassValue.getPassword())) {
+                throw new HyperboxException("Password do not match");
+            }
+            usrIn.setPassword(firstPassValue.getPassword());
+        }
 
-      hide();
-   }
+        hide();
+    }
 
 }

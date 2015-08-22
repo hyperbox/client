@@ -28,21 +28,21 @@ import java.util.List;
 
 public class ConsoleViewerIoFactory {
 
-   private ConsoleViewerIoFactory() {
-   }
+    private ConsoleViewerIoFactory() {
+    }
 
-   public static ConsoleViewerOutput getOut(_ConsoleViewer conView) {
-      ConsoleViewerOutput out = new ConsoleViewerOutput(conView.getId(), conView.getHypervisorId(), conView.getModuleId(), conView.getViewerPath(),
-            conView.getArgs());
-      return out;
-   }
+    public static ConsoleViewerOutput getOut(_ConsoleViewer conView) {
+        ConsoleViewerOutput out = new ConsoleViewerOutput(conView.getId(), conView.getHypervisorId(), conView.getModuleId(), conView.getViewerPath(),
+                conView.getArgs());
+        return out;
+    }
 
-   public static List<ConsoleViewerOutput> getOutList(List<_ConsoleViewer> connViews) {
-      List<ConsoleViewerOutput> listOut = new ArrayList<ConsoleViewerOutput>();
-      for (_ConsoleViewer conView : connViews) {
-         listOut.add(getOut(conView));
-      }
-      return listOut;
-   }
+    public static List<ConsoleViewerOutput> getOutList(List<_ConsoleViewer> connViews) {
+        List<ConsoleViewerOutput> listOut = new ArrayList<ConsoleViewerOutput>();
+        for (_ConsoleViewer conView : connViews) {
+            listOut.add(getOut(conView));
+        }
+        return listOut;
+    }
 
 }

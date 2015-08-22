@@ -36,36 +36,36 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
-@SuppressWarnings("serial")
 public class HypervisorToolsMediumAttachAction extends AbstractAction {
 
-   private String serverId;
-   private StorageDeviceAttachmentOut sdaOut;
+    private static final long serialVersionUID = 9031406546855623059L;
+    private String serverId;
+    private StorageDeviceAttachmentOut sdaOut;
 
-   public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut) {
-      this(serverId, sdaOut, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true);
-   }
+    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut) {
+        this(serverId, sdaOut, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true);
+    }
 
-   public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
-      super(label, icon);
-      setEnabled(isEnabled);
-      this.serverId = serverId;
-      this.sdaOut = sdaOut;
-   }
+    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
+        super(label, icon);
+        setEnabled(isEnabled);
+        this.serverId = serverId;
+        this.sdaOut = sdaOut;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      MediumOut medOut = Gui.getReader().getServerReader(serverId).getHypervisor().getToolsMedium();
-      if (medOut != null) {
-         Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
-         req.set(new ServerIn(serverId));
-         req.set(new MachineIn(sdaOut.getMachineUuid()));
-         req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
-         req.set(new MediumIn(medOut.getLocation(), medOut.getDeviceType()));
-         Gui.post(req);
-      } else {
-         HyperboxClient.getView().postError("Cannot attach - No Hypervisor Tools available");
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        MediumOut medOut = Gui.getReader().getServerReader(serverId).getHypervisor().getToolsMedium();
+        if (medOut != null) {
+            Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
+            req.set(new ServerIn(serverId));
+            req.set(new MachineIn(sdaOut.getMachineUuid()));
+            req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
+            req.set(new MediumIn(medOut.getLocation(), medOut.getDeviceType()));
+            Gui.post(req);
+        } else {
+            HyperboxClient.getView().postError("Cannot attach - No Hypervisor Tools available");
+        }
+    }
 
 }

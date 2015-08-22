@@ -23,37 +23,37 @@ package io.kamax.hboxc.gui.module;
 import io.kamax.hbox.comm.out.ModuleOut;
 import io.kamax.hboxc.gui.utils.AbstractOutputListTableModel;
 
-@SuppressWarnings("serial")
 public class ModuleListTableModel extends AbstractOutputListTableModel<ModuleOut> {
 
-   private final String ID = "ID";
-   private final String NAME = "Name";
-   private final String IS_LOADED = "Loaded";
-   private final String DESCRIPTOR = "Descriptor";
+    private static final long serialVersionUID = -6029782274503402958L;
+    private final String ID = "ID";
+    private final String NAME = "Name";
+    private final String IS_LOADED = "Loaded";
+    private final String DESCRIPTOR = "Descriptor";
 
-   @Override
-   protected void addColumns() {
-      addColumn(ID);
-      addColumn(NAME);
-      addColumn(IS_LOADED);
-      addColumn(DESCRIPTOR);
-   }
+    @Override
+    protected void addColumns() {
+        addColumn(ID);
+        addColumn(NAME);
+        addColumn(IS_LOADED);
+        addColumn(DESCRIPTOR);
+    }
 
-   @Override
-   protected Object getValueAt(ModuleOut obj, String columnName) {
-      if (ID.equalsIgnoreCase(columnName)) {
-         return obj.getId();
-      }
-      if (NAME.equalsIgnoreCase(columnName)) {
-         return obj.getName();
-      }
-      if (IS_LOADED.equalsIgnoreCase(columnName)) {
-         return Boolean.toString(obj.isLoaded());
-      }
-      if (DESCRIPTOR.equalsIgnoreCase(columnName)) {
-         return obj.getDescriptorFile();
-      }
-      return null;
-   }
+    @Override
+    protected Object getValueAt(ModuleOut obj, String columnName) {
+        if (ID.equalsIgnoreCase(columnName)) {
+            return obj.getId();
+        }
+        if (NAME.equalsIgnoreCase(columnName)) {
+            return obj.getName();
+        }
+        if (IS_LOADED.equalsIgnoreCase(columnName)) {
+            return Boolean.toString(obj.isLoaded());
+        }
+        if (DESCRIPTOR.equalsIgnoreCase(columnName)) {
+            return obj.getDescriptorFile();
+        }
+        return null;
+    }
 
 }

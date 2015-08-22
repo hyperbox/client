@@ -26,13 +26,13 @@ import io.kamax.hboxc.constant.ClientEntity;
 
 public class BackendOutput extends ObjectOut {
 
-   public BackendOutput(String id) {
-      super(ClientEntity.Backend, id);
-   }
+    public BackendOutput(String id) {
+        super(ClientEntity.Backend, id);
+    }
 
-   @Override
-   public String toString() {
-      return getId();
-   }
+    @Override
+    public String toString() {
+        return getId();
+    }
 
 }

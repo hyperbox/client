@@ -26,19 +26,19 @@ import net.miginfocom.swing.MigLayout;
 
 public final class SessionView {
 
-   private SessionListView sessionList;
-   private JPanel mainPanel;
+    private SessionListView sessionList;
+    private JPanel mainPanel;
 
-   public void init() throws HyperboxException {
-      sessionList = new SessionListView();
-      sessionList.init();
+    public void init() throws HyperboxException {
+        sessionList = new SessionListView();
+        sessionList.init();
 
-      mainPanel = new JPanel(new MigLayout());
-      mainPanel.add(sessionList.getComponent(), "grow,push");
-   }
+        mainPanel = new JPanel(new MigLayout());
+        mainPanel.add(sessionList.getComponent(), "grow,push");
+    }
 
-   public JPanel getPanel() {
-      return mainPanel;
-   }
+    public JPanel getPanel() {
+        return mainPanel;
+    }
 
 }

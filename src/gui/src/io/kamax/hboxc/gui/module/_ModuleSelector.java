@@ -25,8 +25,8 @@ import java.util.List;
 
 public interface _ModuleSelector {
 
-   public String getServerId();
+    public String getServerId();
 
-   public List<ModuleOut> getModuleSelection();
+    public List<ModuleOut> getModuleSelection();
 
 }

@@ -20,15 +20,17 @@
 
 package io.kamax.hboxc.exception;
 
-@SuppressWarnings("serial")
+
 public class UpdaterNoNewUpdateException extends UpdaterException {
 
-   public UpdaterNoNewUpdateException() {
-      super("No new updates were found");
-   }
+    private static final long serialVersionUID = 1162687424191301991L;
 
-   public UpdaterNoNewUpdateException(String s) {
-      super(s);
-   }
+    public UpdaterNoNewUpdateException() {
+        super("No new updates were found");
+    }
+
+    public UpdaterNoNewUpdateException(String s) {
+        super(s);
+    }
 
 }

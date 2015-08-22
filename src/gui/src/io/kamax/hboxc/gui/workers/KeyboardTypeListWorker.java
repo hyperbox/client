@@ -28,31 +28,31 @@ import java.util.List;
 
 public class KeyboardTypeListWorker extends AxSwingWorker<_KeyboardTypeListReceiver, Void, String> {
 
-   private String serverId;
-   private String machineId;
+    private String serverId;
+    private String machineId;
 
-   public KeyboardTypeListWorker(_KeyboardTypeListReceiver recv, String serverId, String machineId) {
-      super(recv);
-      this.serverId = serverId;
-      this.machineId = machineId;
-   }
+    public KeyboardTypeListWorker(_KeyboardTypeListReceiver recv, String serverId, String machineId) {
+        super(recv);
+        this.serverId = serverId;
+        this.machineId = machineId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      for (String type : Gui.getServer(serverId).listKeyboardMode(new MachineIn(machineId))) {
-         publish(type);
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        for (String type : Gui.getServer(serverId).listKeyboardMode(new MachineIn(machineId))) {
+            publish(type);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<String> typeList) {
-      getReceiver().add(typeList);
-   }
+    @Override
+    protected void process(List<String> typeList) {
+        getReceiver().add(typeList);
+    }
 
-   public static void execute(_WorkerTracker tracker, _KeyboardTypeListReceiver recv, String serverId, String machineId) {
-      tracker.register(new KeyboardTypeListWorker(recv, serverId, machineId)).execute();
-   }
+    public static void execute(_WorkerTracker tracker, _KeyboardTypeListReceiver recv, String serverId, String machineId) {
+        tracker.register(new KeyboardTypeListWorker(recv, serverId, machineId)).execute();
+    }
 
 }

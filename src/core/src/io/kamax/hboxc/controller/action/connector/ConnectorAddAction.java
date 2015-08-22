@@ -37,17 +37,17 @@ import io.kamax.hboxc.front._Front;
 
 public class ConnectorAddAction extends AbstractClientControllerSingleAction {
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.ConnectorAdd;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.ConnectorAdd;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
-      ConnectorInput conIn = req.get(ConnectorInput.class);
-      UserIn usrIn = req.get(UserIn.class);
-      _Connector conn = core.addConnector(conIn, usrIn);
-      recv.putAnswer(new Answer(req, AnswerType.DATA, ConnectorIoFactory.get(conn)));
-   }
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
+        ConnectorInput conIn = req.get(ConnectorInput.class);
+        UserIn usrIn = req.get(UserIn.class);
+        _Connector conn = core.addConnector(conIn, usrIn);
+        recv.putAnswer(new Answer(req, AnswerType.DATA, ConnectorIoFactory.get(conn)));
+    }
 
 }

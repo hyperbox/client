@@ -35,51 +35,51 @@ import javax.swing.SwingWorker;
  */
 public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends SwingWorker<T, V> {
 
-   private K recv;
-   private boolean failed = false;
+    private K recv;
+    private boolean failed = false;
 
-   public AxSwingWorker(K recv) {
-      setReceiver(recv);
-   }
+    public AxSwingWorker(K recv) {
+        setReceiver(recv);
+    }
 
-   protected K getReceiver() {
-      return recv;
-   }
+    protected K getReceiver() {
+        return recv;
+    }
 
-   protected void setReceiver(final K recv) {
-      this.recv = recv;
+    protected void setReceiver(final K recv) {
+        this.recv = recv;
 
-      addPropertyChangeListener(new PropertyChangeListener() {
+        addPropertyChangeListener(new PropertyChangeListener() {
 
-         @Override
-         public void propertyChange(PropertyChangeEvent ev) {
-            if ("state".equals(ev.getPropertyName()) && (SwingWorker.StateValue.STARTED == ev.getNewValue())) {
-               recv.loadingStarted();
+            @Override
+            public void propertyChange(PropertyChangeEvent ev) {
+                if ("state".equals(ev.getPropertyName()) && (SwingWorker.StateValue.STARTED == ev.getNewValue())) {
+                    recv.loadingStarted();
+                }
             }
-         }
-      });
-   }
+        });
+    }
 
-   @Override
-   protected final void done() {
-      try {
-         innerDone();
-         recv.loadingFinished(true, null);
-      } catch (ExecutionException e) {
-         failed = true;
-         recv.loadingFinished(false, e.getCause().getMessage());
-      } catch (Throwable t) {
-         failed = true;
-         recv.loadingFinished(false, t.getMessage());
-      }
-   }
+    @Override
+    protected final void done() {
+        try {
+            innerDone();
+            recv.loadingFinished(true, null);
+        } catch (ExecutionException e) {
+            failed = true;
+            recv.loadingFinished(false, e.getCause().getMessage());
+        } catch (Throwable t) {
+            failed = true;
+            recv.loadingFinished(false, t.getMessage());
+        }
+    }
 
-   protected void innerDone() throws InterruptedException, ExecutionException {
-      get();
-   }
+    protected void innerDone() throws InterruptedException, ExecutionException {
+        get();
+    }
 
-   public boolean hasFailed() {
-      return failed;
-   }
+    public boolean hasFailed() {
+        return failed;
+    }
 
 }

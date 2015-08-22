@@ -37,125 +37,125 @@ import net.miginfocom.swing.MigLayout;
 
 public class HypervisorViewer implements _Refreshable {
 
-   private String srvId;
+    private String srvId;
 
-   private JLabel stateLabel;
-   private JTextField stateData;
+    private JLabel stateLabel;
+    private JTextField stateData;
 
-   private JLabel typeLabel;
-   private JTextField typeData;
+    private JLabel typeLabel;
+    private JTextField typeData;
 
-   private JLabel vendorLabel;
-   private JTextField vendorData;
+    private JLabel vendorLabel;
+    private JTextField vendorData;
 
-   private JLabel productLabel;
-   private JTextField productData;
+    private JLabel productLabel;
+    private JTextField productData;
 
-   private JLabel versionLabel;
-   private JTextField versionData;
+    private JLabel versionLabel;
+    private JTextField versionData;
 
-   private JLabel revisionLabel;
-   private JTextField revisionData;
+    private JLabel revisionLabel;
+    private JTextField revisionData;
 
-   private JPanel panel;
+    private JPanel panel;
 
-   public HypervisorViewer() {
-      stateLabel = new JLabel("State");
-      typeLabel = new JLabel("Type");
-      vendorLabel = new JLabel("Vendor");
-      productLabel = new JLabel("Product");
-      versionLabel = new JLabel("Version");
-      revisionLabel = new JLabel("Revision");
+    public HypervisorViewer() {
+        stateLabel = new JLabel("State");
+        typeLabel = new JLabel("Type");
+        vendorLabel = new JLabel("Vendor");
+        productLabel = new JLabel("Product");
+        versionLabel = new JLabel("Version");
+        revisionLabel = new JLabel("Revision");
 
-      stateData = new JTextField();
-      stateData.setEditable(false);
-      typeData = new JTextField();
-      typeData.setEditable(false);
-      vendorData = new JTextField();
-      vendorData.setEditable(false);
-      productData = new JTextField();
-      productData.setEditable(false);
-      versionData = new JTextField();
-      versionData.setEditable(false);
-      revisionData = new JTextField();
-      revisionData.setEditable(false);
+        stateData = new JTextField();
+        stateData.setEditable(false);
+        typeData = new JTextField();
+        typeData.setEditable(false);
+        vendorData = new JTextField();
+        vendorData.setEditable(false);
+        productData = new JTextField();
+        productData.setEditable(false);
+        versionData = new JTextField();
+        versionData.setEditable(false);
+        revisionData = new JTextField();
+        revisionData.setEditable(false);
 
-      panel = new JPanel(new MigLayout());
-      panel.setBorder(BorderFactory.createTitledBorder("Hypervisor"));
-      panel.add(stateLabel, "hidemode 3");
-      panel.add(stateData, "growx,pushx,wrap,hidemode 3");
-      panel.add(typeLabel, "hidemode 3");
-      panel.add(typeData, "growx,pushx,wrap,hidemode 3");
-      panel.add(vendorLabel, "hidemode 3");
-      panel.add(vendorData, "growx,pushx,wrap,hidemode 3");
-      panel.add(productLabel, "hidemode 3");
-      panel.add(productData, "growx,pushx,wrap,hidemode 3");
-      panel.add(versionLabel, "hidemode 3");
-      panel.add(versionData, "growx,pushx,wrap,hidemode 3");
-      panel.add(revisionLabel, "hidemode 3");
-      panel.add(revisionData, "growx,pushx,wrap,hidemode 3");
+        panel = new JPanel(new MigLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Hypervisor"));
+        panel.add(stateLabel, "hidemode 3");
+        panel.add(stateData, "growx,pushx,wrap,hidemode 3");
+        panel.add(typeLabel, "hidemode 3");
+        panel.add(typeData, "growx,pushx,wrap,hidemode 3");
+        panel.add(vendorLabel, "hidemode 3");
+        panel.add(vendorData, "growx,pushx,wrap,hidemode 3");
+        panel.add(productLabel, "hidemode 3");
+        panel.add(productData, "growx,pushx,wrap,hidemode 3");
+        panel.add(versionLabel, "hidemode 3");
+        panel.add(versionData, "growx,pushx,wrap,hidemode 3");
+        panel.add(revisionLabel, "hidemode 3");
+        panel.add(revisionData, "growx,pushx,wrap,hidemode 3");
 
-      ViewEventManager.register(this);
-   }
+        ViewEventManager.register(this);
+    }
 
-   private void toogleConnected(final boolean isConnected) {
-      stateData.setText(isConnected ? "Connected" : "Disconnected");
-      typeLabel.setVisible(isConnected);
-      typeData.setVisible(isConnected);
-      vendorLabel.setVisible(isConnected);
-      vendorData.setVisible(isConnected);
-      productLabel.setVisible(isConnected);
-      productData.setVisible(isConnected);
-      versionLabel.setVisible(isConnected);
-      versionData.setVisible(isConnected);
-      revisionLabel.setVisible(isConnected);
-      revisionData.setVisible(isConnected);
-   }
+    private void toogleConnected(final boolean isConnected) {
+        stateData.setText(isConnected ? "Connected" : "Disconnected");
+        typeLabel.setVisible(isConnected);
+        typeData.setVisible(isConnected);
+        vendorLabel.setVisible(isConnected);
+        vendorData.setVisible(isConnected);
+        productLabel.setVisible(isConnected);
+        productData.setVisible(isConnected);
+        versionLabel.setVisible(isConnected);
+        versionData.setVisible(isConnected);
+        revisionLabel.setVisible(isConnected);
+        revisionData.setVisible(isConnected);
+    }
 
-   public void show(HypervisorOut srvOut) {
-      typeData.setText(srvOut.getType());
-      vendorData.setText(srvOut.getVendor());
-      productData.setText(srvOut.getProduct());
-      versionData.setText(srvOut.getVersion());
-      revisionData.setText(srvOut.getRevision());
-      toogleConnected(true);
-   }
+    public void show(HypervisorOut srvOut) {
+        typeData.setText(srvOut.getType());
+        vendorData.setText(srvOut.getVendor());
+        productData.setText(srvOut.getProduct());
+        versionData.setText(srvOut.getVersion());
+        revisionData.setText(srvOut.getRevision());
+        toogleConnected(true);
+    }
 
-   public void setDisconnected() {
-      typeData.setText(null);
-      vendorData.setText(null);
-      productData.setText(null);
-      versionData.setText(null);
-      revisionData.setText(null);
-      toogleConnected(false);
-   }
+    public void setDisconnected() {
+        typeData.setText(null);
+        vendorData.setText(null);
+        productData.setText(null);
+        versionData.setText(null);
+        revisionData.setText(null);
+        toogleConnected(false);
+    }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+    public JComponent getComponent() {
+        return panel;
+    }
 
-   public void setSrvId(String srvId) {
-      this.srvId = srvId;
-   }
+    public void setSrvId(String srvId) {
+        this.srvId = srvId;
+    }
 
-   @Handler
-   private void putHypervisorConnectEvent(HypervisorConnectedEventOut ev) {
-      if ((srvId != null) && ev.getServerId().equals(srvId)) {
-         toogleConnected(true);
-      }
+    @Handler
+    private void putHypervisorConnectEvent(HypervisorConnectedEventOut ev) {
+        if ((srvId != null) && ev.getServerId().equals(srvId)) {
+            toogleConnected(true);
+        }
 
-   }
+    }
 
-   @Handler
-   private void putHypervisorConnectEvent(HypervisorDisconnectedEventOut ev) {
-      if ((srvId != null) && ev.getServerId().equals(srvId)) {
-         toogleConnected(false);
-      }
-   }
+    @Handler
+    private void putHypervisorConnectEvent(HypervisorDisconnectedEventOut ev) {
+        if ((srvId != null) && ev.getServerId().equals(srvId)) {
+            toogleConnected(false);
+        }
+    }
 
-   @Override
-   public void refresh() {
-      show(Gui.getServer(srvId).getHypervisor().getInfo());
-   }
+    @Override
+    public void refresh() {
+        show(Gui.getServer(srvId).getHypervisor().getInfo());
+    }
 
 }

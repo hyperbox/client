@@ -34,27 +34,28 @@ import io.kamax.hboxc.gui.store.utils.StoreItemChooser;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public final class MachineRegisterAction extends AbstractAction {
 
-   private _SingleServerSelector select;
+    private static final long serialVersionUID = -8913469537522961357L;
+    private _SingleServerSelector select;
 
-   public MachineRegisterAction(_SingleServerSelector select, String label) {
-      super(label, IconBuilder.getTask(HypervisorTasks.MachineRegister));
-      this.select = select;
-   }
+    public MachineRegisterAction(_SingleServerSelector select, String label) {
+        super(label, IconBuilder.getTask(HypervisorTasks.MachineRegister));
+        this.select = select;
+    }
 
-   public MachineRegisterAction(_SingleServerSelector select) {
-      this(select, "Register");
-   }
+    public MachineRegisterAction(_SingleServerSelector select) {
+        this(select, "Register");
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      StoreItemOut vboxFilePathOut = StoreItemChooser.getExisitingFile(select.getServer().getId());
-      if (vboxFilePathOut != null) {
-         StoreItemIn vboxFilePathIn = StoreItemIoFactory.get(vboxFilePathOut);
-         Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineRegister, new ServerIn(select.getServer().getId()), vboxFilePathIn));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        StoreItemOut vboxFilePathOut = StoreItemChooser.getExisitingFile(select.getServer().getId());
+        if (vboxFilePathOut != null) {
+            StoreItemIn vboxFilePathIn = StoreItemIoFactory.get(vboxFilePathOut);
+            Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineRegister, new ServerIn(select.getServer().getId()), vboxFilePathIn));
+        }
+    }
 
 }

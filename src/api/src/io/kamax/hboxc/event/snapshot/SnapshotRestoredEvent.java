@@ -27,8 +27,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class SnapshotRestoredEvent extends SnapshotEvent {
 
-   public SnapshotRestoredEvent(ServerOut srvOut, MachineOut mOut, SnapshotOut snapOut) {
-      super(ClientEvents.SnapshotRestored, srvOut, mOut, snapOut);
-   }
+    public SnapshotRestoredEvent(ServerOut srvOut, MachineOut mOut, SnapshotOut snapOut) {
+        super(ClientEvents.SnapshotRestored, srvOut, mOut, snapOut);
+    }
 
 }

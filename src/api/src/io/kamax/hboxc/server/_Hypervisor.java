@@ -32,59 +32,59 @@ import java.util.List;
 
 public interface _Hypervisor {
 
-   public HypervisorOut getInfo();
+    public HypervisorOut getInfo();
 
-   public String getServerId();
+    public String getServerId();
 
-   public String getType();
+    public String getType();
 
-   public String getVendor();
+    public String getVendor();
 
-   public String getProduct();
+    public String getProduct();
 
-   public String getVersion();
+    public String getVersion();
 
-   public String getRevision();
+    public String getRevision();
 
-   public boolean hasToolsMedium();
+    public boolean hasToolsMedium();
 
-   public MediumOut getToolsMedium();
+    public MediumOut getToolsMedium();
 
-   /**
-    * List all supported network modes for the adaptors
-    *
-    * @return List of network modes or empty list if none is found
-    */
-   public List<NetModeOut> listNetworkModes();
+    /**
+     * List all supported network modes for the adaptors
+     *
+     * @return List of network modes or empty list if none is found
+     */
+    public List<NetModeOut> listNetworkModes();
 
-   public NetModeOut getNetworkMode(String id);
+    public NetModeOut getNetworkMode(String id);
 
-   /**
-    * List Network adaptors accessible to the VMs
-    *
-    * @return List of network adaptors or empty list if none is found
-    */
-   public List<NetAdaptorOut> listAdaptors();
+    /**
+     * List Network adaptors accessible to the VMs
+     *
+     * @return List of network adaptors or empty list if none is found
+     */
+    public List<NetAdaptorOut> listAdaptors();
 
-   /**
-    * List all network adaptors for the given network mode
-    *
-    * @param modeId Network mode ID to match
-    * @return List of network adaptor of the specified network mode, or empty list if none is found
-    * @throws InvalidNetworkModeException If the netmork mode does not exist
-    */
-   public List<NetAdaptorOut> listAdaptors(String modeId) throws InvalidNetworkModeException;
+    /**
+     * List all network adaptors for the given network mode
+     *
+     * @param modeId Network mode ID to match
+     * @return List of network adaptor of the specified network mode, or empty list if none is found
+     * @throws InvalidNetworkModeException If the netmork mode does not exist
+     */
+    public List<NetAdaptorOut> listAdaptors(String modeId) throws InvalidNetworkModeException;
 
-   public NetAdaptorOut createAdaptor(String modeId, String name) throws InvalidNetworkModeException;
+    public NetAdaptorOut createAdaptor(String modeId, String name) throws InvalidNetworkModeException;
 
-   public void removeAdaptor(String modeId, String adaptorId) throws InvalidNetworkModeException;
+    public void removeAdaptor(String modeId, String adaptorId) throws InvalidNetworkModeException;
 
-   public NetAdaptorOut getNetAdaptor(String modId, String adaptorId) throws NetworkAdaptorNotFoundException;
+    public NetAdaptorOut getNetAdaptor(String modId, String adaptorId) throws NetworkAdaptorNotFoundException;
 
-   public NetServiceIO getNetService(String modeId, String adaptorId, String svcTypeId) throws NetworkAdaptorNotFoundException;
+    public NetServiceIO getNetService(String modeId, String adaptorId, String svcTypeId) throws NetworkAdaptorNotFoundException;
 
-   public List<String> getLogFileList(String vmId);
+    public List<String> getLogFileList(String vmId);
 
-   public _MachineLogFile getLogFile(String vmId, String logid);
+    public _MachineLogFile getLogFile(String vmId, String logid);
 
 }

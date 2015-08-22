@@ -44,82 +44,82 @@ import net.miginfocom.swing.MigLayout;
 
 public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
 
-   private JPanel panel;
+    private JPanel panel;
 
-   private ConsoleViewerTableModel consViewerTableModel;
-   private JTable consViewerTable;
-   private JScrollPane consViewerTablePane;
+    private ConsoleViewerTableModel consViewerTableModel;
+    private JTable consViewerTable;
+    private JScrollPane consViewerTablePane;
 
-   private JButton addButton;
-   private JButton remButton;
-   private JPanel buttonPanel;
+    private JButton addButton;
+    private JButton remButton;
+    private JPanel buttonPanel;
 
-   public ConsoleViewersSettingsViewer() {
+    public ConsoleViewersSettingsViewer() {
 
-      ViewEventManager.register(this);
+        ViewEventManager.register(this);
 
-      consViewerTableModel = new ConsoleViewerTableModel();
-      consViewerTable = new JTable(consViewerTableModel);
-      consViewerTable.addMouseListener(new BrowseMouseListener());
-      consViewerTable.setShowGrid(true);
-      consViewerTable.setFillsViewportHeight(true);
-      consViewerTable.setAutoCreateRowSorter(true);
-      consViewerTablePane = new JScrollPane(consViewerTable);
+        consViewerTableModel = new ConsoleViewerTableModel();
+        consViewerTable = new JTable(consViewerTableModel);
+        consViewerTable.addMouseListener(new BrowseMouseListener());
+        consViewerTable.setShowGrid(true);
+        consViewerTable.setFillsViewportHeight(true);
+        consViewerTable.setAutoCreateRowSorter(true);
+        consViewerTablePane = new JScrollPane(consViewerTable);
 
-      addButton = new JButton(new ConsoleViewerCreateAction());
-      remButton = new JButton(new ConsoleViewerRemoveAction(this));
-      buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(addButton);
-      buttonPanel.add(remButton);
+        addButton = new JButton(new ConsoleViewerCreateAction());
+        remButton = new JButton(new ConsoleViewerRemoveAction(this));
+        buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(addButton);
+        buttonPanel.add(remButton);
 
-      panel = new JPanel(new MigLayout());
-      panel.add(consViewerTablePane, "grow,push,wrap");
-      panel.add(buttonPanel, "growx,pushx,wrap");
-   }
+        panel = new JPanel(new MigLayout());
+        panel.add(consViewerTablePane, "grow,push,wrap");
+        panel.add(buttonPanel, "growx,pushx,wrap");
+    }
 
-   public JComponent getComponet() {
-      return panel;
-   }
+    public JComponent getComponet() {
+        return panel;
+    }
 
-   private class BrowseMouseListener extends MouseAdapter {
+    private class BrowseMouseListener extends MouseAdapter {
 
-      private ConsoleViewerOutput getSelection() {
-         if (consViewerTable.getSelectedRow() == -1) {
-            return null;
-         } else {
-            return consViewerTableModel.getObjectAtRowId(consViewerTable.convertRowIndexToModel(consViewerTable.getSelectedRow()));
-         }
-      }
-
-      @Override
-      public void mouseClicked(MouseEvent ev) {
-
-         if (ev.getClickCount() == 2) {
-            ConsoleViewerOutput cvOut = getSelection();
-            if (cvOut != null) {
-               ConsoleViewerEditor.edit(cvOut);
+        private ConsoleViewerOutput getSelection() {
+            if (consViewerTable.getSelectedRow() == -1) {
+                return null;
+            } else {
+                return consViewerTableModel.getObjectAtRowId(consViewerTable.convertRowIndexToModel(consViewerTable.getSelectedRow()));
             }
-         }
-      }
-   }
+        }
 
-   public void load() {
+        @Override
+        public void mouseClicked(MouseEvent ev) {
 
-      consViewerTableModel.put(Gui.getReader().listConsoleViewers());
-   }
+            if (ev.getClickCount() == 2) {
+                ConsoleViewerOutput cvOut = getSelection();
+                if (cvOut != null) {
+                    ConsoleViewerEditor.edit(cvOut);
+                }
+            }
+        }
+    }
 
-   @Override
-   public List<ConsoleViewerOutput> getConsoleViewers() {
-      List<ConsoleViewerOutput> listOut = new ArrayList<ConsoleViewerOutput>();
-      for (int rowId : consViewerTable.getSelectedRows()) {
-         listOut.add(consViewerTableModel.getObjectAtRowId(consViewerTable.convertRowIndexToModel(rowId)));
-      }
-      return listOut;
-   }
+    public void load() {
 
-   @Handler
-   public void putConsoleViewerEvent(ConsoleViewerEvent ev) {
-      load();
-   }
+        consViewerTableModel.put(Gui.getReader().listConsoleViewers());
+    }
+
+    @Override
+    public List<ConsoleViewerOutput> getConsoleViewers() {
+        List<ConsoleViewerOutput> listOut = new ArrayList<ConsoleViewerOutput>();
+        for (int rowId : consViewerTable.getSelectedRows()) {
+            listOut.add(consViewerTableModel.getObjectAtRowId(consViewerTable.convertRowIndexToModel(rowId)));
+        }
+        return listOut;
+    }
+
+    @Handler
+    public void putConsoleViewerEvent(ConsoleViewerEvent ev) {
+        load();
+    }
 
 }

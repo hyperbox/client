@@ -40,117 +40,117 @@ import net.miginfocom.swing.MigLayout;
 
 public class ConsoleViewerEditor implements _Saveable, _Cancelable {
 
-   private ClientTasks saveTask;
-   private ConsoleViewerInput cvIn;
+    private ClientTasks saveTask;
+    private ConsoleViewerInput cvIn;
 
-   private JLabel hypervisorLabel;
-   private JLabel moduleLabel;
-   private JLabel pathLabel;
-   private JLabel argsLabel;
+    private JLabel hypervisorLabel;
+    private JLabel moduleLabel;
+    private JLabel pathLabel;
+    private JLabel argsLabel;
 
-   private JTextField hypervisorData;
-   private JTextField moduleData;
-   private JTextField pathData;
-   private JTextField argsData;
+    private JTextField hypervisorData;
+    private JTextField moduleData;
+    private JTextField pathData;
+    private JTextField argsData;
 
-   private JPanel buttonPanel;
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JPanel buttonPanel;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   private ConsoleViewerEditor() {
+    private ConsoleViewerEditor() {
 
-      hypervisorLabel = new JLabel("Hypervisor Type Pattern");
-      moduleLabel = new JLabel("Module Pattern");
-      pathLabel = new JLabel("Viewer Path");
-      argsLabel = new JLabel("Arguments");
+        hypervisorLabel = new JLabel("Hypervisor Type Pattern");
+        moduleLabel = new JLabel("Module Pattern");
+        pathLabel = new JLabel("Viewer Path");
+        argsLabel = new JLabel("Arguments");
 
-      hypervisorData = new JTextField();
-      moduleData = new JTextField();
-      pathData = new JTextField();
-      argsData = new JTextField();
+        hypervisorData = new JTextField();
+        moduleData = new JTextField();
+        pathData = new JTextField();
+        argsData = new JTextField();
 
-      saveButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
-      buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(saveButton);
-      buttonPanel.add(cancelButton);
+        saveButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
+        buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
 
-      dialog = JDialogBuilder.get("Console Viewer - Edition", saveButton);
-      dialog.add(hypervisorLabel);
-      dialog.add(hypervisorData, "growx, pushx, wrap");
-      dialog.add(moduleLabel);
-      dialog.add(moduleData, "growx, pushx, wrap");
-      dialog.add(pathLabel);
-      dialog.add(pathData, "growx, pushx, wrap");
-      dialog.add(argsLabel);
-      dialog.add(argsData, "growx, pushx, wrap");
-      dialog.add(buttonPanel, "center, bottom, span 2");
-   }
+        dialog = JDialogBuilder.get("Console Viewer - Edition", saveButton);
+        dialog.add(hypervisorLabel);
+        dialog.add(hypervisorData, "growx, pushx, wrap");
+        dialog.add(moduleLabel);
+        dialog.add(moduleData, "growx, pushx, wrap");
+        dialog.add(pathLabel);
+        dialog.add(pathData, "growx, pushx, wrap");
+        dialog.add(argsLabel);
+        dialog.add(argsData, "growx, pushx, wrap");
+        dialog.add(buttonPanel, "center, bottom, span 2");
+    }
 
-   public static void create() {
+    public static void create() {
 
-      new ConsoleViewerEditor().add();
-   }
+        new ConsoleViewerEditor().add();
+    }
 
-   public static void edit(ConsoleViewerOutput conViewOut) {
+    public static void edit(ConsoleViewerOutput conViewOut) {
 
-      new ConsoleViewerEditor().modify(conViewOut);
-   }
+        new ConsoleViewerEditor().modify(conViewOut);
+    }
 
-   private void add() {
+    private void add() {
 
-      saveTask = ClientTasks.ConsoleViewerAdd;
-      cvIn = new ConsoleViewerInput();
+        saveTask = ClientTasks.ConsoleViewerAdd;
+        cvIn = new ConsoleViewerInput();
 
-      show();
-   }
+        show();
+    }
 
-   private void modify(ConsoleViewerOutput conViewOut) {
+    private void modify(ConsoleViewerOutput conViewOut) {
 
-      saveTask = ClientTasks.ConsoleViewerModify;
-      cvIn = new ConsoleViewerInput(conViewOut.getId());
+        saveTask = ClientTasks.ConsoleViewerModify;
+        cvIn = new ConsoleViewerInput(conViewOut.getId());
 
-      hypervisorData.setText(conViewOut.getHypervisorId());
-      hypervisorData.setEditable(false);
-      moduleData.setText(conViewOut.getModuleId());
-      moduleData.setEditable(false);
-      pathData.setText(conViewOut.getViewerPath());
-      argsData.setText(conViewOut.getArgs().toString());
+        hypervisorData.setText(conViewOut.getHypervisorId());
+        hypervisorData.setEditable(false);
+        moduleData.setText(conViewOut.getModuleId());
+        moduleData.setEditable(false);
+        pathData.setText(conViewOut.getViewerPath());
+        argsData.setText(conViewOut.getArgs().toString());
 
-      show();
-   }
+        show();
+    }
 
-   private void show() {
+    private void show() {
 
-      dialog.setSize(410, 170);
-      dialog.setLocationRelativeTo(dialog.getParent());
-      dialog.setVisible(true);
-   }
+        dialog.setSize(410, 170);
+        dialog.setLocationRelativeTo(dialog.getParent());
+        dialog.setVisible(true);
+    }
 
-   private void hide() {
+    private void hide() {
 
-      dialog.setVisible(false);
-   }
+        dialog.setVisible(false);
+    }
 
-   @Override
-   public void cancel() {
+    @Override
+    public void cancel() {
 
-      hide();
-   }
+        hide();
+    }
 
-   @Override
-   public void save() {
+    @Override
+    public void save() {
 
-      cvIn.setHypervisorId(hypervisorData.getText());
-      cvIn.setModuleId(moduleData.getText());
-      cvIn.setViewer(pathData.getText());
-      cvIn.setArgs(argsData.getText());
+        cvIn.setHypervisorId(hypervisorData.getText());
+        cvIn.setModuleId(moduleData.getText());
+        cvIn.setViewer(pathData.getText());
+        cvIn.setArgs(argsData.getText());
 
-      Gui.post(new Request(saveTask, cvIn));
+        Gui.post(new Request(saveTask, cvIn));
 
-      hide();
-   }
+        hide();
+    }
 
 }

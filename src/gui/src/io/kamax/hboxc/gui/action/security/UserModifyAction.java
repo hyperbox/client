@@ -36,32 +36,32 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class UserModifyAction extends AbstractAction {
 
-   private _UserSelector selector;
+    private static final long serialVersionUID = 7869635770846824715L;
+    private _UserSelector selector;
 
-   public UserModifyAction(_UserSelector selector) {
-      this(selector, "Edit");
-   }
+    public UserModifyAction(_UserSelector selector) {
+        this(selector, "Edit");
+    }
 
-   public UserModifyAction(_UserSelector selector, String label) {
-      super(label, IconBuilder.getTask(HyperboxTasks.UserModify));
-      this.selector = selector;
-   }
+    public UserModifyAction(_UserSelector selector, String label) {
+        super(label, IconBuilder.getTask(HyperboxTasks.UserModify));
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      List<String> selection = selector.getSelection();
-      if (!selection.isEmpty()) {
-         UserOut usrOut = Gui.getReader().getServerReader(selector.getServerId()).getUser(new UserIn(selector.getSelection().get(0)));
-         UserIn usrIn = UserEditor.getInput(selector.getServerId(), usrOut);
-         if (usrIn != null) {
-            Logger.debug("Got user input");
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.UserModify, new ServerIn(selector.getServerId()), usrIn));
-         }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        List<String> selection = selector.getSelection();
+        if (!selection.isEmpty()) {
+            UserOut usrOut = Gui.getReader().getServerReader(selector.getServerId()).getUser(new UserIn(selector.getSelection().get(0)));
+            UserIn usrIn = UserEditor.getInput(selector.getServerId(), usrOut);
+            if (usrIn != null) {
+                Logger.debug("Got user input");
+                Gui.post(new Request(Command.HBOX, HyperboxTasks.UserModify, new ServerIn(selector.getServerId()), usrIn));
+            }
 
-      }
-   }
+        }
+    }
 
 }

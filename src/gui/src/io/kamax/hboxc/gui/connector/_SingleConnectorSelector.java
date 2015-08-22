@@ -25,6 +25,6 @@ import io.kamax.hboxc.comm.output.ConnectorOutput;
 
 public interface _SingleConnectorSelector {
 
-   public ConnectorOutput getConnector();
+    public ConnectorOutput getConnector();
 
 }

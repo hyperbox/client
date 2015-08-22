@@ -31,26 +31,26 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class ServerConfigureAction extends AbstractAction {
 
-   private _ServerSelector selector;
+    private static final long serialVersionUID = 4982724588848783344L;
+    private _ServerSelector selector;
 
-   public ServerConfigureAction(_ServerSelector selector) {
-      super("Configure");
-      this.selector = selector;
-   }
+    public ServerConfigureAction(_ServerSelector selector) {
+        super("Configure");
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      Logger.info("Action: Server Configure for Server #" + selector.getServer().getId());
-      ServerIn srvIn = ServerEditorDialog.getInput(selector.getServer().getId());
-      if (srvIn == null) {
-         Logger.info("No server info was returned");
-      } else {
-         Logger.info("Server info was returned, sending data");
-         Gui.post(new Request(Command.HBOX, HyperboxTasks.ServerConfigure, srvIn));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        Logger.info("Action: Server Configure for Server #" + selector.getServer().getId());
+        ServerIn srvIn = ServerEditorDialog.getInput(selector.getServer().getId());
+        if (srvIn == null) {
+            Logger.info("No server info was returned");
+        } else {
+            Logger.info("Server info was returned, sending data");
+            Gui.post(new Request(Command.HBOX, HyperboxTasks.ServerConfigure, srvIn));
+        }
+    }
 
 }

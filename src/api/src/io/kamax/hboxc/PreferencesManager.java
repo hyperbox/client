@@ -32,93 +32,93 @@ import java.io.IOException;
 
 public class PreferencesManager {
 
-   private static String defaultPerfExtention = ".pref";
-   private static File userPrefPath;
-   private static String userPrefFilename = "global" + defaultPerfExtention;
-   private static File userPrefFile;
-   private static JProperties userPref;
+    private static String defaultPerfExtention = ".pref";
+    private static File userPrefPath;
+    private static String userPrefFilename = "global" + defaultPerfExtention;
+    private static File userPrefFile;
+    private static JProperties userPref;
 
-   static {
-      Runtime.getRuntime().addShutdownHook(new Thread() {
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
 
-         @Override
-         public void run() {
-            savePref();
-         }
-      });
-   }
+            @Override
+            public void run() {
+                savePref();
+            }
+        });
+    }
 
-   protected PreferencesManager() {
-      // static only
-   }
+    protected PreferencesManager() {
+        // static only
+    }
 
-   private static JProperties loadPref(File prefFile) throws HyperboxException {
-      JProperties newSettings = new JProperties();
-      try {
-         if (prefFile.exists()) {
-            newSettings.load(new FileReader(prefFile));
-         }
-      } catch (Throwable e) {
-         throw new HyperboxException("Unable to load the preferences file: " + e.getMessage(), e);
-      }
-      return newSettings;
-   }
+    private static JProperties loadPref(File prefFile) throws HyperboxException {
+        JProperties newSettings = new JProperties();
+        try {
+            if (prefFile.exists()) {
+                newSettings.load(new FileReader(prefFile));
+            }
+        } catch (Throwable e) {
+            throw new HyperboxException("Unable to load the preferences file: " + e.getMessage(), e);
+        }
+        return newSettings;
+    }
 
-   public static void init() throws HyperboxException {
-      initUserPref();
-   }
+    public static void init() throws HyperboxException {
+        initUserPref();
+    }
 
-   public static void initUserPref() throws HyperboxException {
-      initUserPrefAll(Configuration.getUserDataPath());
+    public static void initUserPref() throws HyperboxException {
+        initUserPrefAll(Configuration.getUserDataPath());
 
-      userPrefFile = new File(userPrefPath.getAbsolutePath() + File.separator + userPrefFilename);
-      userPref = loadPref(userPrefFile);
-      Logger.verbose("Default Preference Extention: " + defaultPerfExtention);
-      Logger.verbose("User Preference Path: " + userPrefPath.getAbsolutePath());
-      Logger.verbose("User Global Preference File: " + userPrefFile.getAbsolutePath());
-   }
+        userPrefFile = new File(userPrefPath.getAbsolutePath() + File.separator + userPrefFilename);
+        userPref = loadPref(userPrefFile);
+        Logger.verbose("Default Preference Extention: " + defaultPerfExtention);
+        Logger.verbose("User Preference Path: " + userPrefPath.getAbsolutePath());
+        Logger.verbose("User Global Preference File: " + userPrefFile.getAbsolutePath());
+    }
 
-   private static void initUserPrefAll(String homePath) throws HyperboxException {
-      userPrefPath = new File(homePath);
-      if (!userPrefPath.exists() && !userPrefPath.mkdirs()) {
-         throw new HyperboxException("Unable to create User preference folder: " + userPrefPath.getAbsolutePath());
-      }
-   }
+    private static void initUserPrefAll(String homePath) throws HyperboxException {
+        userPrefPath = new File(homePath);
+        if (!userPrefPath.exists() && !userPrefPath.mkdirs()) {
+            throw new HyperboxException("Unable to create User preference folder: " + userPrefPath.getAbsolutePath());
+        }
+    }
 
-   public static boolean has(String namespace) {
-      File configFile = new File(userPrefPath + File.separator + namespace + defaultPerfExtention);
-      return configFile.exists() && configFile.isFile() && configFile.canRead();
-   }
+    public static boolean has(String namespace) {
+        File configFile = new File(userPrefPath + File.separator + namespace + defaultPerfExtention);
+        return configFile.exists() && configFile.isFile() && configFile.canRead();
+    }
 
-   /**
-    * Without trailing file separator & absolute path
-    *
-    * @return where to store the settings
-    */
-   public static String getUserPrefPath() {
-      return userPrefPath.getAbsolutePath();
-   }
+    /**
+     * Without trailing file separator & absolute path
+     *
+     * @return where to store the settings
+     */
+    public static String getUserPrefPath() {
+        return userPrefPath.getAbsolutePath();
+    }
 
-   /**
-    * Get preferences of the user, saved in the roaming profile or in $HOME/.hbox
-    *
-    * @return Properties
-    */
-   public static JProperties getUserPref() {
-      return userPref;
-   }
+    /**
+     * Get preferences of the user, saved in the roaming profile or in $HOME/.hbox
+     *
+     * @return Properties
+     */
+    public static JProperties getUserPref() {
+        return userPref;
+    }
 
-   public static JProperties get() {
-      return getUserPref();
-   }
+    public static JProperties get() {
+        return getUserPref();
+    }
 
-   public static void savePref() {
-      try {
-         Logger.verbose("Saving global user preferences to " + userPrefFile);
-         userPref.store(new FileWriter(userPrefFile), "");
-      } catch (IOException e) {
-         Logger.error("Unable to save user preferences: " + e.getMessage());
-      }
-   }
+    public static void savePref() {
+        try {
+            Logger.verbose("Saving global user preferences to " + userPrefFile);
+            userPref.store(new FileWriter(userPrefFile), "");
+        } catch (IOException e) {
+            Logger.error("Unable to save user preferences: " + e.getMessage());
+        }
+    }
 
 }

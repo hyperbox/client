@@ -26,10 +26,10 @@ import javax.swing.JComponent;
 
 public interface _GlobalConfigureView {
 
-   public JComponent getComponent();
+    public JComponent getComponent();
 
-   public void update(HypervisorOut hypOut);
+    public void update(HypervisorOut hypOut);
 
-   public HypervisorIn getUserInput();
+    public HypervisorIn getUserInput();
 
 }

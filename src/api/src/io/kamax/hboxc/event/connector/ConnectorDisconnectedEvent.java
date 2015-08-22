@@ -27,13 +27,13 @@ import io.kamax.hboxc.state.ConnectionState;
 
 public class ConnectorDisconnectedEvent extends ConnectorStateChangedEvent {
 
-   public ConnectorDisconnectedEvent(ConnectorOutput conOut) {
-      super(ClientEvents.ConnectorDisconnected, conOut, ConnectionState.Disconnected);
-   }
+    public ConnectorDisconnectedEvent(ConnectorOutput conOut) {
+        super(ClientEvents.ConnectorDisconnected, conOut, ConnectionState.Disconnected);
+    }
 
-   @Override
-   public String toString() {
-      return "Connector " + getConnector().getLabel() + " disconnected @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Connector " + getConnector().getLabel() + " disconnected @ " + getTime();
+    }
 
 }

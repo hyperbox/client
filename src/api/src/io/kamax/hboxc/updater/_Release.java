@@ -26,14 +26,14 @@ import java.util.Date;
 
 public interface _Release {
 
-   public String getChannel();
+    public String getChannel();
 
-   public Version getVersion();
+    public Version getVersion();
 
-   public Date getDate();
+    public Date getDate();
 
-   public URL getChangeLogURL();
+    public URL getChangeLogURL();
 
-   public URL getDownloadURL();
+    public URL getDownloadURL();
 
 }

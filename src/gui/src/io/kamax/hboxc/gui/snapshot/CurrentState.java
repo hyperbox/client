@@ -22,9 +22,9 @@ package io.kamax.hboxc.gui.snapshot;
 
 public class CurrentState {
 
-   @Override
-   public String toString() {
-      return "Current State";
-   }
+    @Override
+    public String toString() {
+        return "Current State";
+    }
 
 }

@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _NetworkInterfaceTypeReceiver extends _WorkerDataReceiver {
 
-   public void add(List<NetworkInterfaceTypeOut> objOutList);
+    public void add(List<NetworkInterfaceTypeOut> objOutList);
 
 }

@@ -33,30 +33,30 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
-@SuppressWarnings("serial")
 public class MediumDettachAction extends AbstractAction {
 
-   private String serverId;
-   private StorageDeviceAttachmentOut sdaOut;
+    private static final long serialVersionUID = -3310041024462638526L;
+    private String serverId;
+    private StorageDeviceAttachmentOut sdaOut;
 
-   public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, boolean isEnabled) {
-      this(serverId, sdaOut, "Detach Medium", IconBuilder.getTask(HypervisorTasks.MediumUnmount), isEnabled);
-   }
+    public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, boolean isEnabled) {
+        this(serverId, sdaOut, "Detach Medium", IconBuilder.getTask(HypervisorTasks.MediumUnmount), isEnabled);
+    }
 
-   public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
-      super(label, icon);
-      setEnabled(isEnabled);
-      this.serverId = serverId;
-      this.sdaOut = sdaOut;
-   }
+    public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
+        super(label, icon);
+        setEnabled(isEnabled);
+        this.serverId = serverId;
+        this.sdaOut = sdaOut;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      Request req = new Request(Command.VBOX, HypervisorTasks.MediumUnmount);
-      req.set(new ServerIn(serverId));
-      req.set(new MachineIn(sdaOut.getMachineUuid()));
-      req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId()));
-      Gui.post(req);
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        Request req = new Request(Command.VBOX, HypervisorTasks.MediumUnmount);
+        req.set(new ServerIn(serverId));
+        req.set(new MachineIn(sdaOut.getMachineUuid()));
+        req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId()));
+        Gui.post(req);
+    }
 
 }

@@ -30,25 +30,26 @@ import io.kamax.hboxc.gui.connector._ConnectorSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class ConnectorConnectAction extends AbstractAction {
 
-   private _ConnectorSelector select;
+    private static final long serialVersionUID = -1316657520388449508L;
+    private _ConnectorSelector select;
 
-   public ConnectorConnectAction(_ConnectorSelector select) {
-      this(select, "Connect");
-   }
+    public ConnectorConnectAction(_ConnectorSelector select) {
+        this(select, "Connect");
+    }
 
-   public ConnectorConnectAction(_ConnectorSelector select, String label) {
-      super(label);
-      this.select = select;
-   }
+    public ConnectorConnectAction(_ConnectorSelector select, String label) {
+        super(label);
+        this.select = select;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      for (ConnectorOutput conOut : select.listConnectors()) {
-         Gui.post(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        for (ConnectorOutput conOut : select.listConnectors()) {
+            Gui.post(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
+        }
+    }
 
 }

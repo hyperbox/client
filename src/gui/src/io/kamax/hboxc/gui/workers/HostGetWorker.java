@@ -29,30 +29,30 @@ import java.util.concurrent.ExecutionException;
 
 public class HostGetWorker extends AxSwingWorker<_HostReceiver, HostOut, Void> {
 
-   private String srvId;
+    private String srvId;
 
-   public HostGetWorker(_HostReceiver recv, String srvId) {
-      super(recv);
-      this.srvId = srvId;
-   }
+    public HostGetWorker(_HostReceiver recv, String srvId) {
+        super(recv);
+        this.srvId = srvId;
+    }
 
-   @Override
-   protected HostOut doInBackground() throws Exception {
-      if (!Gui.getServer(srvId).isHypervisorConnected()) {
-         throw new HypervisorNotConnectedException("Host information is not available while the hypervisor is not connected");
-      }
+    @Override
+    protected HostOut doInBackground() throws Exception {
+        if (!Gui.getServer(srvId).isHypervisorConnected()) {
+            throw new HypervisorNotConnectedException("Host information is not available while the hypervisor is not connected");
+        }
 
-      return Gui.getServer(srvId).getHost();
-   }
+        return Gui.getServer(srvId).getHost();
+    }
 
-   @Override
-   protected void innerDone() throws InterruptedException, ExecutionException {
-      HostOut hostOut = get();
-      getReceiver().put(hostOut);
-   }
+    @Override
+    protected void innerDone() throws InterruptedException, ExecutionException {
+        HostOut hostOut = get();
+        getReceiver().put(hostOut);
+    }
 
-   public static void execute(_HostReceiver recv, String srvId) {
-      (new HostGetWorker(recv, srvId)).execute();
-   }
+    public static void execute(_HostReceiver recv, String srvId) {
+        (new HostGetWorker(recv, srvId)).execute();
+    }
 
 }

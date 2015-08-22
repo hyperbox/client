@@ -24,8 +24,8 @@ import io.kamax.hbox.event.Event;
 
 public abstract class UpdaterEvent extends Event {
 
-   public UpdaterEvent(Enum<?> eventId) {
-      super(eventId);
-   }
+    public UpdaterEvent(Enum<?> eventId) {
+        super(eventId);
+    }
 
 }

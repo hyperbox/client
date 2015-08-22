@@ -35,36 +35,37 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class HypervisorConnectAction extends AbstractAction {
 
-   private _SingleServerSelector selector;
+    private static final long serialVersionUID = -5412030998497315452L;
+    private _SingleServerSelector selector;
 
-   public HypervisorConnectAction(_SingleServerSelector selector) {
-      this(selector, "Connect");
-   }
+    public HypervisorConnectAction(_SingleServerSelector selector) {
+        this(selector, "Connect");
+    }
 
-   public HypervisorConnectAction(_SingleServerSelector selector, String label) {
-      super(label);
-      this.selector = selector;
-   }
+    public HypervisorConnectAction(_SingleServerSelector selector, String label) {
+        super(label);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
+    @Override
+    public void actionPerformed(ActionEvent ae) {
 
-      ServerOut srvOut = selector.getServer();
-      if (srvOut != null) {
-         HypervisorIn hypIn = HypervisorConnectView.getInput(srvOut);
-         if (hypIn != null) {
-            Logger.debug("Got user input to connect hypervisor");
-            Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorConnect);
-            req.set(new ServerIn(srvOut.getId()));
-            req.set(hypIn);
-            Gui.post(new MessageInput(req));
-         }
-      } else {
-         Logger.debug("No server was selected");
-      }
-   }
+        ServerOut srvOut = selector.getServer();
+        if (srvOut != null) {
+            HypervisorIn hypIn = HypervisorConnectView.getInput(srvOut);
+            if (hypIn != null) {
+                Logger.debug("Got user input to connect hypervisor");
+                Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorConnect);
+                req.set(new ServerIn(srvOut.getId()));
+                req.set(hypIn);
+                Gui.post(new MessageInput(req));
+            }
+        } else {
+            Logger.debug("No server was selected");
+        }
+    }
 
 }

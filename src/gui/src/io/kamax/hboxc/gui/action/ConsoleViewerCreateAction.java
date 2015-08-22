@@ -25,16 +25,18 @@ import io.kamax.hboxc.gui.vm.console.viewer.ConsoleViewerEditor;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class ConsoleViewerCreateAction extends AbstractAction {
 
-   public ConsoleViewerCreateAction() {
-      super("+");
-   }
+    private static final long serialVersionUID = -1616888552624355955L;
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      ConsoleViewerEditor.create();
-   }
+    public ConsoleViewerCreateAction() {
+        super("+");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        ConsoleViewerEditor.create();
+    }
 
 }

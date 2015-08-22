@@ -20,9 +20,11 @@
 
 package io.kamax.hboxc.gui.notification;
 
-@SuppressWarnings("serial")
+
 public class NotificationWarning extends Notification {
 
-   // stub
+    private static final long serialVersionUID = -7971579756649895201L;
+
+    // stub
 
 }

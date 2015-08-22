@@ -32,15 +32,15 @@ import io.kamax.hboxc.front._Front;
 
 public class ConnectorRemoveAction extends AbstractClientControllerSingleAction {
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.ConnectorRemove;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.ConnectorRemove;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
-      ConnectorInput conIn = req.get(ConnectorInput.class);
-      core.removeConnector(conIn.getId());
-   }
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
+        ConnectorInput conIn = req.get(ConnectorInput.class);
+        core.removeConnector(conIn.getId());
+    }
 
 }

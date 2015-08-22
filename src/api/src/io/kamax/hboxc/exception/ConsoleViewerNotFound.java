@@ -23,15 +23,17 @@ package io.kamax.hboxc.exception;
 
 import io.kamax.hbox.exception.HyperboxException;
 
-@SuppressWarnings("serial")
+
 public class ConsoleViewerNotFound extends HyperboxException {
 
-   public ConsoleViewerNotFound() {
-      super("No console viewer was found");
-   }
+    private static final long serialVersionUID = -1503014251751925937L;
 
-   public ConsoleViewerNotFound(String s) {
-      super(s);
-   }
+    public ConsoleViewerNotFound() {
+        super("No console viewer was found");
+    }
+
+    public ConsoleViewerNotFound(String s) {
+        super(s);
+    }
 
 }

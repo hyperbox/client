@@ -25,10 +25,10 @@ import javax.swing.JComponent;
 
 public interface _NetServiceEditor {
 
-   public String getServiceId();
+    public String getServiceId();
 
-   public JComponent getComponent();
+    public JComponent getComponent();
 
-   public NetServiceIO getInput();
+    public NetServiceIO getInput();
 
 }

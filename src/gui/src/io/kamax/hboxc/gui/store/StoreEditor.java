@@ -46,169 +46,174 @@ import net.miginfocom.swing.MigLayout;
 
 public class StoreEditor implements _Saveable, _Cancelable {
 
-   private JLabel storeLabel;
-   private JTextField storeLabelValue;
-   private JLabel storeLocLabel;
-   private JTextField storeLocValue;
-   private JButton browseButton;
-   private JLabel storeTypeLabel;
-   private JComboBox storeTypeBox;
+    private JLabel storeLabel;
+    private JTextField storeLabelValue;
+    private JLabel storeLocLabel;
+    private JTextField storeLocValue;
+    private JButton browseButton;
+    private JLabel storeTypeLabel;
+    private JComboBox storeTypeBox;
 
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   private String srvId;
-   private StoreIn stoIn;
-   private StoreOut stoOut;
+    private String srvId;
+    private StoreIn stoIn;
+    private StoreOut stoOut;
 
-   @SuppressWarnings("serial")
-   private class BrowseAction extends AbstractAction {
+    
+    private class BrowseAction extends AbstractAction {
 
-      public BrowseAction() {
-         super("Browse");
-      }
+        /**
+         *
+         */
+        private static final long serialVersionUID = -7633225674262983219L;
 
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         StoreItemOut stiOut = StoreItemChooser.getExisitingFolder(srvId);
-         if (stiOut != null) {
-            storeLocValue.setText(stiOut.getPath());
-            storeLocValue.requestFocus();
-         }
-      }
+        public BrowseAction() {
+            super("Browse");
+        }
 
-   }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            StoreItemOut stiOut = StoreItemChooser.getExisitingFolder(srvId);
+            if (stiOut != null) {
+                storeLocValue.setText(stiOut.getPath());
+                storeLocValue.requestFocus();
+            }
+        }
 
-   private class EmptyValueListener implements DocumentListener {
+    }
 
-      private void validate() {
-         saveButton.setEnabled(!AxStrings.isEmpty(storeLabelValue.getText()) && !AxStrings.isEmpty(storeLocValue.getText()));
-      }
+    private class EmptyValueListener implements DocumentListener {
 
-      @Override
-      public void insertUpdate(DocumentEvent e) {
-         validate();
-      }
+        private void validate() {
+            saveButton.setEnabled(!AxStrings.isEmpty(storeLabelValue.getText()) && !AxStrings.isEmpty(storeLocValue.getText()));
+        }
 
-      @Override
-      public void removeUpdate(DocumentEvent e) {
-         validate();
-      }
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            validate();
+        }
 
-      @Override
-      public void changedUpdate(DocumentEvent e) {
-         validate();
-      }
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            validate();
+        }
 
-   }
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            validate();
+        }
 
-   public StoreEditor(String srvId) {
+    }
 
-      this.srvId = srvId;
+    public StoreEditor(String srvId) {
 
-      saveButton = new JButton(new SaveAction(this));
-      saveButton.setEnabled(false);
-      cancelButton = new JButton(new CancelAction(this));
-      JPanel buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(saveButton);
-      buttonPanel.add(cancelButton);
+        this.srvId = srvId;
 
-      storeLabel = new JLabel("Label");
-      storeLocLabel = new JLabel("Location");
+        saveButton = new JButton(new SaveAction(this));
+        saveButton.setEnabled(false);
+        cancelButton = new JButton(new CancelAction(this));
+        JPanel buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
 
-      storeLabelValue = new JTextField();
-      storeLabelValue.getDocument().addDocumentListener(new EmptyValueListener());
-      storeLocValue = new JTextField();
-      storeLocValue.getDocument().addDocumentListener(new EmptyValueListener());
-      browseButton = new JButton(new BrowseAction());
-      storeTypeLabel = new JLabel("Type");
-      storeTypeBox = new JComboBox();
-      // TODO retrieve full list of supported store types.
-      storeTypeBox.addItem("Native Folder");
+        storeLabel = new JLabel("Label");
+        storeLocLabel = new JLabel("Location");
 
-      dialog = JDialogBuilder.get(saveButton);
-      dialog.add(storeLabel);
-      dialog.add(storeLabelValue, "growx, pushx, span 2, wrap");
-      dialog.add(storeTypeLabel);
-      dialog.add(storeTypeBox, "growx, pushx, span 2, wrap");
-      dialog.add(storeLocLabel);
-      dialog.add(storeLocValue, "growx, pushx");
-      dialog.add(browseButton, "wrap");
-      dialog.add(buttonPanel, "center, span 3");
-      CancelableUtils.set(this, dialog.getRootPane());
-   }
+        storeLabelValue = new JTextField();
+        storeLabelValue.getDocument().addDocumentListener(new EmptyValueListener());
+        storeLocValue = new JTextField();
+        storeLocValue.getDocument().addDocumentListener(new EmptyValueListener());
+        browseButton = new JButton(new BrowseAction());
+        storeTypeLabel = new JLabel("Type");
+        storeTypeBox = new JComboBox();
+        // TODO retrieve full list of supported store types.
+        storeTypeBox.addItem("Native Folder");
 
-   public StoreIn create() {
+        dialog = JDialogBuilder.get(saveButton);
+        dialog.add(storeLabel);
+        dialog.add(storeLabelValue, "growx, pushx, span 2, wrap");
+        dialog.add(storeTypeLabel);
+        dialog.add(storeTypeBox, "growx, pushx, span 2, wrap");
+        dialog.add(storeLocLabel);
+        dialog.add(storeLocValue, "growx, pushx");
+        dialog.add(browseButton, "wrap");
+        dialog.add(buttonPanel, "center, span 3");
+        CancelableUtils.set(this, dialog.getRootPane());
+    }
 
-      dialog.setTitle("Create new Store");
-      show();
-      return stoIn;
-   }
+    public StoreIn create() {
 
-   public StoreIn register() {
+        dialog.setTitle("Create new Store");
+        show();
+        return stoIn;
+    }
 
-      dialog.setTitle("Registering new Store");
-      show();
-      return stoIn;
-   }
+    public StoreIn register() {
 
-   public StoreIn edit(StoreOut stoOut) {
+        dialog.setTitle("Registering new Store");
+        show();
+        return stoIn;
+    }
 
-      this.stoOut = stoOut;
-      dialog.setTitle("Edit store " + stoOut.getLabel());
+    public StoreIn edit(StoreOut stoOut) {
 
-      storeLabelValue.setText(stoOut.getLabel());
-      storeLocValue.setText(stoOut.getLocation());
+        this.stoOut = stoOut;
+        dialog.setTitle("Edit store " + stoOut.getLabel());
 
-      show();
-      return stoIn;
-   }
+        storeLabelValue.setText(stoOut.getLabel());
+        storeLocValue.setText(stoOut.getLocation());
 
-   public static StoreIn getInputCreate(String srvId) {
-      return new StoreEditor(srvId).create();
-   }
+        show();
+        return stoIn;
+    }
 
-   public static StoreIn getInputRegister(String srvId) {
-      return new StoreEditor(srvId).register();
-   }
+    public static StoreIn getInputCreate(String srvId) {
+        return new StoreEditor(srvId).create();
+    }
 
-   public static StoreIn getInputEdit(String srvId, StoreOut stoOut) {
-      return new StoreEditor(srvId).edit(stoOut);
+    public static StoreIn getInputRegister(String srvId) {
+        return new StoreEditor(srvId).register();
+    }
 
-   }
+    public static StoreIn getInputEdit(String srvId, StoreOut stoOut) {
+        return new StoreEditor(srvId).edit(stoOut);
 
-   private void show() {
+    }
 
-      dialog.pack();
-      dialog.setSize(323, dialog.getHeight());
-      dialog.setLocationRelativeTo(dialog.getParent());
-      dialog.setVisible(true);
-   }
+    private void show() {
 
-   private void hide() {
+        dialog.pack();
+        dialog.setSize(323, dialog.getHeight());
+        dialog.setLocationRelativeTo(dialog.getParent());
+        dialog.setVisible(true);
+    }
 
-      dialog.setVisible(false);
-   }
+    private void hide() {
 
-   @Override
-   public void cancel() {
+        dialog.setVisible(false);
+    }
 
-      hide();
-   }
+    @Override
+    public void cancel() {
 
-   @Override
-   public void save() {
+        hide();
+    }
 
-      if (stoOut != null) {
-         stoIn = new StoreIn(stoOut.getId());
-      } else {
-         stoIn = new StoreIn();
-      }
-      stoIn.setLabel(storeLabelValue.getText());
-      stoIn.setLocation(storeLocValue.getText());
-      hide();
-   }
+    @Override
+    public void save() {
+
+        if (stoOut != null) {
+            stoIn = new StoreIn(stoOut.getId());
+        } else {
+            stoIn = new StoreIn();
+        }
+        stoIn.setLabel(storeLabelValue.getText());
+        stoIn.setLocation(storeLocValue.getText());
+        hide();
+    }
 
 }

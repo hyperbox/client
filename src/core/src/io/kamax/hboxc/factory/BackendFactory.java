@@ -31,28 +31,28 @@ import java.util.Set;
 
 public class BackendFactory {
 
-   private static Map<String, String> backends;
+    private static Map<String, String> backends;
 
-   static {
-      backends = new HashMap<String, String>();
+    static {
+        backends = new HashMap<String, String>();
 
-      try {
-         Set<_Backend> backs = ClassManager.getAllOrFail(_Backend.class);
-         for (_Backend backend : backs) {
-            backends.put(backend.getId(), backend.getClass().getName());
-         }
-      } catch (HyperboxException e) {
-         throw new HyperboxException(e);
-      }
-   }
+        try {
+            Set<_Backend> backs = ClassManager.getAllOrFail(_Backend.class);
+            for (_Backend backend : backs) {
+                backends.put(backend.getId(), backend.getClass().getName());
+            }
+        } catch (HyperboxException e) {
+            throw new HyperboxException(e);
+        }
+    }
 
-   public static _Backend get(String id) {
-      // TODO throw exception if not found
-      return ClassManager.loadClass(_Backend.class, backends.get(id));
-   }
+    public static _Backend get(String id) {
+        // TODO throw exception if not found
+        return ClassManager.loadClass(_Backend.class, backends.get(id));
+    }
 
-   public static List<String> list() {
-      return new ArrayList<String>(backends.keySet());
-   }
+    public static List<String> list() {
+        return new ArrayList<String>(backends.keySet());
+    }
 
 }

@@ -28,29 +28,29 @@ import java.util.List;
 
 public class StoreListWorker extends AxSwingWorker<_StoreListReceiver, Void, StoreOut> {
 
-   private String srvId;
+    private String srvId;
 
-   public StoreListWorker(_StoreListReceiver recv, String srvId) {
-      super(recv);
-      this.srvId = srvId;
-   }
+    public StoreListWorker(_StoreListReceiver recv, String srvId) {
+        super(recv);
+        this.srvId = srvId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      for (StoreOut stoOut : Gui.getServer(srvId).listStores()) {
-         publish(stoOut);
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        for (StoreOut stoOut : Gui.getServer(srvId).listStores()) {
+            publish(stoOut);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<StoreOut> stoOutList) {
-      getReceiver().add(stoOutList);
-   }
+    @Override
+    protected void process(List<StoreOut> stoOutList) {
+        getReceiver().add(stoOutList);
+    }
 
-   public static void execute(_StoreListReceiver recv, String srvId) {
-      (new StoreListWorker(recv, srvId)).execute();
-   }
+    public static void execute(_StoreListReceiver recv, String srvId) {
+        (new StoreListWorker(recv, srvId)).execute();
+    }
 
 }

@@ -24,19 +24,19 @@ import io.kamax.hboxc.gui.security.user._UserSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class PermissionEditAction extends AbstractAction {
 
-   private _UserSelector usrSelect;
+    private static final long serialVersionUID = 6638675847995368365L;
+    private _UserSelector usrSelect;
 
-   public PermissionEditAction(_UserSelector usrSelect) {
-      this.usrSelect = usrSelect;
-   }
+    public PermissionEditAction(_UserSelector usrSelect) {
+        this.usrSelect = usrSelect;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      // TODO Auto-generated method stub
-      usrSelect.getServerId();
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        usrSelect.getServerId();
+    }
 
 }

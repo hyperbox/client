@@ -35,17 +35,17 @@ import java.util.List;
 
 public class BackendListAction extends AbstractClientControllerSingleAction {
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.BackendList;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.BackendList;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
-      List<String> bcks = core.listBackends();
-      for (String bck : bcks) {
-         recv.putAnswer(new Answer(req, AnswerType.DATA, BackendIoFactory.get(bck)));
-      }
-   }
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
+        List<String> bcks = core.listBackends();
+        for (String bck : bcks) {
+            recv.putAnswer(new Answer(req, AnswerType.DATA, BackendIoFactory.get(bck)));
+        }
+    }
 
 }

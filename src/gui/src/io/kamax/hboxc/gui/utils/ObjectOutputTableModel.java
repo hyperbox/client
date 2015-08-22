@@ -26,85 +26,86 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-@SuppressWarnings("serial")
+
 public abstract class ObjectOutputTableModel<T extends ObjectOut> extends AbstractTableModel {
 
-   private List<String> columnNames = new ArrayList<String>();
-   private List<Object> columnSettings = new ArrayList<Object>();
+    private static final long serialVersionUID = 7670285516747281649L;
+    private List<String> columnNames = new ArrayList<String>();
+    private List<Object> columnSettings = new ArrayList<Object>();
 
-   private List<T> data = new ArrayList<T>();
+    private List<T> data = new ArrayList<T>();
 
-   public ObjectOutputTableModel() {
-      addColumns();
-   }
+    public ObjectOutputTableModel() {
+        addColumns();
+    }
 
-   public void add(T item) {
-      if (data.add(item)) {
-         fireTableRowsInserted(data.size() - 1, data.size() - 1);
-      }
-   }
+    public void add(T item) {
+        if (data.add(item)) {
+            fireTableRowsInserted(data.size() - 1, data.size() - 1);
+        }
+    }
 
-   public void add(List<T> itemList) {
-      for (T item : itemList) {
-         add(item);
-      }
-   }
+    public void add(List<T> itemList) {
+        for (T item : itemList) {
+            add(item);
+        }
+    }
 
-   public void put(List<T> itemList) {
-      clear();
-      add(itemList);
-   }
+    public void put(List<T> itemList) {
+        clear();
+        add(itemList);
+    }
 
-   public void clear() {
-      if (!data.isEmpty()) {
-         int lastIndex = data.size() - 1;
-         data.clear();
-         fireTableRowsDeleted(0, lastIndex);
-      }
-   }
+    public void clear() {
+        if (!data.isEmpty()) {
+            int lastIndex = data.size() - 1;
+            data.clear();
+            fireTableRowsDeleted(0, lastIndex);
+        }
+    }
 
-   @Override
-   public int getColumnCount() {
-      return columnNames.size();
-   }
+    @Override
+    public int getColumnCount() {
+        return columnNames.size();
+    }
 
-   @Override
-   public int getRowCount() {
-      return data.size();
-   }
+    @Override
+    public int getRowCount() {
+        return data.size();
+    }
 
-   @Override
-   public Object getValueAt(int rowIndex, int columnIndex) {
-      if (data.get(rowIndex).hasSetting(columnSettings.get(columnIndex))) {
-         return data.get(rowIndex).getSetting(columnSettings.get(columnIndex)).getString();
-      } else {
-         return "";
-      }
-   }
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        if (data.get(rowIndex).hasSetting(columnSettings.get(columnIndex))) {
+            return data.get(rowIndex).getSetting(columnSettings.get(columnIndex)).getString();
+        } else {
+            return "";
+        }
+    }
 
-   public T getObjectAtRowId(int rowId) {
-      return data.get(rowId);
-   }
+    public T getObjectAtRowId(int rowId) {
+        return data.get(rowId);
+    }
 
-   @Override
-   public String getColumnName(int columnIndex) {
-      return columnNames.get(columnIndex);
-   }
+    @Override
+    public String getColumnName(int columnIndex) {
+        return columnNames.get(columnIndex);
+    }
 
-   /**
-    * Add a new column with a name and bind its value to a setting.
-    * 
-    * @param name The name to display to the user
-    * @param settingName The setting ID to link this column to on the output object
-    */
-   protected void addColumn(String name, Object settingName) {
-      columnNames.add(name);
-      columnSettings.add(settingName);
-   }
+    /**
+     * Add a new column with a name and bind its value to a setting.
+     * 
+     * @param name The name to display to the user
+     * @param settingName The setting ID to link this column to on the output object
+     */
+    protected void addColumn(String name, Object settingName) {
+        columnNames.add(name);
+        columnSettings.add(settingName);
+    }
 
-   /**
-    * Use {@link #addColumn(String, Object)}
-    */
-   protected abstract void addColumns();
+    /**
+     * Use {@link #addColumn(String, Object)}
+     */
+    protected abstract void addColumns();
 
 }

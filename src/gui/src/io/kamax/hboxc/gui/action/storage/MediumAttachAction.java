@@ -38,38 +38,38 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
-@SuppressWarnings("serial")
 public class MediumAttachAction extends AbstractAction {
 
-   private String serverId;
-   private StorageDeviceAttachmentOut sdaOut;
+    private static final long serialVersionUID = -3492903531451947151L;
+    private String serverId;
+    private StorageDeviceAttachmentOut sdaOut;
 
-   public MediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut) {
-      this(serverId, sdaOut, "Attach Medium...", IconBuilder.getTask(HypervisorTasks.MediumMount), true);
-   }
+    public MediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut) {
+        this(serverId, sdaOut, "Attach Medium...", IconBuilder.getTask(HypervisorTasks.MediumMount), true);
+    }
 
-   public MediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
-      super(label, icon);
-      setEnabled(isEnabled);
-      this.serverId = serverId;
-      this.sdaOut = sdaOut;
-   }
+    public MediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
+        super(label, icon);
+        setEnabled(isEnabled);
+        this.serverId = serverId;
+        this.sdaOut = sdaOut;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
+    @Override
+    public void actionPerformed(ActionEvent ae) {
 
-      MediumOut medOut = MediumBrowser.browse(new ServerOut(serverId), sdaOut.getDeviceType());
-      if (medOut != null) {
-         Logger.debug("Medium was choosen to be mounted: " + medOut.getName() + " - " + medOut.getLocation());
-         Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
-         req.set(new ServerIn(serverId));
-         req.set(new MachineIn(sdaOut.getMachineUuid()));
-         req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
-         req.set(new MediumIn(medOut.getLocation(), medOut.getDeviceType()));
-         Gui.post(req);
-      } else {
-         Logger.debug("No medium was choosen to be mounted");
-      }
-   }
+        MediumOut medOut = MediumBrowser.browse(new ServerOut(serverId), sdaOut.getDeviceType());
+        if (medOut != null) {
+            Logger.debug("Medium was choosen to be mounted: " + medOut.getName() + " - " + medOut.getLocation());
+            Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
+            req.set(new ServerIn(serverId));
+            req.set(new MachineIn(sdaOut.getMachineUuid()));
+            req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
+            req.set(new MediumIn(medOut.getLocation(), medOut.getDeviceType()));
+            Gui.post(req);
+        } else {
+            Logger.debug("No medium was choosen to be mounted");
+        }
+    }
 
 }

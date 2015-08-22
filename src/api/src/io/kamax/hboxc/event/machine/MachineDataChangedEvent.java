@@ -25,8 +25,8 @@ import io.kamax.hbox.event.HyperboxEvents;
 
 public class MachineDataChangedEvent extends MachineUpdatedEvent {
 
-   public MachineDataChangedEvent(String srvId, MachineOut mOut) {
-      super(HyperboxEvents.MachineDataChange, srvId, mOut);
-   }
+    public MachineDataChangedEvent(String srvId, MachineOut mOut) {
+        super(HyperboxEvents.MachineDataChange, srvId, mOut);
+    }
 
 }

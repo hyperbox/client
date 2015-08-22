@@ -33,33 +33,33 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-@SuppressWarnings("serial")
 public class StoreDeleteAction extends AbstractAction {
 
-   private _StoreSelector selector;
+    private static final long serialVersionUID = 45779716838996171L;
+    private _StoreSelector selector;
 
-   public StoreDeleteAction(_StoreSelector selector) {
-      this(selector, "Delete");
-   }
+    public StoreDeleteAction(_StoreSelector selector) {
+        this(selector, "Delete");
+    }
 
-   public StoreDeleteAction(_StoreSelector selector, String label) {
-      super(label, IconBuilder.getTask(HyperboxTasks.StoreDelete));
-      this.selector = selector;
-   }
+    public StoreDeleteAction(_StoreSelector selector, String label) {
+        super(label, IconBuilder.getTask(HyperboxTasks.StoreDelete));
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      int info = JOptionPane.showConfirmDialog(
-            null,
-            "This will delete the store and all its content.\nThis cannot be canceled or rolled back!\nAre you sure?",
-            "Delete confirmation",
-            JOptionPane.WARNING_MESSAGE,
-            JOptionPane.OK_CANCEL_OPTION);
-      if (info == JOptionPane.YES_OPTION) {
-         for (String storeId : selector.getSelection()) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreDelete, new ServerIn(selector.getServer()), new StoreIn(storeId)));
-         }
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int info = JOptionPane.showConfirmDialog(
+                null,
+                "This will delete the store and all its content.\nThis cannot be canceled or rolled back!\nAre you sure?",
+                "Delete confirmation",
+                JOptionPane.WARNING_MESSAGE,
+                JOptionPane.OK_CANCEL_OPTION);
+        if (info == JOptionPane.YES_OPTION) {
+            for (String storeId : selector.getSelection()) {
+                Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreDelete, new ServerIn(selector.getServer()), new StoreIn(storeId)));
+            }
+        }
+    }
 
 }

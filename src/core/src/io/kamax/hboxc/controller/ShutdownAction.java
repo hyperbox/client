@@ -28,16 +28,16 @@ import io.kamax.hboxc.front._Front;
 
 public final class ShutdownAction extends AbstractClientControllerSingleAction {
 
-   static Controller c;
+    static Controller c;
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.Exit;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.Exit;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) {
-      c.stop();
-   }
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) {
+        c.stop();
+    }
 
 }

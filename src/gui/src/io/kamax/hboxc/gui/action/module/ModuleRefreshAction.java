@@ -30,19 +30,19 @@ import io.kamax.hboxc.gui.module._ModuleSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class ModuleRefreshAction extends AbstractAction {
 
-   private _ModuleSelector selector;
+    private static final long serialVersionUID = -5039652723475166495L;
+    private _ModuleSelector selector;
 
-   public ModuleRefreshAction(_ModuleSelector selector) {
-      super("Refresh", IconBuilder.getTask(HyperboxTasks.ModuleRefresh));
-      this.selector = selector;
-   }
+    public ModuleRefreshAction(_ModuleSelector selector) {
+        super("Refresh", IconBuilder.getTask(HyperboxTasks.ModuleRefresh));
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Gui.post(new Request(Command.HBOX, HyperboxTasks.ModuleRefresh, new ServerIn(selector.getServerId())));
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Gui.post(new Request(Command.HBOX, HyperboxTasks.ModuleRefresh, new ServerIn(selector.getServerId())));
+    }
 
 }

@@ -26,13 +26,13 @@ import io.kamax.hbox.states.ServerConnectionState;
 
 public class ServerConnectedEvent extends ServerConnectionStateEvent {
 
-   public ServerConnectedEvent(ServerOut srv) {
-      super(srv, ServerConnectionState.Connected);
-   }
+    public ServerConnectedEvent(ServerOut srv) {
+        super(srv, ServerConnectionState.Connected);
+    }
 
-   @Override
-   public String toString() {
-      return "Server ID " + getServer().getId() + " connected @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Server ID " + getServer().getId() + " connected @ " + getTime();
+    }
 
 }

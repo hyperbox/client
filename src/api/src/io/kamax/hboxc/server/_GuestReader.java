@@ -24,6 +24,6 @@ import io.kamax.hbox.comm.out.hypervisor.GuestNetworkInterfaceOut;
 
 public interface _GuestReader {
 
-   public GuestNetworkInterfaceOut findNetworkInterface(String macAddress);
+    public GuestNetworkInterfaceOut findNetworkInterface(String macAddress);
 
 }

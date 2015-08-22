@@ -26,42 +26,42 @@ import java.util.Date;
 
 public class Release implements _Release {
 
-   private String channel;
-   private Version version;
-   private Date date;
-   private URL downloadUrl;
-   private URL changelogUrl;
+    private String channel;
+    private Version version;
+    private Date date;
+    private URL downloadUrl;
+    private URL changelogUrl;
 
-   public Release(String channel, Version version, Date releaseDate, URL downloadUrl, URL changelogUrl) {
-      this.channel = channel;
-      this.version = version;
-      this.downloadUrl = downloadUrl;
-      this.changelogUrl = changelogUrl;
-   }
+    public Release(String channel, Version version, Date releaseDate, URL downloadUrl, URL changelogUrl) {
+        this.channel = channel;
+        this.version = version;
+        this.downloadUrl = downloadUrl;
+        this.changelogUrl = changelogUrl;
+    }
 
-   @Override
-   public String getChannel() {
-      return channel;
-   }
+    @Override
+    public String getChannel() {
+        return channel;
+    }
 
-   @Override
-   public Version getVersion() {
-      return version;
-   }
+    @Override
+    public Version getVersion() {
+        return version;
+    }
 
-   @Override
-   public Date getDate() {
-      return date;
-   }
+    @Override
+    public Date getDate() {
+        return date;
+    }
 
-   @Override
-   public URL getChangeLogURL() {
-      return changelogUrl;
-   }
+    @Override
+    public URL getChangeLogURL() {
+        return changelogUrl;
+    }
 
-   @Override
-   public URL getDownloadURL() {
-      return downloadUrl;
-   }
+    @Override
+    public URL getDownloadURL() {
+        return downloadUrl;
+    }
 
 }

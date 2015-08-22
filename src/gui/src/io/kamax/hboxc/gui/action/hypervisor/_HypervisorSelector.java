@@ -22,6 +22,6 @@ package io.kamax.hboxc.gui.action.hypervisor;
 
 public interface _HypervisorSelector extends _SingleHypervisorSelector {
 
-   // stub
+    // stub
 
 }

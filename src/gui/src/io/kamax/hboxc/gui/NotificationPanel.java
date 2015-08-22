@@ -30,29 +30,30 @@ import javax.swing.JPanel;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
 
-@SuppressWarnings("serial")
+
 public class NotificationPanel extends JPanel {
 
-   private volatile Map<Enum<?>, Component> notifications = new HashMap<Enum<?>, Component>();
+    private static final long serialVersionUID = 3064525253691111344L;
+    private volatile Map<Enum<?>, Component> notifications = new HashMap<Enum<?>, Component>();
 
-   public NotificationPanel() {
-      super(new MigLayout("ins 0"));
-      ViewEventManager.register(this);
-      setVisible(false);
-   }
+    public NotificationPanel() {
+        super(new MigLayout("ins 0"));
+        ViewEventManager.register(this);
+        setVisible(false);
+    }
 
-   @Handler
-   private void putUpdateAvailableEvent(UpdaterUpdateAvailableEvent ev) {
-      if (notifications.containsKey(ev.getEventId())) {
-         Logger.debug("Update available panel is already added, skipping");
-      } else {
-         Component updateLabel = new UpdateAvailableNotification(Gui.getReader().getUpdater().getUpdate());
-         notifications.put(ev.getEventId(), updateLabel);
-         add(updateLabel, "hidemode 3, growx, pushx, wrap");
-         if (!isVisible()) {
-            setVisible(true);
-         }
-      }
-   }
+    @Handler
+    private void putUpdateAvailableEvent(UpdaterUpdateAvailableEvent ev) {
+        if (notifications.containsKey(ev.getEventId())) {
+            Logger.debug("Update available panel is already added, skipping");
+        } else {
+            Component updateLabel = new UpdateAvailableNotification(Gui.getReader().getUpdater().getUpdate());
+            notifications.put(ev.getEventId(), updateLabel);
+            add(updateLabel, "hidemode 3, growx, pushx, wrap");
+            if (!isVisible()) {
+                setVisible(true);
+            }
+        }
+    }
 
 }

@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _NetworkAttachNameReceiver extends _WorkerDataReceiver {
 
-   public void add(List<NetworkAttachNameOut> objOutList);
+    public void add(List<NetworkAttachNameOut> objOutList);
 
 }

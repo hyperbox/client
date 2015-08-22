@@ -31,37 +31,37 @@ import java.util.List;
 
 public class OsTypeListWorker extends AxSwingWorker<_OsTypeListReceiver, Void, OsTypeOut> {
 
-   private String srvId;
-   private String vmId;
+    private String srvId;
+    private String vmId;
 
-   public OsTypeListWorker(_OsTypeListReceiver recv, String srvId, String vmId) {
-      super(recv);
-      this.srvId = srvId;
-      this.vmId = vmId;
-   }
+    public OsTypeListWorker(_OsTypeListReceiver recv, String srvId, String vmId) {
+        super(recv);
+        this.srvId = srvId;
+        this.vmId = vmId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      if (vmId != null) {
-         for (OsTypeOut ostOut : Gui.getServer(srvId).listOsType(new MachineIn(vmId))) {
-            publish(ostOut);
-         }
-      } else {
-         for (OsTypeOut ostOut : Gui.getServer(srvId).listOsType()) {
-            publish(ostOut);
-         }
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        if (vmId != null) {
+            for (OsTypeOut ostOut : Gui.getServer(srvId).listOsType(new MachineIn(vmId))) {
+                publish(ostOut);
+            }
+        } else {
+            for (OsTypeOut ostOut : Gui.getServer(srvId).listOsType()) {
+                publish(ostOut);
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<OsTypeOut> ostOutList) {
-      getReceiver().add(ostOutList);
-   }
+    @Override
+    protected void process(List<OsTypeOut> ostOutList) {
+        getReceiver().add(ostOutList);
+    }
 
-   public static void execute(_WorkerTracker tracker, _OsTypeListReceiver recv, MachineOut mOut) {
-      tracker.register(new OsTypeListWorker(recv, mOut.getServerId(), mOut.getUuid())).execute();
-   }
+    public static void execute(_WorkerTracker tracker, _OsTypeListReceiver recv, MachineOut mOut) {
+        tracker.register(new OsTypeListWorker(recv, mOut.getServerId(), mOut.getUuid())).execute();
+    }
 
 }

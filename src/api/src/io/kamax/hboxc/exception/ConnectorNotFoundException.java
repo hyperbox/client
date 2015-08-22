@@ -22,15 +22,17 @@ package io.kamax.hboxc.exception;
 
 import io.kamax.hbox.exception.HyperboxException;
 
-@SuppressWarnings("serial")
+
 public class ConnectorNotFoundException extends HyperboxException {
 
-   public ConnectorNotFoundException() {
-      this("Connector not found");
-   }
+    private static final long serialVersionUID = -9173546700178836268L;
 
-   public ConnectorNotFoundException(String s) {
-      super(s);
-   }
+    public ConnectorNotFoundException() {
+        this("Connector not found");
+    }
+
+    public ConnectorNotFoundException(String s) {
+        super(s);
+    }
 
 }

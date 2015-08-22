@@ -46,104 +46,104 @@ import net.miginfocom.swing.MigLayout;
 
 public class ConnectorDetailedView implements _Refreshable {
 
-   private String conId;
-   private JTabbedPane tabs;
-   private JLabel loadingLabel;
-   private JPanel panel;
+    private String conId;
+    private JTabbedPane tabs;
+    private JLabel loadingLabel;
+    private JPanel panel;
 
-   private ConnectorSummaryViewer summaryView;
-   private HostViewer hostViewer;
-   private HypervisorNetViewer netViewer;
-   private ServerTaskListView taskViewer;
-   private StoreListView storeView;
-   private UserListView userView;
-   private ModuleListView modView;
+    private ConnectorSummaryViewer summaryView;
+    private HostViewer hostViewer;
+    private HypervisorNetViewer netViewer;
+    private ServerTaskListView taskViewer;
+    private StoreListView storeView;
+    private UserListView userView;
+    private ModuleListView modView;
 
-   public ConnectorDetailedView(ConnectorOutput conOut) {
-      this.conId = conOut.getId();
+    public ConnectorDetailedView(ConnectorOutput conOut) {
+        this.conId = conOut.getId();
 
-      summaryView = new ConnectorSummaryViewer(conOut);
-      hostViewer = new HostViewer(conOut.getServerId());
-      netViewer = new HypervisorNetViewer(conOut.getServerId());
-      taskViewer = new ServerTaskListView(conOut.getServerId());
-      storeView = new StoreListView();
-      userView = new UserListView();
-      modView = new ModuleListView();
+        summaryView = new ConnectorSummaryViewer(conOut);
+        hostViewer = new HostViewer(conOut.getServerId());
+        netViewer = new HypervisorNetViewer(conOut.getServerId());
+        taskViewer = new ServerTaskListView(conOut.getServerId());
+        storeView = new StoreListView();
+        userView = new UserListView();
+        modView = new ModuleListView();
 
-      tabs = new JTabbedPane();
-      tabs.addTab("Summary", IconBuilder.getEntityType(EntityType.Server), summaryView.getComponent());
-      tabs.addTab("Host", IconBuilder.getEntityType(EntityType.Server), hostViewer.getComponent());
-      tabs.addTab("Network", IconBuilder.getEntityType(EntityType.Network), netViewer.getComponent());
-      tabs.addTab("Tasks", IconBuilder.getEntityType(EntityType.Task), taskViewer.getComponent());
-      tabs.addTab("Stores", IconBuilder.getEntityType(EntityType.Store), storeView.getComponent());
-      tabs.addTab("Users", IconBuilder.getEntityType(EntityType.User), userView.getComponent());
-      tabs.addTab("Modules", IconBuilder.getEntityType(EntityType.Module), modView.getComponent());
+        tabs = new JTabbedPane();
+        tabs.addTab("Summary", IconBuilder.getEntityType(EntityType.Server), summaryView.getComponent());
+        tabs.addTab("Host", IconBuilder.getEntityType(EntityType.Server), hostViewer.getComponent());
+        tabs.addTab("Network", IconBuilder.getEntityType(EntityType.Network), netViewer.getComponent());
+        tabs.addTab("Tasks", IconBuilder.getEntityType(EntityType.Task), taskViewer.getComponent());
+        tabs.addTab("Stores", IconBuilder.getEntityType(EntityType.Store), storeView.getComponent());
+        tabs.addTab("Users", IconBuilder.getEntityType(EntityType.User), userView.getComponent());
+        tabs.addTab("Modules", IconBuilder.getEntityType(EntityType.Module), modView.getComponent());
 
-      loadingLabel = new JLabel("Loading...");
-      loadingLabel.setVisible(false);
+        loadingLabel = new JLabel("Loading...");
+        loadingLabel.setVisible(false);
 
-      panel = new JPanel(new MigLayout("ins 0"));
-      panel.add(loadingLabel, "growx,pushx,wrap,hidemode 3");
-      panel.add(tabs, "grow,push,wrap");
+        panel = new JPanel(new MigLayout("ins 0"));
+        panel.add(loadingLabel, "growx,pushx,wrap,hidemode 3");
+        panel.add(tabs, "grow,push,wrap");
 
-      RefreshUtil.set(panel, this);
-      refresh();
-      ViewEventManager.register(this);
-   }
+        RefreshUtil.set(panel, this);
+        refresh();
+        ViewEventManager.register(this);
+    }
 
-   private void update(ConnectorOutput conOut) {
-      tabs.setEnabledAt(tabs.indexOfTab("Host"), conOut.isConnected());
-      tabs.setEnabledAt(tabs.indexOfTab("Network"), conOut.isConnected());
-      tabs.setEnabledAt(tabs.indexOfTab("Tasks"), conOut.isConnected());
-      tabs.setEnabledAt(tabs.indexOfTab("Stores"), conOut.isConnected());
-      tabs.setEnabledAt(tabs.indexOfTab("Users"), conOut.isConnected());
-      tabs.setEnabledAt(tabs.indexOfTab("Modules"), conOut.isConnected());
+    private void update(ConnectorOutput conOut) {
+        tabs.setEnabledAt(tabs.indexOfTab("Host"), conOut.isConnected());
+        tabs.setEnabledAt(tabs.indexOfTab("Network"), conOut.isConnected());
+        tabs.setEnabledAt(tabs.indexOfTab("Tasks"), conOut.isConnected());
+        tabs.setEnabledAt(tabs.indexOfTab("Stores"), conOut.isConnected());
+        tabs.setEnabledAt(tabs.indexOfTab("Users"), conOut.isConnected());
+        tabs.setEnabledAt(tabs.indexOfTab("Modules"), conOut.isConnected());
 
-      if (conOut.isConnected()) {
-         hostViewer.refresh(conOut.getServerId());
-         netViewer.refresh(conOut.getServerId());
-         taskViewer.refresh(conOut.getServerId());
-         storeView.show(conOut.getServer());
-         userView.show(conOut.getServer());
-         modView.show(conOut.getServer());
-      } else {
-         tabs.setSelectedComponent(summaryView.getComponent());
-      }
-   }
+        if (conOut.isConnected()) {
+            hostViewer.refresh(conOut.getServerId());
+            netViewer.refresh(conOut.getServerId());
+            taskViewer.refresh(conOut.getServerId());
+            storeView.show(conOut.getServer());
+            userView.show(conOut.getServer());
+            modView.show(conOut.getServer());
+        } else {
+            tabs.setSelectedComponent(summaryView.getComponent());
+        }
+    }
 
-   @Override
-   public void refresh() {
+    @Override
+    public void refresh() {
 
-      new SwingWorker<ConnectorOutput, Void>() {
+        new SwingWorker<ConnectorOutput, Void>() {
 
-         @Override
-         protected ConnectorOutput doInBackground() throws Exception {
-            return Gui.getReader().getConnector(conId);
-         }
-
-         @Override
-         protected void done() {
-            try {
-               update(get());
-            } catch (InterruptedException e) {
-               Gui.showError(e);
-            } catch (ExecutionException e) {
-               Gui.showError(e.getCause());
+            @Override
+            protected ConnectorOutput doInBackground() throws Exception {
+                return Gui.getReader().getConnector(conId);
             }
-         }
 
-      }.execute();
-   }
+            @Override
+            protected void done() {
+                try {
+                    update(get());
+                } catch (InterruptedException e) {
+                    Gui.showError(e);
+                } catch (ExecutionException e) {
+                    Gui.showError(e.getCause());
+                }
+            }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+        }.execute();
+    }
 
-   @Handler
-   private void putConnectorStateEvent(ConnectorStateChangedEvent ev) {
-      if (conId.equals(ev.getConnector().getId())) {
-         refresh();
-      }
-   }
+    public JComponent getComponent() {
+        return panel;
+    }
+
+    @Handler
+    private void putConnectorStateEvent(ConnectorStateChangedEvent ev) {
+        if (conId.equals(ev.getConnector().getId())) {
+            refresh();
+        }
+    }
 
 }

@@ -32,125 +32,125 @@ import net.engio.mbassy.bus.config.BusConfiguration;
 
 public class DefaultEventManager implements _EventManager, Runnable, UncaughtExceptionHandler {
 
-   private String label;
+    private String label;
 
-   private Set<_EventProcessor> postProcessors = new HashSet<_EventProcessor>();
-   protected MBassador<Object> eventBus;
-   private BlockingQueue<Object> eventsQueue;
-   private boolean running;
-   private Thread worker;
+    private Set<_EventProcessor> postProcessors = new HashSet<_EventProcessor>();
+    protected MBassador<Object> eventBus;
+    private BlockingQueue<Object> eventsQueue;
+    private boolean running;
+    private Thread worker;
 
-   public DefaultEventManager() {
-      this("EMW");
-   }
+    public DefaultEventManager() {
+        this("EMW");
+    }
 
-   public DefaultEventManager(String label) {
-      this.label = label;
-   }
+    public DefaultEventManager(String label) {
+        this.label = label;
+    }
 
-   private void stopWorker() {
-      running = false;
-      worker.interrupt();
-      try {
-         worker.join(1000);
-      } catch (InterruptedException e) {
-         Logger.exception(e);
-      }
-   }
-
-   private void startWorker() {
-      worker = new Thread(this);
-      worker.setUncaughtExceptionHandler(this);
-      worker.setName(label);
-      worker.start();
-   }
-
-   @Override
-   public void uncaughtException(Thread arg0, Throwable arg1) {
-      Logger.error("Event Manager " + label + " Worker Thread has crashed: " + arg1.getMessage());
-      stopWorker();
-      startWorker();
-   }
-
-   @Override
-   public void start() throws HyperboxException {
-      Logger.verbose("Event Manager - " + label + " - is starting");
-      eventBus = new MBassador<Object>(BusConfiguration.Default());
-      eventsQueue = new LinkedBlockingQueue<Object>();
-      startWorker();
-      Logger.verbose("Event Manager - " + label + " - has started");
-   }
-
-   @Override
-   public void start(_EventProcessor postProcessor) throws HyperboxException {
-      postProcessors.add(postProcessor);
-      start();
-   }
-
-   @Override
-   public void stop() {
-      if (running) {
-         Logger.verbose("Event Manager - " + label + " - is stopping");
-         stopWorker();
-         eventsQueue = null;
-         Logger.verbose("Event Manager - " + label + " - has stopped");
-      }
-   }
-
-   @Override
-   public void register(Object o) {
-      eventBus.subscribe(o);
-   }
-
-   @Override
-   public void unregister(Object o) {
-      eventBus.unsubscribe(o);
-   }
-
-   @Override
-   public void post(Object o) {
-      if (eventsQueue != null) {
-         if (!eventsQueue.offer(o)) {
-            Logger.error("Event Manager - " + label + " queue is full, cannot add " + o.getClass().getSimpleName());
-         }
-      } else {
-         Logger.error("Event Manager - " + label + " was not started, event ignored");
-      }
-   }
-
-   protected void publish(Object event) throws Throwable {
-      send(event);
-   }
-
-   protected final void send(Object event) {
-      eventBus.publish(event);
-   }
-
-   @Override
-   public void run() {
-      Logger.debug("Event Manager - " + label + " Worker Started");
-      running = true;
-      while (running) {
-         try {
-            Object event = eventsQueue.take();
-            Logger.debug("Processing Event " + event.getClass().getSimpleName() + ": " + event.toString());
-            publish(event);
-            for (_EventProcessor postProcessor : postProcessors) {
-               postProcessor.post(event);
-            }
-         } catch (InterruptedException e) {
-            Logger.debug("Interupted, halting...");
-         } catch (Throwable e) {
-            Logger.error("Error while trying to dispatch event");
+    private void stopWorker() {
+        running = false;
+        worker.interrupt();
+        try {
+            worker.join(1000);
+        } catch (InterruptedException e) {
             Logger.exception(e);
-         }
-      }
-      Logger.debug("Event Manager - " + label + " Worker halted.");
-   }
+        }
+    }
 
-   @Override
-   public void add(_EventProcessor postProcessor) {
-      postProcessors.add(postProcessor);
-   }
+    private void startWorker() {
+        worker = new Thread(this);
+        worker.setUncaughtExceptionHandler(this);
+        worker.setName(label);
+        worker.start();
+    }
+
+    @Override
+    public void uncaughtException(Thread arg0, Throwable arg1) {
+        Logger.error("Event Manager " + label + " Worker Thread has crashed: " + arg1.getMessage());
+        stopWorker();
+        startWorker();
+    }
+
+    @Override
+    public void start() throws HyperboxException {
+        Logger.verbose("Event Manager - " + label + " - is starting");
+        eventBus = new MBassador<Object>(BusConfiguration.Default());
+        eventsQueue = new LinkedBlockingQueue<Object>();
+        startWorker();
+        Logger.verbose("Event Manager - " + label + " - has started");
+    }
+
+    @Override
+    public void start(_EventProcessor postProcessor) throws HyperboxException {
+        postProcessors.add(postProcessor);
+        start();
+    }
+
+    @Override
+    public void stop() {
+        if (running) {
+            Logger.verbose("Event Manager - " + label + " - is stopping");
+            stopWorker();
+            eventsQueue = null;
+            Logger.verbose("Event Manager - " + label + " - has stopped");
+        }
+    }
+
+    @Override
+    public void register(Object o) {
+        eventBus.subscribe(o);
+    }
+
+    @Override
+    public void unregister(Object o) {
+        eventBus.unsubscribe(o);
+    }
+
+    @Override
+    public void post(Object o) {
+        if (eventsQueue != null) {
+            if (!eventsQueue.offer(o)) {
+                Logger.error("Event Manager - " + label + " queue is full, cannot add " + o.getClass().getSimpleName());
+            }
+        } else {
+            Logger.error("Event Manager - " + label + " was not started, event ignored");
+        }
+    }
+
+    protected void publish(Object event) throws Throwable {
+        send(event);
+    }
+
+    protected final void send(Object event) {
+        eventBus.publish(event);
+    }
+
+    @Override
+    public void run() {
+        Logger.debug("Event Manager - " + label + " Worker Started");
+        running = true;
+        while (running) {
+            try {
+                Object event = eventsQueue.take();
+                Logger.debug("Processing Event " + event.getClass().getSimpleName() + ": " + event.toString());
+                publish(event);
+                for (_EventProcessor postProcessor : postProcessors) {
+                    postProcessor.post(event);
+                }
+            } catch (InterruptedException e) {
+                Logger.debug("Interupted, halting...");
+            } catch (Throwable e) {
+                Logger.error("Error while trying to dispatch event");
+                Logger.exception(e);
+            }
+        }
+        Logger.debug("Event Manager - " + label + " Worker halted.");
+    }
+
+    @Override
+    public void add(_EventProcessor postProcessor) {
+        postProcessors.add(postProcessor);
+    }
 
 }

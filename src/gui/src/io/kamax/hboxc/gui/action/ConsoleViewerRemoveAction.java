@@ -31,21 +31,22 @@ import io.kamax.hboxc.gui.vm.console.viewer._ConsoleViewerSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class ConsoleViewerRemoveAction extends AbstractAction {
 
-   private _ConsoleViewerSelector selector;
+    private static final long serialVersionUID = 121514003218490085L;
+    private _ConsoleViewerSelector selector;
 
-   public ConsoleViewerRemoveAction(_ConsoleViewerSelector selector) {
-      super("-");
-      this.selector = selector;
-   }
+    public ConsoleViewerRemoveAction(_ConsoleViewerSelector selector) {
+        super("-");
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      for (ConsoleViewerOutput cvOut : selector.getConsoleViewers()) {
-         Gui.post(new MessageInput(new Request(ClientTasks.ConsoleViewerRemove, new ConsoleViewerInput(cvOut.getId()))));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        for (ConsoleViewerOutput cvOut : selector.getConsoleViewers()) {
+            Gui.post(new MessageInput(new Request(ClientTasks.ConsoleViewerRemove, new ConsoleViewerInput(cvOut.getId()))));
+        }
+    }
 
 }

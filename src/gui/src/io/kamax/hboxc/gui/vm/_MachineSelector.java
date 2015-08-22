@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _MachineSelector {
 
-   public List<MachineOut> getMachines();
+    public List<MachineOut> getMachines();
 
 }

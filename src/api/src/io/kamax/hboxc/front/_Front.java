@@ -26,20 +26,20 @@ import io.kamax.hboxc.core._CoreReader;
 
 public interface _Front {
 
-   public void setRequestReceiver(_RequestReceiver reqRec);
+    public void setRequestReceiver(_RequestReceiver reqRec);
 
-   public void setCoreReader(_CoreReader reader);
+    public void setCoreReader(_CoreReader reader);
 
-   public void start() throws HyperboxException;
+    public void start() throws HyperboxException;
 
-   public void stop();
+    public void stop();
 
-   public void postError(Throwable t);
+    public void postError(Throwable t);
 
-   public void postError(String s);
+    public void postError(String s);
 
-   public void postError(Throwable t, String s);
+    public void postError(Throwable t, String s);
 
-   public void postError(String s, Throwable t);
+    public void postError(String s, Throwable t);
 
 }

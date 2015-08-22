@@ -33,28 +33,28 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class StoreUnregisterAction extends AbstractAction {
 
-   private _StoreSelector selector;
+    private static final long serialVersionUID = 2620186011842789222L;
+    private _StoreSelector selector;
 
-   public StoreUnregisterAction(_StoreSelector selector) {
-      this(selector, "Unregister");
-   }
+    public StoreUnregisterAction(_StoreSelector selector) {
+        this(selector, "Unregister");
+    }
 
-   public StoreUnregisterAction(_StoreSelector selector, String label) {
-      super(label, IconBuilder.getTask(HyperboxTasks.StoreUnregister));
-      this.selector = selector;
-   }
+    public StoreUnregisterAction(_StoreSelector selector, String label) {
+        super(label, IconBuilder.getTask(HyperboxTasks.StoreUnregister));
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      List<String> selection = selector.getSelection();
-      if (!selection.isEmpty()) {
-         for (String storeId : selection) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreUnregister, new ServerIn(selector.getServer()), new StoreIn(storeId)));
-         }
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        List<String> selection = selector.getSelection();
+        if (!selection.isEmpty()) {
+            for (String storeId : selection) {
+                Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreUnregister, new ServerIn(selector.getServer()), new StoreIn(storeId)));
+            }
+        }
+    }
 
 }

@@ -27,10 +27,10 @@ import java.util.HashSet;
 
 public final class HyperboxClientApplicationStart {
 
-   public static void main(String[] args) throws HyperboxException {
-      Hyperbox.processArgs(new HashSet<String>(Arrays.asList(args)));
+    public static void main(String[] args) throws HyperboxException {
+        Hyperbox.processArgs(new HashSet<String>(Arrays.asList(args)));
 
-      new Controller().start();
-   }
+        new Controller().start();
+    }
 
 }

@@ -24,6 +24,6 @@ import io.kamax.hbox.comm.out.hypervisor.SnapshotOut;
 
 public interface _SnapshotGetReceiver extends _WorkerDataReceiver {
 
-   public void put(String srvId, String vmId, SnapshotOut snapOut);
+    public void put(String srvId, String vmId, SnapshotOut snapOut);
 
 }

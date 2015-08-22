@@ -25,14 +25,14 @@ import net.miginfocom.swing.MigLayout;
 
 public abstract class StorageDeviceViewer {
 
-   protected JPanel panel;
+    protected JPanel panel;
 
-   public StorageDeviceViewer() {
-      panel = new JPanel(new MigLayout("ins 0"));
-   }
+    public StorageDeviceViewer() {
+        panel = new JPanel(new MigLayout("ins 0"));
+    }
 
-   public JPanel getPanel() {
-      return panel;
-   }
+    public JPanel getPanel() {
+        return panel;
+    }
 
 }

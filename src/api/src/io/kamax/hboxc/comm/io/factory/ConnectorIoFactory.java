@@ -33,28 +33,28 @@ import java.util.List;
 
 public class ConnectorIoFactory {
 
-   public static ConnectorOutput get(_Connector conn) {
-      List<SettingIO> settings = new ArrayList<SettingIO>();
-      settings.add(new StringSettingIO(ConnectorAttributes.Label, conn.getLabel()));
-      settings.add(new StringSettingIO(ConnectorAttributes.Address, conn.getAddress()));
-      settings.add(new StringSettingIO(ConnectorAttributes.BackendId, conn.getBackendId()));
-      settings.add(new BooleanSettingIO(ConnectorAttributes.isConnected, conn.isConnected()));
-      settings.add(new SettingIO(ConnectorAttributes.ConnectionState, conn.getState()));
-      settings.add(new StringSettingIO(ConnectorAttributes.Username, conn.getUsername()));
-      settings.add(new StringSettingIO(ConnectorAttributes.ServerId, conn.getServerId()));
-      if (conn.isConnected()) {
-         settings.add(new SettingIO(ConnectorAttributes.Server, ServerIoFactory.get(conn.getServer())));
-      }
-      ConnectorOutput srvOut = new ConnectorOutput(conn.getId(), settings);
-      return srvOut;
-   }
+    public static ConnectorOutput get(_Connector conn) {
+        List<SettingIO> settings = new ArrayList<SettingIO>();
+        settings.add(new StringSettingIO(ConnectorAttributes.Label, conn.getLabel()));
+        settings.add(new StringSettingIO(ConnectorAttributes.Address, conn.getAddress()));
+        settings.add(new StringSettingIO(ConnectorAttributes.BackendId, conn.getBackendId()));
+        settings.add(new BooleanSettingIO(ConnectorAttributes.isConnected, conn.isConnected()));
+        settings.add(new SettingIO(ConnectorAttributes.ConnectionState, conn.getState()));
+        settings.add(new StringSettingIO(ConnectorAttributes.Username, conn.getUsername()));
+        settings.add(new StringSettingIO(ConnectorAttributes.ServerId, conn.getServerId()));
+        if (conn.isConnected()) {
+            settings.add(new SettingIO(ConnectorAttributes.Server, ServerIoFactory.get(conn.getServer())));
+        }
+        ConnectorOutput srvOut = new ConnectorOutput(conn.getId(), settings);
+        return srvOut;
+    }
 
-   public static List<ConnectorOutput> getList(Collection<_Connector> objList) {
-      List<ConnectorOutput> listOut = new ArrayList<ConnectorOutput>();
-      for (_Connector obj : objList) {
-         listOut.add(get(obj));
-      }
-      return listOut;
-   }
+    public static List<ConnectorOutput> getList(Collection<_Connector> objList) {
+        List<ConnectorOutput> listOut = new ArrayList<ConnectorOutput>();
+        for (_Connector obj : objList) {
+            listOut.add(get(obj));
+        }
+        return listOut;
+    }
 
 }

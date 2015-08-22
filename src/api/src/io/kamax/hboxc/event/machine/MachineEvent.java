@@ -25,29 +25,29 @@ import io.kamax.hbox.event.Event;
 
 public abstract class MachineEvent extends Event {
 
-   private String srvId;
+    private String srvId;
 
-   public MachineEvent(Enum<?> id, String srvId, MachineOut mOut) {
-      super(id);
-      this.srvId = srvId;
-      set(MachineOut.class, mOut);
-   }
+    public MachineEvent(Enum<?> id, String srvId, MachineOut mOut) {
+        super(id);
+        this.srvId = srvId;
+        set(MachineOut.class, mOut);
+    }
 
-   public MachineOut getMachine() {
-      return get(MachineOut.class);
-   }
+    public MachineOut getMachine() {
+        return get(MachineOut.class);
+    }
 
-   public String getUuid() {
-      return getMachine().getUuid();
-   }
+    public String getUuid() {
+        return getMachine().getUuid();
+    }
 
-   public String getServerId() {
-      return srvId;
-   }
+    public String getServerId() {
+        return srvId;
+    }
 
-   @Override
-   public String toString() {
-      return "Event ID " + getEventId() + " for Machine " + getUuid() + " on Server " + getServerId() + " occured @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Event ID " + getEventId() + " for Machine " + getUuid() + " on Server " + getServerId() + " occured @ " + getTime();
+    }
 
 }

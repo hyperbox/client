@@ -50,124 +50,129 @@ import net.miginfocom.swing.MigLayout;
 
 public class SettingsManager implements _Saveable, _Cancelable {
 
-   private final String GENERAL = "General";
-   private final String VIEWERS = "Viewers";
+    private final String GENERAL = "General";
+    private final String VIEWERS = "Viewers";
 
-   private JDialog mainDialog;
+    private JDialog mainDialog;
 
-   private JSplitPane split;
+    private JSplitPane split;
 
-   private JPanel buttonsPanel;
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JPanel buttonsPanel;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private JScrollPane leftPane;
-   private JScrollPane rightPane;
+    private JScrollPane leftPane;
+    private JScrollPane rightPane;
 
-   private DefaultListModel listModel;
-   private JList itemList;
+    private DefaultListModel listModel;
+    private JList itemList;
 
-   private JPanel sectionPanels;
-   private CardLayout layout;
+    private JPanel sectionPanels;
+    private CardLayout layout;
 
-   private GeneralSettingsViewer generalEdit;
-   private ConsoleViewersSettingsViewer viewerEdit;
+    private GeneralSettingsViewer generalEdit;
+    private ConsoleViewersSettingsViewer viewerEdit;
 
-   public static SettingsManager show() {
-      return new SettingsManager();
-   }
+    public static SettingsManager show() {
+        return new SettingsManager();
+    }
 
-   public SettingsManager() {
-      generalEdit = new GeneralSettingsViewer();
-      generalEdit.load();
-      viewerEdit = new ConsoleViewersSettingsViewer();
-      viewerEdit.load();
+    public SettingsManager() {
+        generalEdit = new GeneralSettingsViewer();
+        generalEdit.load();
+        viewerEdit = new ConsoleViewersSettingsViewer();
+        viewerEdit.load();
 
-      mainDialog = new JDialog(MainView.getMainFrame());
-      mainDialog.setIconImage(IconBuilder.getTask(HypervisorTasks.MachineModify).getImage());
-      mainDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-      mainDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
-      mainDialog.setSize(1000, 600);
+        mainDialog = new JDialog(MainView.getMainFrame());
+        mainDialog.setIconImage(IconBuilder.getTask(HypervisorTasks.MachineModify).getImage());
+        mainDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        mainDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
+        mainDialog.setSize(1000, 600);
 
-      layout = new CardLayout();
-      sectionPanels = new JPanel(layout);
+        layout = new CardLayout();
+        sectionPanels = new JPanel(layout);
 
-      sectionPanels.add(generalEdit.getComponet(), GENERAL);
-      sectionPanels.add(viewerEdit.getComponet(), VIEWERS);
+        sectionPanels.add(generalEdit.getComponet(), GENERAL);
+        sectionPanels.add(viewerEdit.getComponet(), VIEWERS);
 
-      listModel = new DefaultListModel();
-      //listModel.addElement(GENERAL);
-      listModel.addElement(VIEWERS);
+        listModel = new DefaultListModel();
+        //listModel.addElement(GENERAL);
+        listModel.addElement(VIEWERS);
 
-      itemList = new JList(listModel);
-      itemList.setCellRenderer(new LabelCellRenderer());
-      itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      itemList.addListSelectionListener(new ListSelect());
-      if (!listModel.isEmpty()) {
-         itemList.setSelectedValue(listModel.getElementAt(0), true);
-      }
+        itemList = new JList(listModel);
+        itemList.setCellRenderer(new LabelCellRenderer());
+        itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        itemList.addListSelectionListener(new ListSelect());
+        if (!listModel.isEmpty()) {
+            itemList.setSelectedValue(listModel.getElementAt(0), true);
+        }
 
-      leftPane = new JScrollPane(itemList);
-      leftPane.setMinimumSize(new Dimension(100, 50));
-      rightPane = new JScrollPane(sectionPanels);
-      rightPane.setMinimumSize(new Dimension(300, 100));
+        leftPane = new JScrollPane(itemList);
+        leftPane.setMinimumSize(new Dimension(100, 50));
+        rightPane = new JScrollPane(sectionPanels);
+        rightPane.setMinimumSize(new Dimension(300, 100));
 
-      split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, rightPane);
-      split.setBorder(null);
+        split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, rightPane);
+        split.setBorder(null);
 
-      saveButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
+        saveButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
 
-      buttonsPanel = new JPanel(new MigLayout());
-      buttonsPanel.add(saveButton);
-      buttonsPanel.add(cancelButton);
+        buttonsPanel = new JPanel(new MigLayout());
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
 
-      mainDialog.getContentPane().setLayout(new MigLayout());
-      mainDialog.getContentPane().add(split, "grow,push,wrap");
-      mainDialog.getContentPane().add(buttonsPanel, "grow x");
-      mainDialog.setLocationRelativeTo(mainDialog.getParent());
-      mainDialog.setVisible(true);
-   }
+        mainDialog.getContentPane().setLayout(new MigLayout());
+        mainDialog.getContentPane().add(split, "grow,push,wrap");
+        mainDialog.getContentPane().add(buttonsPanel, "grow x");
+        mainDialog.setLocationRelativeTo(mainDialog.getParent());
+        mainDialog.setVisible(true);
+    }
 
-   @Override
-   public void cancel() {
-      mainDialog.setVisible(false);
-   }
+    @Override
+    public void cancel() {
+        mainDialog.setVisible(false);
+    }
 
-   @Override
-   public void save() {
-      mainDialog.setVisible(false);
-   }
+    @Override
+    public void save() {
+        mainDialog.setVisible(false);
+    }
 
-   private class ListSelect implements ListSelectionListener {
+    private class ListSelect implements ListSelectionListener {
 
-      @Override
-      public void valueChanged(ListSelectionEvent lsEv) {
-         if (itemList.getSelectedValue() != null) {
-            layout.show(sectionPanels, itemList.getSelectedValue().toString());
-         }
-      }
+        @Override
+        public void valueChanged(ListSelectionEvent lsEv) {
+            if (itemList.getSelectedValue() != null) {
+                layout.show(sectionPanels, itemList.getSelectedValue().toString());
+            }
+        }
 
-   }
+    }
 
-   @SuppressWarnings("serial")
-   private class LabelCellRenderer extends DefaultListCellRenderer {
+    
+    private class LabelCellRenderer extends DefaultListCellRenderer {
 
-      @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        /**
+         *
+         */
+        private static final long serialVersionUID = -3013644638595005392L;
 
-         if (label.getText() == GENERAL) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.Machine));
-         } else if (label.getText() == VIEWERS) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.Display));
-         } else {
-            label.setIcon(null);
-         }
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-         return label;
-      }
+            if (label.getText() == GENERAL) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.Machine));
+            } else if (label.getText() == VIEWERS) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.Display));
+            } else {
+                label.setIcon(null);
+            }
 
-   }
+            return label;
+        }
+
+    }
 
 }

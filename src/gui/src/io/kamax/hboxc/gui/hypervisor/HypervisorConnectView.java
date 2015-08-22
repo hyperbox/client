@@ -42,81 +42,81 @@ import net.miginfocom.swing.MigLayout;
 
 public class HypervisorConnectView implements _Saveable, _Cancelable {
 
-   private ServerOut srvOut;
+    private ServerOut srvOut;
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   private JLabel loaderLabel;
-   private JComboBox loaderData;
+    private JLabel loaderLabel;
+    private JComboBox loaderData;
 
-   private JLabel optionsLabel;
-   private JTextField optionsData;
+    private JLabel optionsLabel;
+    private JTextField optionsData;
 
-   private JButton connectButton;
-   private JButton cancelButton;
+    private JButton connectButton;
+    private JButton cancelButton;
 
-   private HypervisorIn hypIn;
+    private HypervisorIn hypIn;
 
-   public HypervisorConnectView(ServerOut srvOut) {
-      this.srvOut = srvOut;
+    public HypervisorConnectView(ServerOut srvOut) {
+        this.srvOut = srvOut;
 
-      loaderLabel = new JLabel("Connector ID");
-      loaderData = new JComboBox();
+        loaderLabel = new JLabel("Connector ID");
+        loaderData = new JComboBox();
 
-      optionsLabel = new JLabel("Connector Options");
-      optionsData = new JTextField();
+        optionsLabel = new JLabel("Connector Options");
+        optionsData = new JTextField();
 
-      connectButton = new JButton(new SaveAction(this, "Connect"));
-      cancelButton = new JButton(new CancelAction(this));
+        connectButton = new JButton(new SaveAction(this, "Connect"));
+        cancelButton = new JButton(new CancelAction(this));
 
-      JPanel centerPanel = new JPanel(new MigLayout("ins 0"));
-      centerPanel.add(loaderLabel);
-      centerPanel.add(loaderData, "growx,pushx,wrap");
-      centerPanel.add(optionsLabel);
-      centerPanel.add(optionsData, "growx,pushx,wrap");
+        JPanel centerPanel = new JPanel(new MigLayout("ins 0"));
+        centerPanel.add(loaderLabel);
+        centerPanel.add(loaderData, "growx,pushx,wrap");
+        centerPanel.add(optionsLabel);
+        centerPanel.add(optionsData, "growx,pushx,wrap");
 
-      JPanel buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(connectButton);
-      buttonPanel.add(cancelButton);
+        JPanel buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(connectButton);
+        buttonPanel.add(cancelButton);
 
-      dialog = JDialogBuilder.get("Connect to Hypervisor", connectButton);
-      dialog.add(centerPanel, "growx,pushx,wrap");
-      dialog.add(buttonPanel, "growx,pushx,wrap");
-   }
+        dialog = JDialogBuilder.get("Connect to Hypervisor", connectButton);
+        dialog.add(centerPanel, "growx,pushx,wrap");
+        dialog.add(buttonPanel, "growx,pushx,wrap");
+    }
 
-   public void show() {
-      for (HypervisorLoaderOut hypOut : KxCollections.sort(Gui.getServer(srvOut).listHypervisors(), new HypervisorLoaderOutComparator())) {
-         loaderData.addItem(hypOut);
-      }
-      dialog.pack();
-      dialog.setLocationRelativeTo(dialog.getParent());
-      dialog.setVisible(true);
-   }
+    public void show() {
+        for (HypervisorLoaderOut hypOut : KxCollections.sort(Gui.getServer(srvOut).listHypervisors(), new HypervisorLoaderOutComparator())) {
+            loaderData.addItem(hypOut);
+        }
+        dialog.pack();
+        dialog.setLocationRelativeTo(dialog.getParent());
+        dialog.setVisible(true);
+    }
 
-   public void hide() {
-      dialog.setVisible(false);
-   }
+    public void hide() {
+        dialog.setVisible(false);
+    }
 
-   @Override
-   public void cancel() {
-      hide();
-   }
+    @Override
+    public void cancel() {
+        hide();
+    }
 
-   @Override
-   public void save() {
-      hypIn = new HypervisorIn(((HypervisorLoaderOut) loaderData.getSelectedItem()).getHypervisorId());
-      hypIn.setConnectionOptions(optionsData.getText());
-      hypIn.setAutoConnect(true);
-      hide();
-   }
+    @Override
+    public void save() {
+        hypIn = new HypervisorIn(((HypervisorLoaderOut) loaderData.getSelectedItem()).getHypervisorId());
+        hypIn.setConnectionOptions(optionsData.getText());
+        hypIn.setAutoConnect(true);
+        hide();
+    }
 
-   public HypervisorIn getUserInput() {
-      show();
-      return hypIn;
-   }
+    public HypervisorIn getUserInput() {
+        show();
+        return hypIn;
+    }
 
-   public static HypervisorIn getInput(ServerOut srvOut) {
-      return new HypervisorConnectView(srvOut).getUserInput();
-   }
+    public static HypervisorIn getInput(ServerOut srvOut) {
+        return new HypervisorConnectView(srvOut).getUserInput();
+    }
 
 }

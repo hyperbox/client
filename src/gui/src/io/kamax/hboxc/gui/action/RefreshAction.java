@@ -25,18 +25,19 @@ import io.kamax.hboxc.gui._Refreshable;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class RefreshAction extends AbstractAction {
 
-   private _Refreshable refreshable;
+    private static final long serialVersionUID = 4790936188063112797L;
+    private _Refreshable refreshable;
 
-   public RefreshAction(_Refreshable r) {
-      refreshable = r;
-   }
+    public RefreshAction(_Refreshable r) {
+        refreshable = r;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      refreshable.refresh();
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        refreshable.refresh();
+    }
 
 }

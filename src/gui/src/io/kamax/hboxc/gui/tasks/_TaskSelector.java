@@ -25,11 +25,11 @@ import java.util.List;
 
 public interface _TaskSelector {
 
-   /**
-    * Give the list of Task IDs currently selected by the user on this TaskSelector object
-    * 
-    * @return a List of String IDs for the tasks
-    */
-   public List<TaskOut> getSelection();
+    /**
+     * Give the list of Task IDs currently selected by the user on this TaskSelector object
+     * 
+     * @return a List of String IDs for the tasks
+     */
+    public List<TaskOut> getSelection();
 
 }

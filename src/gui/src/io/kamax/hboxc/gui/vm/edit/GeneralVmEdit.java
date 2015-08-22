@@ -43,166 +43,166 @@ import net.miginfocom.swing.MigLayout;
 
 public class GeneralVmEdit {
 
-   private _WorkerTracker tracker;
+    private _WorkerTracker tracker;
 
-   private JPanel panel;
-   private JLabel nameLabel;
-   private JTextField nameField;
-   private JLabel osTypeLabel;
-   private JComboBox osTypeField;
-   private JLabel snapshotFolderLabel;
-   private JTextField snapshotFolderField;
-   private JLabel keyboardTypeLabel;
-   private JComboBox keyboardTypeBox;
-   private JLabel mouseTypeLabel;
-   private JComboBox mouseTypeBox;
-   private JLabel descLabel;
-   private JTextArea descArea;
+    private JPanel panel;
+    private JLabel nameLabel;
+    private JTextField nameField;
+    private JLabel osTypeLabel;
+    private JComboBox osTypeField;
+    private JLabel snapshotFolderLabel;
+    private JTextField snapshotFolderField;
+    private JLabel keyboardTypeLabel;
+    private JComboBox keyboardTypeBox;
+    private JLabel mouseTypeLabel;
+    private JComboBox mouseTypeBox;
+    private JLabel descLabel;
+    private JTextArea descArea;
 
-   private MachineOut mOut;
-   private MachineIn mIn;
+    private MachineOut mOut;
+    private MachineIn mIn;
 
-   public GeneralVmEdit(_WorkerTracker tracker) {
-      this.tracker = tracker;
+    public GeneralVmEdit(_WorkerTracker tracker) {
+        this.tracker = tracker;
 
-      nameLabel = new JLabel("Name");
-      nameField = new JTextField();
+        nameLabel = new JLabel("Name");
+        nameField = new JTextField();
 
-      osTypeLabel = new JLabel("OS Type");
-      osTypeField = new JComboBox();
+        osTypeLabel = new JLabel("OS Type");
+        osTypeField = new JComboBox();
 
-      snapshotFolderLabel = new JLabel("Snapshot Folder");
-      snapshotFolderField = new JTextField();
+        snapshotFolderLabel = new JLabel("Snapshot Folder");
+        snapshotFolderField = new JTextField();
 
-      keyboardTypeLabel = new JLabel("Keyboard Type");
-      keyboardTypeBox = new JComboBox();
+        keyboardTypeLabel = new JLabel("Keyboard Type");
+        keyboardTypeBox = new JComboBox();
 
-      mouseTypeLabel = new JLabel("Mouse Type");
-      mouseTypeBox = new JComboBox();
+        mouseTypeLabel = new JLabel("Mouse Type");
+        mouseTypeBox = new JComboBox();
 
-      descLabel = new JLabel("Description");
-      descArea = new JTextArea();
+        descLabel = new JLabel("Description");
+        descArea = new JTextArea();
 
-      panel = new JPanel(new MigLayout());
-      panel.add(nameLabel);
-      panel.add(nameField, "growx,pushx,wrap");
-      panel.add(osTypeLabel);
-      panel.add(osTypeField, "growx,pushx,wrap");
-      panel.add(snapshotFolderLabel);
-      panel.add(snapshotFolderField, "growx,pushx,wrap");
-      panel.add(keyboardTypeLabel);
-      panel.add(keyboardTypeBox, "growx,pushx,wrap");
-      panel.add(mouseTypeLabel);
-      panel.add(mouseTypeBox, "growx,pushx,wrap");
-      panel.add(descLabel);
-      panel.add(descArea, "growx,pushx,wrap");
-   }
+        panel = new JPanel(new MigLayout());
+        panel.add(nameLabel);
+        panel.add(nameField, "growx,pushx,wrap");
+        panel.add(osTypeLabel);
+        panel.add(osTypeField, "growx,pushx,wrap");
+        panel.add(snapshotFolderLabel);
+        panel.add(snapshotFolderField, "growx,pushx,wrap");
+        panel.add(keyboardTypeLabel);
+        panel.add(keyboardTypeBox, "growx,pushx,wrap");
+        panel.add(mouseTypeLabel);
+        panel.add(mouseTypeBox, "growx,pushx,wrap");
+        panel.add(descLabel);
+        panel.add(descArea, "growx,pushx,wrap");
+    }
 
-   public Component getComp() {
-      return panel;
-   }
+    public Component getComp() {
+        return panel;
+    }
 
-   public void update(MachineOut mOut, MachineIn mIn) {
-      this.mIn = mIn;
-      this.mOut = mOut;
+    public void update(MachineOut mOut, MachineIn mIn) {
+        this.mIn = mIn;
+        this.mOut = mOut;
 
-      nameField.setText(mOut.getName());
-      descArea.setText(mOut.getSetting(MachineAttribute.Description).getString());
+        nameField.setText(mOut.getName());
+        descArea.setText(mOut.getSetting(MachineAttribute.Description).getString());
 
-      KeyboardTypeListWorker.execute(tracker, new KeyboardListReceiver(), mOut.getServerId(), mOut.getUuid());
+        KeyboardTypeListWorker.execute(tracker, new KeyboardListReceiver(), mOut.getServerId(), mOut.getUuid());
 
-      try {
-         mouseTypeBox.removeAllItems();
-         for (String mouse : Gui.getServer(mOut.getServerId()).listMouseMode(new MachineIn(mOut))) {
-            mouseTypeBox.addItem(mouse);
-         }
-         mouseTypeBox.setSelectedItem(mOut.getSetting(MachineAttribute.MouseMode).getRawValue());
-      } catch (Throwable t) {
-         HyperboxClient.getView().postError("Unable to retrieve list of Mouse modes", t);
-      }
-      OsTypeListWorker.execute(tracker, new OsTypeLoader(), mOut);
-   }
+        try {
+            mouseTypeBox.removeAllItems();
+            for (String mouse : Gui.getServer(mOut.getServerId()).listMouseMode(new MachineIn(mOut))) {
+                mouseTypeBox.addItem(mouse);
+            }
+            mouseTypeBox.setSelectedItem(mOut.getSetting(MachineAttribute.MouseMode).getRawValue());
+        } catch (Throwable t) {
+            HyperboxClient.getView().postError("Unable to retrieve list of Mouse modes", t);
+        }
+        OsTypeListWorker.execute(tracker, new OsTypeLoader(), mOut);
+    }
 
-   public void save() {
-      if (!nameField.getText().contentEquals(mOut.getName())) {
-         mIn.setName(nameField.getText());
-      }
-      if (!osTypeField.getSelectedItem().toString().contentEquals(mOut.getSetting(MachineAttribute.OsType).getString())) {
-         mIn.setSetting(new StringSettingIO(MachineAttribute.OsType, osTypeField.getSelectedItem().toString()));
-      }
-      if (!keyboardTypeBox.getSelectedItem().toString().contentEquals(mOut.getSetting(MachineAttribute.KeyboardMode).getString())) {
-         mIn.setSetting(new StringSettingIO(MachineAttribute.KeyboardMode, keyboardTypeBox.getSelectedItem().toString()));
-      }
-      if (!mouseTypeBox.getSelectedItem().toString().contentEquals(mOut.getSetting(MachineAttribute.MouseMode).getString())) {
-         mIn.setSetting(new StringSettingIO(MachineAttribute.MouseMode, mouseTypeBox.getSelectedItem().toString()));
-      }
-      if (!descArea.getText().contentEquals(mOut.getSetting(MachineAttribute.Description).getString())) {
-         mIn.setSetting(new StringSettingIO(MachineAttribute.Description, descArea.getText()));
-      }
-   }
+    public void save() {
+        if (!nameField.getText().contentEquals(mOut.getName())) {
+            mIn.setName(nameField.getText());
+        }
+        if (!osTypeField.getSelectedItem().toString().contentEquals(mOut.getSetting(MachineAttribute.OsType).getString())) {
+            mIn.setSetting(new StringSettingIO(MachineAttribute.OsType, osTypeField.getSelectedItem().toString()));
+        }
+        if (!keyboardTypeBox.getSelectedItem().toString().contentEquals(mOut.getSetting(MachineAttribute.KeyboardMode).getString())) {
+            mIn.setSetting(new StringSettingIO(MachineAttribute.KeyboardMode, keyboardTypeBox.getSelectedItem().toString()));
+        }
+        if (!mouseTypeBox.getSelectedItem().toString().contentEquals(mOut.getSetting(MachineAttribute.MouseMode).getString())) {
+            mIn.setSetting(new StringSettingIO(MachineAttribute.MouseMode, mouseTypeBox.getSelectedItem().toString()));
+        }
+        if (!descArea.getText().contentEquals(mOut.getSetting(MachineAttribute.Description).getString())) {
+            mIn.setSetting(new StringSettingIO(MachineAttribute.Description, descArea.getText()));
+        }
+    }
 
-   private class OsTypeLoader implements _OsTypeListReceiver {
+    private class OsTypeLoader implements _OsTypeListReceiver {
 
-      @Override
-      public void loadingStarted() {
-         osTypeField.removeAllItems();
-         osTypeField.addItem("Loading...");
-         osTypeField.setSelectedItem("Loading...");
-         osTypeField.setEnabled(false);
-      }
-
-      @Override
-      public void loadingFinished(boolean isSuccess, String message) {
-         osTypeField.setEnabled(true);
-         if (isSuccess) {
-            osTypeField.setSelectedItem(mOut.getSetting(MachineAttribute.OsType).getRawValue());
-            osTypeField.removeItem("Loading...");
-         } else {
+        @Override
+        public void loadingStarted() {
             osTypeField.removeAllItems();
-            osTypeField.addItem("Failed to load: " + message);
-         }
-      }
+            osTypeField.addItem("Loading...");
+            osTypeField.setSelectedItem("Loading...");
+            osTypeField.setEnabled(false);
+        }
 
-      @Override
-      public void add(List<OsTypeOut> ostOuttList) {
-         for (OsTypeOut osOut : ostOuttList) {
-            osTypeField.addItem(osOut.getId());
-         }
-      }
+        @Override
+        public void loadingFinished(boolean isSuccess, String message) {
+            osTypeField.setEnabled(true);
+            if (isSuccess) {
+                osTypeField.setSelectedItem(mOut.getSetting(MachineAttribute.OsType).getRawValue());
+                osTypeField.removeItem("Loading...");
+            } else {
+                osTypeField.removeAllItems();
+                osTypeField.addItem("Failed to load: " + message);
+            }
+        }
 
-   }
+        @Override
+        public void add(List<OsTypeOut> ostOuttList) {
+            for (OsTypeOut osOut : ostOuttList) {
+                osTypeField.addItem(osOut.getId());
+            }
+        }
 
-   private class KeyboardListReceiver implements _KeyboardTypeListReceiver {
+    }
 
-      @Override
-      public void loadingStarted() {
-         keyboardTypeBox.setEnabled(false);
-         keyboardTypeBox.removeAllItems();
-         keyboardTypeBox.addItem("Loading...");
-         keyboardTypeBox.setSelectedItem("Loading...");
-      }
+    private class KeyboardListReceiver implements _KeyboardTypeListReceiver {
 
-      @Override
-      public void loadingFinished(boolean isSuccessful, String message) {
-         keyboardTypeBox.removeItem("Loading...");
-         keyboardTypeBox.setEnabled(isSuccessful);
-         if (isSuccessful) {
-            keyboardTypeBox.setSelectedItem(mOut.getSetting(MachineAttribute.KeyboardMode).getRawValue());
-         } else {
+        @Override
+        public void loadingStarted() {
+            keyboardTypeBox.setEnabled(false);
             keyboardTypeBox.removeAllItems();
-            keyboardTypeBox.addItem("Failed to load Keyboard Types list: " + message);
-         }
+            keyboardTypeBox.addItem("Loading...");
+            keyboardTypeBox.setSelectedItem("Loading...");
+        }
 
-      }
+        @Override
+        public void loadingFinished(boolean isSuccessful, String message) {
+            keyboardTypeBox.removeItem("Loading...");
+            keyboardTypeBox.setEnabled(isSuccessful);
+            if (isSuccessful) {
+                keyboardTypeBox.setSelectedItem(mOut.getSetting(MachineAttribute.KeyboardMode).getRawValue());
+            } else {
+                keyboardTypeBox.removeAllItems();
+                keyboardTypeBox.addItem("Failed to load Keyboard Types list: " + message);
+            }
 
-      @Override
-      public void add(List<String> keyboardList) {
-         for (String keyboard : keyboardList) {
-            keyboardTypeBox.addItem(keyboard);
-         }
+        }
 
-      }
+        @Override
+        public void add(List<String> keyboardList) {
+            for (String keyboard : keyboardList) {
+                keyboardTypeBox.addItem(keyboard);
+            }
 
-   }
+        }
+
+    }
 
 }

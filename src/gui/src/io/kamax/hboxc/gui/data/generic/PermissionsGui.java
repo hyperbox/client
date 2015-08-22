@@ -25,15 +25,15 @@ import io.kamax.hboxc.gui.data.EntityGui;
 
 public class PermissionsGui extends EntityGui {
 
-   public final static String id = "Permissions";
+    public final static String id = "Permissions";
 
-   public PermissionsGui() {
-      super(EntityType.Permission.getId(), id, true);
-   }
+    public PermissionsGui() {
+        super(EntityType.Permission.getId(), id, true);
+    }
 
-   @Override
-   public String toString() {
-      return id;
-   }
+    @Override
+    public String toString() {
+        return id;
+    }
 
 }

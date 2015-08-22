@@ -26,13 +26,13 @@ import io.kamax.hbox.states.ServerConnectionState;
 
 public class ServerDisconnectedEvent extends ServerConnectionStateEvent {
 
-   public ServerDisconnectedEvent(ServerOut srv) {
-      super(srv, ServerConnectionState.Disconnected);
-   }
+    public ServerDisconnectedEvent(ServerOut srv) {
+        super(srv, ServerConnectionState.Disconnected);
+    }
 
-   @Override
-   public String toString() {
-      return "Server ID " + getServer().getId() + " disconnected @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Server ID " + getServer().getId() + " disconnected @ " + getTime();
+    }
 
 }

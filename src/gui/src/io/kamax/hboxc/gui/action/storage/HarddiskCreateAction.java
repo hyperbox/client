@@ -31,26 +31,26 @@ import io.kamax.hboxc.gui.storage.HarddiskCreateDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class HarddiskCreateAction extends AbstractAction {
 
-   private _SingleServerSelector select;
+    private static final long serialVersionUID = 8863485482314246476L;
+    private _SingleServerSelector select;
 
-   public HarddiskCreateAction(_SingleServerSelector select, String label) {
-      super(label);
-      this.select = select;
-   }
+    public HarddiskCreateAction(_SingleServerSelector select, String label) {
+        super(label);
+        this.select = select;
+    }
 
-   public HarddiskCreateAction(_SingleServerSelector select) {
-      this(select, "Create");
-   }
+    public HarddiskCreateAction(_SingleServerSelector select) {
+        this(select, "Create");
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      MediumIn medIn = HarddiskCreateDialog.show(select.getServer());
-      if (medIn != null) {
-         Gui.post(new Request(Command.VBOX, HypervisorTasks.MediumCreate, new ServerIn(select.getServer().getId()), medIn));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        MediumIn medIn = HarddiskCreateDialog.show(select.getServer());
+        if (medIn != null) {
+            Gui.post(new Request(Command.VBOX, HypervisorTasks.MediumCreate, new ServerIn(select.getServer().getId()), medIn));
+        }
+    }
 
 }

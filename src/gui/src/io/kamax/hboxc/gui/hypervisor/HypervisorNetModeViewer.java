@@ -38,62 +38,62 @@ import net.miginfocom.swing.MigLayout;
 
 public class HypervisorNetModeViewer implements _Refreshable, _NetAdaptorListReceiver {
 
-   private String srvId;
-   private NetModeOut mode;
+    private String srvId;
+    private NetModeOut mode;
 
-   private JPanel panel = new JPanel(new MigLayout());
+    private JPanel panel = new JPanel(new MigLayout());
 
-   public HypervisorNetModeViewer(String srvId, NetModeOut mode) {
-      this.srvId = srvId;
-      this.mode = mode;
-      ViewEventManager.register(this);
-      refresh();
-   }
+    public HypervisorNetModeViewer(String srvId, NetModeOut mode) {
+        this.srvId = srvId;
+        this.mode = mode;
+        ViewEventManager.register(this);
+        refresh();
+    }
 
-   @Override
-   public void refresh() {
-      NetAdaptorListWorker.execute(this, srvId, mode.getId());
-   }
+    @Override
+    public void refresh() {
+        NetAdaptorListWorker.execute(this, srvId, mode.getId());
+    }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+    public JComponent getComponent() {
+        return panel;
+    }
 
-   @Override
-   public void loadingStarted() {
-      panel.removeAll();
-      panel.revalidate();
-      panel.repaint();
-   }
+    @Override
+    public void loadingStarted() {
+        panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
+    }
 
-   @Override
-   public void loadingFinished(boolean isSuccessful, String message) {
-      if (!isSuccessful) {
-         panel.add(new JLabel(message), "wrap");
-      } else {
-         if (panel.getComponents().length == 0) {
-            panel.add(new JLabel("No adaptor"), "wrap");
-         }
-         if (mode.canAddAdaptor()) {
-            panel.add(new JButton(new NetAdaptorAddAction(srvId, mode.getId())), "wrap");
-         }
-      }
-      // TODO find out why this is needed
-      panel.revalidate();
-      panel.repaint();
-   }
+    @Override
+    public void loadingFinished(boolean isSuccessful, String message) {
+        if (!isSuccessful) {
+            panel.add(new JLabel(message), "wrap");
+        } else {
+            if (panel.getComponents().length == 0) {
+                panel.add(new JLabel("No adaptor"), "wrap");
+            }
+            if (mode.canAddAdaptor()) {
+                panel.add(new JButton(new NetAdaptorAddAction(srvId, mode.getId())), "wrap");
+            }
+        }
+        // TODO find out why this is needed
+        panel.revalidate();
+        panel.repaint();
+    }
 
-   @Override
-   public void add(List<NetAdaptorOut> adaptOutList) {
-      for (NetAdaptorOut adapt : adaptOutList) {
-         panel.add(new JLabel(adapt.getLabel()), "growx, pushx");
-         if (mode.canRemoveAdaptor()) {
-            panel.add(new JButton(new NetAdaptorEditAction(srvId, mode.getId(), adapt.getId())));
-            panel.add(new JButton(new NetAdaptorRemoveAction(srvId, mode.getId(), adapt.getId())), "wrap");
-         } else {
-            panel.add(new JLabel(), "span 2, wrap");
-         }
-      }
-   }
+    @Override
+    public void add(List<NetAdaptorOut> adaptOutList) {
+        for (NetAdaptorOut adapt : adaptOutList) {
+            panel.add(new JLabel(adapt.getLabel()), "growx, pushx");
+            if (mode.canRemoveAdaptor()) {
+                panel.add(new JButton(new NetAdaptorEditAction(srvId, mode.getId(), adapt.getId())));
+                panel.add(new JButton(new NetAdaptorRemoveAction(srvId, mode.getId(), adapt.getId())), "wrap");
+            } else {
+                panel.add(new JLabel(), "span 2, wrap");
+            }
+        }
+    }
 
 }

@@ -26,6 +26,6 @@ import java.util.List;
 
 public interface _ConsoleViewerSelector {
 
-   public List<ConsoleViewerOutput> getConsoleViewers();
+    public List<ConsoleViewerOutput> getConsoleViewers();
 
 }

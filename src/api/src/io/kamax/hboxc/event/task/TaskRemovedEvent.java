@@ -26,8 +26,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class TaskRemovedEvent extends TaskEvent {
 
-   public TaskRemovedEvent(ServerOut srvOut, TaskOut taskOut) {
-      super(ClientEvents.TaskRemoved, srvOut, taskOut);
-   }
+    public TaskRemovedEvent(ServerOut srvOut, TaskOut taskOut) {
+        super(ClientEvents.TaskRemoved, srvOut, taskOut);
+    }
 
 }

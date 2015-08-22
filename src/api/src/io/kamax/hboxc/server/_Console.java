@@ -22,6 +22,6 @@ package io.kamax.hboxc.server;
 
 public interface _Console extends _Device {
 
-   // stub
+    // stub
 
 }

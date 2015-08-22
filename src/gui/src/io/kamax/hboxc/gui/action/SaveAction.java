@@ -26,28 +26,29 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class SaveAction extends AbstractAction {
 
-   private _Saveable obj;
+    private static final long serialVersionUID = -5885429669111924805L;
+    private _Saveable obj;
 
-   public SaveAction(_Saveable obj) {
-      this(obj, "Save");
-   }
+    public SaveAction(_Saveable obj) {
+        this(obj, "Save");
+    }
 
-   public SaveAction(_Saveable obj, String label) {
-      super(label);
-      this.obj = obj;
-   }
+    public SaveAction(_Saveable obj, String label) {
+        super(label);
+        this.obj = obj;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      try {
-         obj.save();
-      } catch (Throwable t) {
-         Logger.exception(t);
-         HyperboxClient.getView().postError(t, "Cannot save: " + t.getMessage());
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        try {
+            obj.save();
+        } catch (Throwable t) {
+            Logger.exception(t);
+            HyperboxClient.getView().postError(t, "Cannot save: " + t.getMessage());
+        }
+    }
 
 }

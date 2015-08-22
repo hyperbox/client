@@ -20,11 +20,13 @@
 
 package io.kamax.hboxc.exception;
 
-@SuppressWarnings("serial")
+
 public class UpdaterScheduleException extends UpdaterException {
 
-   public UpdaterScheduleException(String s) {
-      super(s);
-   }
+    private static final long serialVersionUID = 1240133987182742940L;
+
+    public UpdaterScheduleException(String s) {
+        super(s);
+    }
 
 }

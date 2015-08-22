@@ -64,355 +64,355 @@ import net.engio.mbassy.listener.Handler;
 
 public class ClientCore implements _Core {
 
-   private class ConnectorIdGenerator {
+    private class ConnectorIdGenerator {
 
-      private Integer id = 1;
+        private Integer id = 1;
 
-      public String getId() {
-         while (conns.containsKey(id.toString())) {
-            id++;
-         }
-         return id.toString();
-      }
-   }
-
-   private volatile CoreState state = CoreState.Stopped;
-
-   private _ModuleManager modMgr;
-   private _CoreStorage storage;
-
-   private ConnectorIdGenerator connectIdGen = new ConnectorIdGenerator();
-
-   private Map<String, _ConsoleViewer> consoleViewers;
-   private Map<String, _Connector> conns;
-   private Map<String, _Server> servers;
-
-   private _Updater updater;
-
-   private void setState(CoreState state) {
-      if (!this.state.equals(state)) {
-         Logger.verbose("Changing Core State to " + state);
-         this.state = state;
-         EventManager.post(new CoreStateEvent(this.state));
-      } else {
-         Logger.debug("Ignoring new state, same as old: " + state);
-      }
-   }
-
-   private void loadViewers() throws HyperboxException {
-      consoleViewers.clear();
-
-      Collection<_ConsoleViewer> viewers = new ArrayList<_ConsoleViewer>();
-      if (storage.hasConsoleViewers()) {
-         viewers.addAll(storage.loadViewers());
-      } else {
-         viewers.addAll(ConsoleViewerFactory.getDefaults());
-      }
-      for (_ConsoleViewer viewer : viewers) {
-         if (consoleViewers.containsKey(viewer.getId())) {
-            throw new HyperboxException("Invalid Console Viewer data: duplicate ID for " + viewer.getId());
-         }
-         consoleViewers.put(viewer.getId(), viewer);
-      }
-   }
-
-   private void loadConnectors() throws HyperboxException {
-      conns.clear();
-
-      if (storage.hasConnectors()) {
-         for (_Connector conn : storage.loadConnectors()) {
-            if (conns.containsKey(conn.getId())) {
-               throw new HyperboxException("Invalid Connector data: duplicate ID for " + conn.getId());
+        public String getId() {
+            while (conns.containsKey(id.toString())) {
+                id++;
             }
-            conns.put(conn.getId(), conn);
-            EventManager.post(new ConnectorAddedEvent(ConnectorIoFactory.get(conn)));
-         }
-      }
-   }
+            return id.toString();
+        }
+    }
 
-   @Override
-   public void init() throws HyperboxException {
-      EventManager.get().register(this);
+    private volatile CoreState state = CoreState.Stopped;
 
-      modMgr = ModuleManagerFactory.get();
+    private _ModuleManager modMgr;
+    private _CoreStorage storage;
 
-      storage = new UserProfileCoreStorage();
-      storage.init();
+    private ConnectorIdGenerator connectIdGen = new ConnectorIdGenerator();
 
-      updater = UpdaterFactory.get();
-   }
+    private Map<String, _ConsoleViewer> consoleViewers;
+    private Map<String, _Connector> conns;
+    private Map<String, _Server> servers;
 
-   @Override
-   public void start() throws HyperboxException {
-      setState(CoreState.Starting);
+    private _Updater updater;
 
-      consoleViewers = new HashMap<String, _ConsoleViewer>();
-      conns = new HashMap<String, _Connector>();
-      servers = new HashMap<String, _Server>();
+    private void setState(CoreState state) {
+        if (!this.state.equals(state)) {
+            Logger.verbose("Changing Core State to " + state);
+            this.state = state;
+            EventManager.post(new CoreStateEvent(this.state));
+        } else {
+            Logger.debug("Ignoring new state, same as old: " + state);
+        }
+    }
 
-      try {
-         modMgr.start();
-         storage.start();
+    private void loadViewers() throws HyperboxException {
+        consoleViewers.clear();
 
-         loadViewers();
-         loadConnectors();
-
-         setState(CoreState.Started);
-      } catch (Throwable e) {
-         stop();
-         throw new HyperboxException("Error during core start sequence", e);
-      }
-   }
-
-   @Override
-   public void stop() {
-      if (getCoreState().equals(CoreState.Started) || getCoreState().equals(CoreState.Starting)) {
-         setState(CoreState.Stopping);
-
-         for (String connId : conns.keySet()) {
-            try {
-               disconnect(connId);
-            } catch (Throwable t) {
-               Logger.warning("Failed to disconnect servers during client shutdown: " + t.getMessage());
+        Collection<_ConsoleViewer> viewers = new ArrayList<_ConsoleViewer>();
+        if (storage.hasConsoleViewers()) {
+            viewers.addAll(storage.loadViewers());
+        } else {
+            viewers.addAll(ConsoleViewerFactory.getDefaults());
+        }
+        for (_ConsoleViewer viewer : viewers) {
+            if (consoleViewers.containsKey(viewer.getId())) {
+                throw new HyperboxException("Invalid Console Viewer data: duplicate ID for " + viewer.getId());
             }
-         }
+            consoleViewers.put(viewer.getId(), viewer);
+        }
+    }
 
-         if (storage != null) {
-            storage.storeViewers(consoleViewers.values());
-            storage.storeConnectors(conns.values());
+    private void loadConnectors() throws HyperboxException {
+        conns.clear();
 
-            storage.stop();
-            storage = null;
-         }
+        if (storage.hasConnectors()) {
+            for (_Connector conn : storage.loadConnectors()) {
+                if (conns.containsKey(conn.getId())) {
+                    throw new HyperboxException("Invalid Connector data: duplicate ID for " + conn.getId());
+                }
+                conns.put(conn.getId(), conn);
+                EventManager.post(new ConnectorAddedEvent(ConnectorIoFactory.get(conn)));
+            }
+        }
+    }
 
-         if (updater != null) {
-            updater.stop();
-            updater = null;
-         }
+    @Override
+    public void init() throws HyperboxException {
+        EventManager.get().register(this);
 
-         setState(CoreState.Stopped);
-      }
-   }
+        modMgr = ModuleManagerFactory.get();
 
-   @Override
-   public void destroy() {
-      if (storage != null) {
-         storage.destroy();
-      }
-   }
+        storage = new UserProfileCoreStorage();
+        storage.init();
 
-   @Override
-   public CoreState getCoreState() {
-      return state;
-   }
+        updater = UpdaterFactory.get();
+    }
 
-   @Override
-   public _ConsoleViewer getConsoleViewer(String id) {
-      if (!consoleViewers.containsKey(id)) {
-         throw new ConsoleViewerNotFound();
-      }
+    @Override
+    public void start() throws HyperboxException {
+        setState(CoreState.Starting);
 
-      return consoleViewers.get(id);
-   }
+        consoleViewers = new HashMap<String, _ConsoleViewer>();
+        conns = new HashMap<String, _Connector>();
+        servers = new HashMap<String, _Server>();
 
-   @Override
-   public List<_ConsoleViewer> listConsoleViewer() {
-      List<_ConsoleViewer> listOut = new ArrayList<_ConsoleViewer>();
-      for (_ConsoleViewer conViewer : consoleViewers.values()) {
-         listOut.add(conViewer);
-      }
-      return listOut;
-   }
+        try {
+            modMgr.start();
+            storage.start();
 
-   @Override
-   public List<_ConsoleViewer> listConsoleViewer(String hypervisorTypeId) {
-      List<_ConsoleViewer> listOut = new ArrayList<_ConsoleViewer>();
-      for (_ConsoleViewer conViewer : consoleViewers.values()) {
-         if (conViewer.getHypervisorId().equalsIgnoreCase(hypervisorTypeId)) {
+            loadViewers();
+            loadConnectors();
+
+            setState(CoreState.Started);
+        } catch (Throwable e) {
+            stop();
+            throw new HyperboxException("Error during core start sequence", e);
+        }
+    }
+
+    @Override
+    public void stop() {
+        if (getCoreState().equals(CoreState.Started) || getCoreState().equals(CoreState.Starting)) {
+            setState(CoreState.Stopping);
+
+            for (String connId : conns.keySet()) {
+                try {
+                    disconnect(connId);
+                } catch (Throwable t) {
+                    Logger.warning("Failed to disconnect servers during client shutdown: " + t.getMessage());
+                }
+            }
+
+            if (storage != null) {
+                storage.storeViewers(consoleViewers.values());
+                storage.storeConnectors(conns.values());
+
+                storage.stop();
+                storage = null;
+            }
+
+            if (updater != null) {
+                updater.stop();
+                updater = null;
+            }
+
+            setState(CoreState.Stopped);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        if (storage != null) {
+            storage.destroy();
+        }
+    }
+
+    @Override
+    public CoreState getCoreState() {
+        return state;
+    }
+
+    @Override
+    public _ConsoleViewer getConsoleViewer(String id) {
+        if (!consoleViewers.containsKey(id)) {
+            throw new ConsoleViewerNotFound();
+        }
+
+        return consoleViewers.get(id);
+    }
+
+    @Override
+    public List<_ConsoleViewer> listConsoleViewer() {
+        List<_ConsoleViewer> listOut = new ArrayList<_ConsoleViewer>();
+        for (_ConsoleViewer conViewer : consoleViewers.values()) {
             listOut.add(conViewer);
-         }
-      }
-      return listOut;
-   }
+        }
+        return listOut;
+    }
 
-   @Override
-   public _ConsoleViewer addConsoleViewer(String hypervisorId, String moduleId, String viewerPath, String viewerArgs) {
-      String id = hypervisorId + moduleId;
-      if (consoleViewers.containsKey(id)) {
-         throw new HyperboxException("Console viewer already exist for this Hypervisor and Module");
-      }
+    @Override
+    public List<_ConsoleViewer> listConsoleViewer(String hypervisorTypeId) {
+        List<_ConsoleViewer> listOut = new ArrayList<_ConsoleViewer>();
+        for (_ConsoleViewer conViewer : consoleViewers.values()) {
+            if (conViewer.getHypervisorId().equalsIgnoreCase(hypervisorTypeId)) {
+                listOut.add(conViewer);
+            }
+        }
+        return listOut;
+    }
 
-      _ConsoleViewer conView = ConsoleViewerFactory.get(hypervisorId, moduleId, viewerPath, viewerArgs);
-      conView.save();
+    @Override
+    public _ConsoleViewer addConsoleViewer(String hypervisorId, String moduleId, String viewerPath, String viewerArgs) {
+        String id = hypervisorId + moduleId;
+        if (consoleViewers.containsKey(id)) {
+            throw new HyperboxException("Console viewer already exist for this Hypervisor and Module");
+        }
 
-      storage.storeViewers(consoleViewers.values());
-      consoleViewers.put(conView.getId(), conView);
+        _ConsoleViewer conView = ConsoleViewerFactory.get(hypervisorId, moduleId, viewerPath, viewerArgs);
+        conView.save();
 
-      EventManager.post(new ConsoleViewerAddedEvent(ConsoleViewerIoFactory.getOut(conView)));
+        storage.storeViewers(consoleViewers.values());
+        consoleViewers.put(conView.getId(), conView);
 
-      return conView;
-   }
+        EventManager.post(new ConsoleViewerAddedEvent(ConsoleViewerIoFactory.getOut(conView)));
 
-   @Override
-   public void removeConsoleViewer(String id) {
-      _ConsoleViewer viewer = getConsoleViewer(id);
-      viewer.remove();
-      consoleViewers.remove(id);
+        return conView;
+    }
 
-      EventManager.post(new ConsoleViewerAddedEvent(ConsoleViewerIoFactory.getOut(viewer)));
-   }
+    @Override
+    public void removeConsoleViewer(String id) {
+        _ConsoleViewer viewer = getConsoleViewer(id);
+        viewer.remove();
+        consoleViewers.remove(id);
 
-   @Override
-   public _ConsoleViewer findConsoleViewer(String hypervisorId, String moduleId) {
-      for (_ConsoleViewer conViewer : consoleViewers.values()) {
-         if (hypervisorId.matches(conViewer.getHypervisorId()) && moduleId.matches(conViewer.getModuleId())) {
-            return conViewer;
-         }
-      }
+        EventManager.post(new ConsoleViewerAddedEvent(ConsoleViewerIoFactory.getOut(viewer)));
+    }
 
-      throw new ConsoleViewerNotFoundForType(hypervisorId, moduleId);
-   }
+    @Override
+    public _ConsoleViewer findConsoleViewer(String hypervisorId, String moduleId) {
+        for (_ConsoleViewer conViewer : consoleViewers.values()) {
+            if (hypervisorId.matches(conViewer.getHypervisorId()) && moduleId.matches(conViewer.getModuleId())) {
+                return conViewer;
+            }
+        }
 
-   @Override
-   public _Server getServer(String id) {
-      if (!servers.containsKey(id)) {
-         throw new HyperboxException("No Server for ID " + id);
-      }
-      return servers.get(id);
-   }
+        throw new ConsoleViewerNotFoundForType(hypervisorId, moduleId);
+    }
 
-   @Override
-   public List<_Connector> listConnector() {
-      return new ArrayList<_Connector>(conns.values());
-   }
+    @Override
+    public _Server getServer(String id) {
+        if (!servers.containsKey(id)) {
+            throw new HyperboxException("No Server for ID " + id);
+        }
+        return servers.get(id);
+    }
 
-   @Override
-   public _Connector getConnector(String id) {
-      if (!conns.containsKey(id)) {
-         throw new ConnectorNotFoundException("No Connector for ID " + id);
-      }
-      return conns.get(id);
-   }
+    @Override
+    public List<_Connector> listConnector() {
+        return new ArrayList<_Connector>(conns.values());
+    }
 
-   @Override
-   public _Backend getBackend(String id) {
-      return BackendFactory.get(id);
-   }
+    @Override
+    public _Connector getConnector(String id) {
+        if (!conns.containsKey(id)) {
+            throw new ConnectorNotFoundException("No Connector for ID " + id);
+        }
+        return conns.get(id);
+    }
 
-   @Override
-   public List<String> listBackends() {
-      return BackendFactory.list();
-   }
+    @Override
+    public _Backend getBackend(String id) {
+        return BackendFactory.get(id);
+    }
 
-   @Override
-   public _Connector addConnector(ConnectorInput conIn, UserIn usrIn) {
-      _Connector conn = ConnectorFactory.get(connectIdGen.getId(), conIn.getLabel(), conIn.getAddress(), usrIn.getUsername(), conIn.getBackendId());
-      storage.storeConnectorCredentials(conn.getId(), usrIn);
-      conns.put(conn.getId(), conn);
-      storage.storeConnectors(new ArrayList<_Connector>(conns.values()));
-      EventManager.post(new ConnectorAddedEvent(ConnectorIoFactory.get(conn)));
-      return conn;
-   }
+    @Override
+    public List<String> listBackends() {
+        return BackendFactory.list();
+    }
 
-   @Override
-   public _Connector modifyConnector(ConnectorInput conIn, UserIn usrIn) {
-      _Connector conn = getConnector(conIn.getId());
-      ConnectorFactory.update(conn, conIn);
-      if (usrIn != null) {
-         conn.setUsername(usrIn.getUsername());
-         storage.storeConnectorCredentials(conn.getId(), usrIn);
-      }
-      storage.storeConnectors(conns.values());
-      EventManager.post(new ConnectorModifiedEvent(ConnectorIoFactory.get(conn)));
-      return conn;
-   }
+    @Override
+    public _Connector addConnector(ConnectorInput conIn, UserIn usrIn) {
+        _Connector conn = ConnectorFactory.get(connectIdGen.getId(), conIn.getLabel(), conIn.getAddress(), usrIn.getUsername(), conIn.getBackendId());
+        storage.storeConnectorCredentials(conn.getId(), usrIn);
+        conns.put(conn.getId(), conn);
+        storage.storeConnectors(new ArrayList<_Connector>(conns.values()));
+        EventManager.post(new ConnectorAddedEvent(ConnectorIoFactory.get(conn)));
+        return conn;
+    }
 
-   @Override
-   public _Connector connect(String id) {
-      _Connector conn = getConnector(id);
-      UserIn usrIn = storage.loadConnectorCredentials(conn.getId());
-      _Server srv = conn.connect(usrIn);
-      servers.put(srv.getId(), srv);
-      return conn;
-   }
+    @Override
+    public _Connector modifyConnector(ConnectorInput conIn, UserIn usrIn) {
+        _Connector conn = getConnector(conIn.getId());
+        ConnectorFactory.update(conn, conIn);
+        if (usrIn != null) {
+            conn.setUsername(usrIn.getUsername());
+            storage.storeConnectorCredentials(conn.getId(), usrIn);
+        }
+        storage.storeConnectors(conns.values());
+        EventManager.post(new ConnectorModifiedEvent(ConnectorIoFactory.get(conn)));
+        return conn;
+    }
 
-   @Override
-   public void disconnect(String id) {
-      _Connector conn = getConnector(id);
-      conn.disconnect();
-   }
+    @Override
+    public _Connector connect(String id) {
+        _Connector conn = getConnector(id);
+        UserIn usrIn = storage.loadConnectorCredentials(conn.getId());
+        _Server srv = conn.connect(usrIn);
+        servers.put(srv.getId(), srv);
+        return conn;
+    }
 
-   @Override
-   public void removeConnector(String id) {
-      disconnect(id);
+    @Override
+    public void disconnect(String id) {
+        _Connector conn = getConnector(id);
+        conn.disconnect();
+    }
 
-      _Connector conn = conns.remove(id);
-      storage.storeConnectors(conns.values());
-      storage.removeConnectorCredentials(id);
-      EventManager.post(new ConnectorRemovedEvent(ConnectorIoFactory.get(conn)));
-   }
+    @Override
+    public void removeConnector(String id) {
+        disconnect(id);
 
-   @Handler
-   private void putConnectorConnected(ConnectorStateChangedEvent ev) {
-      if (ev.getState().equals(ConnectionState.Connected)) {
-         servers.put(ev.getConnector().getServerId(), getConnector(ev.getConnector().getId()).getServer());
-      }
-   }
+        _Connector conn = conns.remove(id);
+        storage.storeConnectors(conns.values());
+        storage.removeConnectorCredentials(id);
+        EventManager.post(new ConnectorRemovedEvent(ConnectorIoFactory.get(conn)));
+    }
 
-   @Handler
-   protected void putServerDisconnected(ServerDisconnectedEvent ev) {
-      servers.remove(ev.getServer().getId());
-   }
+    @Handler
+    private void putConnectorConnected(ConnectorStateChangedEvent ev) {
+        if (ev.getState().equals(ConnectionState.Connected)) {
+            servers.put(ev.getConnector().getServerId(), getConnector(ev.getConnector().getId()).getServer());
+        }
+    }
 
-   @Handler
-   private void putStarted(CoreStateEvent ev) {
-      if (CoreState.Started.equals(ev.getState())) {
-         updater.start();
-      }
-   }
+    @Handler
+    protected void putServerDisconnected(ServerDisconnectedEvent ev) {
+        servers.remove(ev.getServer().getId());
+    }
 
-   @Override
-   public _Connector getConnectorForServer(String serverId) {
-      for (_Connector con : conns.values()) {
-         if (con.isConnected() && con.getServer().getId().equals(serverId)) {
-            return con;
-         }
-      }
-      throw new HyperboxException("No connected server was found under ID " + serverId);
-   }
+    @Handler
+    private void putStarted(CoreStateEvent ev) {
+        if (CoreState.Started.equals(ev.getState())) {
+            updater.start();
+        }
+    }
 
-   @Override
-   public void launchConsoleViewer(_Machine machine) {
-      launchConsoleViewer(machine.getServer().getId(), machine.getId());
-   }
+    @Override
+    public _Connector getConnectorForServer(String serverId) {
+        for (_Connector con : conns.values()) {
+            if (con.isConnected() && con.getServer().getId().equals(serverId)) {
+                return con;
+            }
+        }
+        throw new HyperboxException("No connected server was found under ID " + serverId);
+    }
 
-   @Override
-   public void launchConsoleViewer(String serverId, String machineId) {
-      _Server srv = getServer(serverId);
-      MachineOut m = srv.getMachine(machineId);
-      _ConsoleViewer cView = findConsoleViewer(getServer(serverId).getHypervisor().getType(), m.getSetting(MachineAttribute.VrdeModule).getString());
-      String address = m.getSetting(MachineAttribute.VrdeAddress).getString();
-      if ((address == null) || address.isEmpty()) {
-         address = getConnectorForServer(srv.getId()).getAddress();
-      }
-      String port = m.getSetting(MachineAttribute.VrdePort).getString();
+    @Override
+    public void launchConsoleViewer(_Machine machine) {
+        launchConsoleViewer(machine.getServer().getId(), machine.getId());
+    }
 
-      String arg = cView.getArgs();
-      arg = arg.replace("%SA%", address);
-      arg = arg.replace("%SP%", port);
-      Logger.info("Starting Console viewer " + cView.getViewerPath() + " for machine " + m.getUuid() + " on server " + srv.getId()
-            + " with arguments: " + arg);
-      try {
-         ProcessRunner.runHeadless(new ProcessBuilder(new String[] { cView.getViewerPath(), arg }).start());
-      } catch (Throwable t) {
-         throw new HyperboxException("Couldn't launch Console Viewer", t);
-      }
+    @Override
+    public void launchConsoleViewer(String serverId, String machineId) {
+        _Server srv = getServer(serverId);
+        MachineOut m = srv.getMachine(machineId);
+        _ConsoleViewer cView = findConsoleViewer(getServer(serverId).getHypervisor().getType(), m.getSetting(MachineAttribute.VrdeModule).getString());
+        String address = m.getSetting(MachineAttribute.VrdeAddress).getString();
+        if ((address == null) || address.isEmpty()) {
+            address = getConnectorForServer(srv.getId()).getAddress();
+        }
+        String port = m.getSetting(MachineAttribute.VrdePort).getString();
 
-   }
+        String arg = cView.getArgs();
+        arg = arg.replace("%SA%", address);
+        arg = arg.replace("%SP%", port);
+        Logger.info("Starting Console viewer " + cView.getViewerPath() + " for machine " + m.getUuid() + " on server " + srv.getId()
+                + " with arguments: " + arg);
+        try {
+            ProcessRunner.runHeadless(new ProcessBuilder(new String[] { cView.getViewerPath(), arg }).start());
+        } catch (Throwable t) {
+            throw new HyperboxException("Couldn't launch Console Viewer", t);
+        }
 
-   @Override
-   public _Updater getUpdater() {
-      return updater;
-   }
+    }
+
+    @Override
+    public _Updater getUpdater() {
+        return updater;
+    }
 
 }

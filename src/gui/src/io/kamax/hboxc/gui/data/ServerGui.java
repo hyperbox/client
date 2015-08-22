@@ -26,85 +26,85 @@ import io.kamax.tool.AxStrings;
 
 public class ServerGui extends EntityGui {
 
-   private String address;
-   private String name;
-   private String label;
-   private String state;
+    private String address;
+    private String name;
+    private String label;
+    private String state;
 
-   public ServerGui(ConnectorOutput conOut, ServerOut srvOut) {
-      super(srvOut.getEntityTypeId(), conOut.getId());
-      address = conOut.getAddress();
-      label = conOut.getLabel();
-      name = srvOut.getName();
-   }
+    public ServerGui(ConnectorOutput conOut, ServerOut srvOut) {
+        super(srvOut.getEntityTypeId(), conOut.getId());
+        address = conOut.getAddress();
+        label = conOut.getLabel();
+        name = srvOut.getName();
+    }
 
-   @Override
-   public String toString() {
-      if (!AxStrings.isEmpty(label)) {
-         return label;
-      } else if (!AxStrings.isEmpty(name)) {
-         return name;
-      } else if (!AxStrings.isEmpty(address)) {
-         return address;
-      } else {
-         return super.toString();
-      }
-   }
+    @Override
+    public String toString() {
+        if (!AxStrings.isEmpty(label)) {
+            return label;
+        } else if (!AxStrings.isEmpty(name)) {
+            return name;
+        } else if (!AxStrings.isEmpty(address)) {
+            return address;
+        } else {
+            return super.toString();
+        }
+    }
 
-   /**
-    * @return the address
-    */
-   public String getAddress() {
-      return address;
-   }
+    /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
 
-   /**
-    * @param address the address to set
-    */
-   public void setAddress(String address) {
-      this.address = address;
-   }
+    /**
+     * @param address the address to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName() {
-      return name;
-   }
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @param name the name to set
-    */
-   public void setName(String name) {
-      this.name = name;
-   }
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @return the label
-    */
-   public String getLabel() {
-      return label;
-   }
+    /**
+     * @return the label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-   /**
-    * @param label the label to set
-    */
-   public void setLabel(String label) {
-      this.label = label;
-   }
+    /**
+     * @param label the label to set
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-   /**
-    * @return the state
-    */
-   public String getState() {
-      return state;
-   }
+    /**
+     * @return the state
+     */
+    public String getState() {
+        return state;
+    }
 
-   /**
-    * @param state the state to set
-    */
-   public void setState(String state) {
-      this.state = state;
-   }
+    /**
+     * @param state the state to set
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
 
 }

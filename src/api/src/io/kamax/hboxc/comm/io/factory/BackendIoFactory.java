@@ -28,32 +28,32 @@ import java.util.List;
 
 public class BackendIoFactory {
 
-   private BackendIoFactory() {
-      // static only
-   }
+    private BackendIoFactory() {
+        // static only
+    }
 
-   public static BackendOutput get(String id) {
-      return new BackendOutput(id);
-   }
+    public static BackendOutput get(String id) {
+        return new BackendOutput(id);
+    }
 
-   public static BackendOutput get(_Backend back) {
-      return get(back.getId());
-   }
+    public static BackendOutput get(_Backend back) {
+        return get(back.getId());
+    }
 
-   public static List<BackendOutput> getList(List<_Backend> backList) {
-      List<BackendOutput> listOut = new ArrayList<BackendOutput>();
-      for (_Backend back : backList) {
-         listOut.add(get(back));
-      }
-      return listOut;
-   }
+    public static List<BackendOutput> getList(List<_Backend> backList) {
+        List<BackendOutput> listOut = new ArrayList<BackendOutput>();
+        for (_Backend back : backList) {
+            listOut.add(get(back));
+        }
+        return listOut;
+    }
 
-   public static List<BackendOutput> getListId(List<String> backIdList) {
-      List<BackendOutput> listOut = new ArrayList<BackendOutput>();
-      for (String id : backIdList) {
-         listOut.add(get(id));
-      }
-      return listOut;
-   }
+    public static List<BackendOutput> getListId(List<String> backIdList) {
+        List<BackendOutput> listOut = new ArrayList<BackendOutput>();
+        for (String id : backIdList) {
+            listOut.add(get(id));
+        }
+        return listOut;
+    }
 
 }

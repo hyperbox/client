@@ -26,8 +26,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class ConsoleViewerRemovedEvent extends ConsoleViewerEvent {
 
-   public ConsoleViewerRemovedEvent(ConsoleViewerOutput data) {
-      super(ClientEvents.ConsoleViewerRemove, data);
-   }
+    public ConsoleViewerRemovedEvent(ConsoleViewerOutput data) {
+        super(ClientEvents.ConsoleViewerRemove, data);
+    }
 
 }

@@ -22,6 +22,6 @@ package io.kamax.hboxc.event;
 
 public interface _EventProcessor {
 
-   public void post(Object o);
+    public void post(Object o);
 
 }

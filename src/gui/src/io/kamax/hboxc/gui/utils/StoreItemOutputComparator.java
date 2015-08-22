@@ -26,9 +26,9 @@ import java.util.Comparator;
 
 public class StoreItemOutputComparator implements Comparator<StoreItemOut> {
 
-   @Override
-   public int compare(StoreItemOut obj1, StoreItemOut obj2) {
-      return obj1.getName().compareToIgnoreCase(obj2.getName());
-   }
+    @Override
+    public int compare(StoreItemOut obj1, StoreItemOut obj2) {
+        return obj1.getName().compareToIgnoreCase(obj2.getName());
+    }
 
 }

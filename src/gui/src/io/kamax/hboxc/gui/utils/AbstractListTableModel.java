@@ -25,155 +25,156 @@ import java.util.Collection;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-@SuppressWarnings("serial")
+
 public abstract class AbstractListTableModel<T extends Object> extends AbstractTableModel {
 
-   private List<T> data;
-   private List<String> columns;
+    private static final long serialVersionUID = -6659527446204458382L;
+    private List<T> data;
+    private List<String> columns;
 
-   public AbstractListTableModel() {
-      init();
-      addColumns();
-   }
+    public AbstractListTableModel() {
+        init();
+        addColumns();
+    }
 
-   public AbstractListTableModel(List<T> list) {
-      this();
-      add(list);
-   }
+    public AbstractListTableModel(List<T> list) {
+        this();
+        add(list);
+    }
 
-   private void init() {
-      columns = new ArrayList<String>();
-      reset();
-   }
+    private void init() {
+        columns = new ArrayList<String>();
+        reset();
+    }
 
-   private void reset() {
-      data = new ArrayList<T>();
-   }
+    private void reset() {
+        data = new ArrayList<T>();
+    }
 
-   public void addColumn(String s) {
-      columns.add(s);
-      fireTableStructureChanged();
-   }
+    public void addColumn(String s) {
+        columns.add(s);
+        fireTableStructureChanged();
+    }
 
-   public void clear() {
+    public void clear() {
 
-      Integer maxIndex = data.size() - 1;
-      reset();
-      if (maxIndex > -1) {
-         fireTableRowsDeleted(0, maxIndex);
-      } else {
-         fireTableDataChanged();
-      }
-   }
+        Integer maxIndex = data.size() - 1;
+        reset();
+        if (maxIndex > -1) {
+            fireTableRowsDeleted(0, maxIndex);
+        } else {
+            fireTableDataChanged();
+        }
+    }
 
-   public List<T> list() {
-      return new ArrayList<T>(data);
-   }
+    public List<T> list() {
+        return new ArrayList<T>(data);
+    }
 
-   public T getObjectAtRow(int rowId) {
-      return data.get(rowId);
-   }
+    public T getObjectAtRow(int rowId) {
+        return data.get(rowId);
+    }
 
-   @Override
-   public boolean isCellEditable(int row, int col) {
-      return false;
-   }
+    @Override
+    public boolean isCellEditable(int row, int col) {
+        return false;
+    }
 
-   @Override
-   public int getColumnCount() {
-      return columns.size();
-   }
+    @Override
+    public int getColumnCount() {
+        return columns.size();
+    }
 
-   @Override
-   public String getColumnName(int columnIndex) {
-      return columns.get(columnIndex);
-   }
+    @Override
+    public String getColumnName(int columnIndex) {
+        return columns.get(columnIndex);
+    }
 
-   @Override
-   public int getRowCount() {
-      return data.size();
-   }
+    @Override
+    public int getRowCount() {
+        return data.size();
+    }
 
-   @Override
-   public Object getValueAt(int rowId, int columnId) {
-      return getValueAt(data.get(rowId), getColumnName(columnId));
-   }
+    @Override
+    public Object getValueAt(int rowId, int columnId) {
+        return getValueAt(data.get(rowId), getColumnName(columnId));
+    }
 
-   protected abstract Object getValueAt(T obj, String columnName);
+    protected abstract Object getValueAt(T obj, String columnName);
 
-   public int getRowForObj(T oOut) {
-      return data.indexOf(oOut);
-   }
+    public int getRowForObj(T oOut) {
+        return data.indexOf(oOut);
+    }
 
-   public boolean has(T oOut) {
-      return data.contains(oOut);
-   }
+    public boolean has(T oOut) {
+        return data.contains(oOut);
+    }
 
-   public void add(T oOut) {
-      if (oOut != null) {
-         int index = data.size();
-         data.add(index, oOut);
-         fireTableRowsInserted(index, index);
-      }
-   }
+    public void add(T oOut) {
+        if (oOut != null) {
+            int index = data.size();
+            data.add(index, oOut);
+            fireTableRowsInserted(index, index);
+        }
+    }
 
-   public void update(T oOut) {
-      if (oOut != null) {
-         int index = getRowForObj(oOut);
-         if (index > -1) {
-            data.set(index, oOut);
-            fireTableRowsUpdated(index, index);
-         }
-      }
-   }
+    public void update(T oOut) {
+        if (oOut != null) {
+            int index = getRowForObj(oOut);
+            if (index > -1) {
+                data.set(index, oOut);
+                fireTableRowsUpdated(index, index);
+            }
+        }
+    }
 
-   public void merge(T oOut) {
-      if (has(oOut)) {
-         update(oOut);
-      } else {
-         add(oOut);
-      }
-   }
+    public void merge(T oOut) {
+        if (has(oOut)) {
+            update(oOut);
+        } else {
+            add(oOut);
+        }
+    }
 
-   public void put(T oOut) {
-      clear();
-      add(oOut);
-   }
+    public void put(T oOut) {
+        clear();
+        add(oOut);
+    }
 
-   public void remove(T oOut) {
-      if (oOut != null) {
-         int index = getRowForObj(oOut);
-         if (index > -1) {
+    public void remove(T oOut) {
+        if (oOut != null) {
+            int index = getRowForObj(oOut);
+            if (index > -1) {
 
-            data.remove(index);
-            fireTableRowsDeleted(index, index);
-         }
-      }
-   }
+                data.remove(index);
+                fireTableRowsDeleted(index, index);
+            }
+        }
+    }
 
-   public void add(Collection<T> list) {
-      for (T oOut : list) {
-         add(oOut);
-      }
-   }
+    public void add(Collection<T> list) {
+        for (T oOut : list) {
+            add(oOut);
+        }
+    }
 
-   public void update(Collection<T> list) {
-      for (T oOut : list) {
-         update(oOut);
-      }
-   }
+    public void update(Collection<T> list) {
+        for (T oOut : list) {
+            update(oOut);
+        }
+    }
 
-   public void merge(Collection<T> list) {
-      for (T oOut : list) {
-         merge(oOut);
-      }
-   }
+    public void merge(Collection<T> list) {
+        for (T oOut : list) {
+            merge(oOut);
+        }
+    }
 
-   public void put(Collection<T> list) {
-      clear();
-      add(list);
-   }
+    public void put(Collection<T> list) {
+        clear();
+        add(list);
+    }
 
-   protected abstract void addColumns();
+    protected abstract void addColumns();
 
 }

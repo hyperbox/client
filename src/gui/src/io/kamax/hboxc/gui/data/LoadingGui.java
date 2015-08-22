@@ -22,24 +22,24 @@ package io.kamax.hboxc.gui.data;
 
 public class LoadingGui extends EntityGui {
 
-   private static String id = "Loading...";
-   private static LoadingGui me;
+    private static String id = "Loading...";
+    private static LoadingGui me;
 
-   static {
-      me = new LoadingGui();
-   }
+    static {
+        me = new LoadingGui();
+    }
 
-   public static LoadingGui get() {
-      return me;
-   }
+    public static LoadingGui get() {
+        return me;
+    }
 
-   public LoadingGui() {
-      super(id, id);
-   }
+    public LoadingGui() {
+        super(id, id);
+    }
 
-   @Override
-   public String toString() {
-      return id;
-   }
+    @Override
+    public String toString() {
+        return id;
+    }
 
 }

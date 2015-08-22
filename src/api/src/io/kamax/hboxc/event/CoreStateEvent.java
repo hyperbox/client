@@ -25,13 +25,13 @@ import io.kamax.hboxc.state.CoreState;
 
 public class CoreStateEvent extends Event {
 
-   public CoreStateEvent(CoreState state) {
-      super(ClientEventTypes.CoreState);
-      set(state);
-   }
+    public CoreStateEvent(CoreState state) {
+        super(ClientEventTypes.CoreState);
+        set(state);
+    }
 
-   public CoreState getState() {
-      return get(CoreState.class);
-   }
+    public CoreState getState() {
+        return get(CoreState.class);
+    }
 
 }

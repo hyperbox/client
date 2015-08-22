@@ -22,32 +22,32 @@ package io.kamax.hboxc.controller;
 
 public enum ClientTasks {
 
-   ServerGet,
-   ServerList,
+    ServerGet,
+    ServerList,
 
-   ConnectorList,
-   ConnectorGet,
-   ConnectorAdd,
-   ConnectorModify,
-   ConnectorRemove,
-   ConnectorConnect,
-   ConnectorDisconnect,
+    ConnectorList,
+    ConnectorGet,
+    ConnectorAdd,
+    ConnectorModify,
+    ConnectorRemove,
+    ConnectorConnect,
+    ConnectorDisconnect,
 
-   ConsoleViewerGet,
-   ConsoleViewerList,
-   ConsoleViewerAdd,
-   ConsoleViewerModify,
-   ConsoleViewerRemove,
-   ConsoleViewerUse,
+    ConsoleViewerGet,
+    ConsoleViewerList,
+    ConsoleViewerAdd,
+    ConsoleViewerModify,
+    ConsoleViewerRemove,
+    ConsoleViewerUse,
 
-   BackendList,
-   BackendGet,
-   BackendAdd,
-   BackendModify,
-   BackendRemove,
+    BackendList,
+    BackendGet,
+    BackendAdd,
+    BackendModify,
+    BackendRemove,
 
-   NotificationClose,
+    NotificationClose,
 
-   Exit,
+    Exit,
 
 }

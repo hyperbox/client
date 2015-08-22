@@ -35,40 +35,40 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-@SuppressWarnings("serial")
 public class SnapshotDeleteAction extends AbstractAction {
 
-   private _SnapshotSelector selector;
+    private static final long serialVersionUID = -3490141907188974126L;
+    private _SnapshotSelector selector;
 
-   public SnapshotDeleteAction(String label, Icon icon, String toolTip, _SnapshotSelector selector) {
-      super(label, icon);
-      putValue(SHORT_DESCRIPTION, toolTip);
-      this.selector = selector;
-   }
+    public SnapshotDeleteAction(String label, Icon icon, String toolTip, _SnapshotSelector selector) {
+        super(label, icon);
+        putValue(SHORT_DESCRIPTION, toolTip);
+        this.selector = selector;
+    }
 
-   public SnapshotDeleteAction(_SnapshotSelector selector) {
-      this(null, IconBuilder.getTask(HypervisorTasks.SnapshotDelete), "Delete the selected snapshot(s)", selector);
-   }
+    public SnapshotDeleteAction(_SnapshotSelector selector) {
+        this(null, IconBuilder.getTask(HypervisorTasks.SnapshotDelete), "Delete the selected snapshot(s)", selector);
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      if (selector.getSelection().size() > 0) {
-         int info = JOptionPane
-               .showConfirmDialog(
-                     MainView.getMainFrame(),
-                     "This will delete the selected snapshot(s), merging the data with the previous state(s).\nThis cannot be canceled or rolled back!\nAre you sure?",
-                     "Delete confirmation",
-                     JOptionPane.WARNING_MESSAGE,
-                     JOptionPane.OK_CANCEL_OPTION);
-         if (info == JOptionPane.YES_OPTION) {
-            for (SnapshotOut snapOut : selector.getSelection()) {
-               Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotDelete);
-               req.set(new MachineIn(selector.getMachine()));
-               req.set(new SnapshotIn(snapOut.getUuid()));
-               Gui.post(req);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (selector.getSelection().size() > 0) {
+            int info = JOptionPane
+                    .showConfirmDialog(
+                            MainView.getMainFrame(),
+                            "This will delete the selected snapshot(s), merging the data with the previous state(s).\nThis cannot be canceled or rolled back!\nAre you sure?",
+                            "Delete confirmation",
+                            JOptionPane.WARNING_MESSAGE,
+                            JOptionPane.OK_CANCEL_OPTION);
+            if (info == JOptionPane.YES_OPTION) {
+                for (SnapshotOut snapOut : selector.getSelection()) {
+                    Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotDelete);
+                    req.set(new MachineIn(selector.getMachine()));
+                    req.set(new SnapshotIn(snapOut.getUuid()));
+                    Gui.post(req);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
 }

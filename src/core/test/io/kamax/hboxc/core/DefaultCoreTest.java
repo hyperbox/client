@@ -28,11 +28,11 @@ import org.junit.BeforeClass;
 
 public final class DefaultCoreTest extends CoreTest {
 
-   @BeforeClass
-   public static void beforeClass() throws HyperboxException {
-      EventManager.get().start();
-      ServerIn srvIn = new ServerIn();
-      init(new ClientCore(), srvIn, new UserIn());
-   }
+    @BeforeClass
+    public static void beforeClass() throws HyperboxException {
+        EventManager.get().start();
+        ServerIn srvIn = new ServerIn();
+        init(new ClientCore(), srvIn, new UserIn());
+    }
 
 }

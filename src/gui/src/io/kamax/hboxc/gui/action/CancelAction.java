@@ -24,20 +24,21 @@ import io.kamax.hboxc.gui._Cancelable;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class CancelAction extends AbstractAction {
 
-   private _Cancelable obj;
+    private static final long serialVersionUID = -5394602704151824335L;
+    private _Cancelable obj;
 
-   public CancelAction(_Cancelable obj) {
-      super("Cancel");
-      this.obj = obj;
-      setEnabled(true);
-   }
+    public CancelAction(_Cancelable obj) {
+        super("Cancel");
+        this.obj = obj;
+        setEnabled(true);
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      obj.cancel();
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        obj.cancel();
+    }
 
 }

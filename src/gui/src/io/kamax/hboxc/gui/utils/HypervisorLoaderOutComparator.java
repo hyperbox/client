@@ -25,9 +25,9 @@ import java.util.Comparator;
 
 public class HypervisorLoaderOutComparator implements Comparator<HypervisorLoaderOut> {
 
-   @Override
-   public int compare(HypervisorLoaderOut o1, HypervisorLoaderOut o2) {
-      return o1.getHypervisorId().compareToIgnoreCase(o2.getHypervisorId());
-   }
+    @Override
+    public int compare(HypervisorLoaderOut o1, HypervisorLoaderOut o2) {
+        return o1.getHypervisorId().compareToIgnoreCase(o2.getHypervisorId());
+    }
 
 }

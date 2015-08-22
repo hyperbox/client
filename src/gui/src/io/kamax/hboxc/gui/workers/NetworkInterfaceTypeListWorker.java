@@ -28,29 +28,29 @@ import java.util.List;
 
 public class NetworkInterfaceTypeListWorker extends AxSwingWorker<_NetworkInterfaceTypeReceiver, Void, NetworkInterfaceTypeOut> {
 
-   private String srvId;
+    private String srvId;
 
-   public NetworkInterfaceTypeListWorker(_NetworkInterfaceTypeReceiver recv, String srvId) {
-      super(recv);
-      this.srvId = srvId;
-   }
+    public NetworkInterfaceTypeListWorker(_NetworkInterfaceTypeReceiver recv, String srvId) {
+        super(recv);
+        this.srvId = srvId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      for (NetworkInterfaceTypeOut nicTypeOut : Gui.getServer(srvId).listNetworkInterfaceTypes()) {
-         publish(nicTypeOut);
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        for (NetworkInterfaceTypeOut nicTypeOut : Gui.getServer(srvId).listNetworkInterfaceTypes()) {
+            publish(nicTypeOut);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<NetworkInterfaceTypeOut> nicTypeOut) {
-      getReceiver().add(nicTypeOut);
-   }
+    @Override
+    protected void process(List<NetworkInterfaceTypeOut> nicTypeOut) {
+        getReceiver().add(nicTypeOut);
+    }
 
-   public static void execute(_WorkerTracker tracker, _NetworkInterfaceTypeReceiver recv, String srvId) {
-      tracker.register(new NetworkInterfaceTypeListWorker(recv, srvId)).execute();
-   }
+    public static void execute(_WorkerTracker tracker, _NetworkInterfaceTypeReceiver recv, String srvId) {
+        tracker.register(new NetworkInterfaceTypeListWorker(recv, srvId)).execute();
+    }
 
 }

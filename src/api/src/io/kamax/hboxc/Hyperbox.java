@@ -33,63 +33,63 @@ import java.util.Set;
 
 public class Hyperbox {
 
-   private static Properties buildProperties = new Properties();
-   private static Version version;
+    private static Properties buildProperties = new Properties();
+    private static Version version;
 
-   public static String getConfigFilePath() throws HyperboxException {
-      return Configuration.getUserDataPath() + File.separator + "main.cfg";
-   }
+    public static String getConfigFilePath() throws HyperboxException {
+        return Configuration.getUserDataPath() + File.separator + "main.cfg";
+    }
 
-   private static void failedToLoad(Exception e) {
-      version = Version.UNKNOWN;
-      Logger.error("Unable to access the build.properties file: " + e.getMessage());
-      Logger.error("Version and revision will not be accurate");
-   }
+    private static void failedToLoad(Exception e) {
+        version = Version.UNKNOWN;
+        Logger.error("Unable to access the build.properties file: " + e.getMessage());
+        Logger.error("Version and revision will not be accurate");
+    }
 
-   private static void loadVersions() {
-      try {
-         buildProperties.load(Hyperbox.class.getResourceAsStream("/client.build.properties"));
-         Version rawVersion = new Version(buildProperties.getProperty("version"));
-         if (rawVersion.isValid()) {
-            version = rawVersion;
-         } else {
-            version = Version.UNKNOWN;
-            Logger.error("Invalid client version in properties: " + rawVersion);
-            Logger.error("Failing back to " + version);
-         }
-      } catch (IOException e) {
-         failedToLoad(e);
-      } catch (NullPointerException e) {
-         failedToLoad(e);
-      }
-   }
+    private static void loadVersions() {
+        try {
+            buildProperties.load(Hyperbox.class.getResourceAsStream("/client.build.properties"));
+            Version rawVersion = new Version(buildProperties.getProperty("version"));
+            if (rawVersion.isValid()) {
+                version = rawVersion;
+            } else {
+                version = Version.UNKNOWN;
+                Logger.error("Invalid client version in properties: " + rawVersion);
+                Logger.error("Failing back to " + version);
+            }
+        } catch (IOException e) {
+            failedToLoad(e);
+        } catch (NullPointerException e) {
+            failedToLoad(e);
+        }
+    }
 
-   public static Version getVersion() {
-      if (version == null) {
-         loadVersions();
-      }
+    public static Version getVersion() {
+        if (version == null) {
+            loadVersions();
+        }
 
-      return version;
-   }
+        return version;
+    }
 
-   public static void processArgs(Set<String> args) {
-      HyperboxAPI.processArgs(args);
+    public static void processArgs(Set<String> args) {
+        HyperboxAPI.processArgs(args);
 
-      if (args.contains("-?") || args.contains("--help")) {
-         System.out.println("Hyperbox available executable switches:\n");
-         System.out.println("--help or -? : Print this help");
-         // TODO enable more command line switches
-         System.out.println("--apiversion : Print API version");
-         System.out.println("--apirevision : Print API revision");
-         System.out.println("--netversion : Print Net protocol version");
-         System.out.println("--version : Print Client version");
-         System.out.println("--revision : Print Client revision");
-         System.exit(0);
-      }
-      if (args.contains("--version")) {
-         System.out.println(getVersion());
-         System.exit(0);
-      }
-   }
+        if (args.contains("-?") || args.contains("--help")) {
+            System.out.println("Hyperbox available executable switches:\n");
+            System.out.println("--help or -? : Print this help");
+            // TODO enable more command line switches
+            System.out.println("--apiversion : Print API version");
+            System.out.println("--apirevision : Print API revision");
+            System.out.println("--netversion : Print Net protocol version");
+            System.out.println("--version : Print Client version");
+            System.out.println("--revision : Print Client revision");
+            System.exit(0);
+        }
+        if (args.contains("--version")) {
+            System.out.println(getVersion());
+            System.exit(0);
+        }
+    }
 
 }

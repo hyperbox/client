@@ -33,26 +33,26 @@ import io.kamax.hboxc.gui.server._SingleServerSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class UserAddAction extends AbstractAction {
 
-   private _SingleServerSelector select;
+    private static final long serialVersionUID = 1757065569583520509L;
+    private _SingleServerSelector select;
 
-   public UserAddAction(_SingleServerSelector select) {
-      this(select, "Add");
-   }
+    public UserAddAction(_SingleServerSelector select) {
+        this(select, "Add");
+    }
 
-   public UserAddAction(_SingleServerSelector select, String label) {
-      super(label, IconBuilder.getTask(HyperboxTasks.UserCreate));
-      this.select = select;
-   }
+    public UserAddAction(_SingleServerSelector select, String label) {
+        super(label, IconBuilder.getTask(HyperboxTasks.UserCreate));
+        this.select = select;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      UserIn usrIn = UserEditor.getInput();
-      if (usrIn != null) {
-         Gui.post(new Request(Command.HBOX, HyperboxTasks.UserCreate, new ServerIn(select.getServer().getId()), usrIn));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        UserIn usrIn = UserEditor.getInput();
+        if (usrIn != null) {
+            Gui.post(new Request(Command.HBOX, HyperboxTasks.UserCreate, new ServerIn(select.getServer().getId()), usrIn));
+        }
+    }
 
 }

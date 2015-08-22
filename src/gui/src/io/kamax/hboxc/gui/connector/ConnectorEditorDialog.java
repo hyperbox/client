@@ -43,144 +43,144 @@ import net.miginfocom.swing.MigLayout;
 
 public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   private JPanel inputPanel;
-   private JLabel hostnameLabel;
-   private JTextField hostnameField;
-   private JLabel labelLabel;
-   private JTextField labelField;
-   private JLabel userLabel;
-   private JTextField userField;
-   private JLabel passLabel;
-   private JPasswordField passField;
-   private JLabel connectorLabel;
-   private JComboBox connectorValue;
+    private JPanel inputPanel;
+    private JLabel hostnameLabel;
+    private JTextField hostnameField;
+    private JLabel labelLabel;
+    private JTextField labelField;
+    private JLabel userLabel;
+    private JTextField userField;
+    private JLabel passLabel;
+    private JPasswordField passField;
+    private JLabel connectorLabel;
+    private JComboBox connectorValue;
 
-   private JPanel buttonPanel;
-   private JButton loginButton;
-   private JButton cancelButton;
+    private JPanel buttonPanel;
+    private JButton loginButton;
+    private JButton cancelButton;
 
-   private String conId = "-1";
-   private ClientTasks task;
+    private String conId = "-1";
+    private ClientTasks task;
 
-   private ConnectorEditorDialog() {
+    private ConnectorEditorDialog() {
 
-      hostnameLabel = new JLabel("Hostname");
-      hostnameField = new JTextField(15);
-      hostnameField.setText("127.0.0.1");
+        hostnameLabel = new JLabel("Hostname");
+        hostnameField = new JTextField(15);
+        hostnameField.setText("127.0.0.1");
 
-      labelLabel = new JLabel("Label");
-      labelField = new JTextField(15);
+        labelLabel = new JLabel("Label");
+        labelField = new JTextField(15);
 
-      userLabel = new JLabel("User");
-      userField = new JTextField(15);
+        userLabel = new JLabel("User");
+        userField = new JTextField(15);
 
-      passLabel = new JLabel("Password");
-      passField = new JPasswordField(15);
+        passLabel = new JLabel("Password");
+        passField = new JPasswordField(15);
 
-      connectorLabel = new JLabel("Connector");
-      connectorValue = new JComboBox();
-      for (BackendOutput bckOut : Gui.getReader().listBackends()) {
-         connectorValue.addItem(bckOut);
-      }
+        connectorLabel = new JLabel("Connector");
+        connectorValue = new JComboBox();
+        for (BackendOutput bckOut : Gui.getReader().listBackends()) {
+            connectorValue.addItem(bckOut);
+        }
 
-      loginButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
+        loginButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
 
-      inputPanel = new JPanel(new MigLayout());
-      inputPanel.add(labelLabel);
-      inputPanel.add(labelField, "growx,pushx,wrap");
-      inputPanel.add(hostnameLabel);
-      inputPanel.add(hostnameField, "growx, pushx, wrap");
-      inputPanel.add(userLabel);
-      inputPanel.add(userField, "growx, pushx, wrap");
-      inputPanel.add(passLabel);
-      inputPanel.add(passField, "growx, pushx, wrap");
-      inputPanel.add(connectorLabel);
-      inputPanel.add(connectorValue, "growx,pushx,wrap");
+        inputPanel = new JPanel(new MigLayout());
+        inputPanel.add(labelLabel);
+        inputPanel.add(labelField, "growx,pushx,wrap");
+        inputPanel.add(hostnameLabel);
+        inputPanel.add(hostnameField, "growx, pushx, wrap");
+        inputPanel.add(userLabel);
+        inputPanel.add(userField, "growx, pushx, wrap");
+        inputPanel.add(passLabel);
+        inputPanel.add(passField, "growx, pushx, wrap");
+        inputPanel.add(connectorLabel);
+        inputPanel.add(connectorValue, "growx,pushx,wrap");
 
-      buttonPanel = new JPanel(new MigLayout());
-      buttonPanel.add(loginButton);
-      buttonPanel.add(cancelButton);
+        buttonPanel = new JPanel(new MigLayout());
+        buttonPanel.add(loginButton);
+        buttonPanel.add(cancelButton);
 
-      dialog = JDialogBuilder.get(loginButton);
-      dialog.add(inputPanel, "growx, pushx, wrap");
-      dialog.add(buttonPanel, "center, bottom");
-   }
+        dialog = JDialogBuilder.get(loginButton);
+        dialog.add(inputPanel, "growx, pushx, wrap");
+        dialog.add(buttonPanel, "center, bottom");
+    }
 
-   public void show() {
+    public void show() {
 
-      dialog.pack();
-      dialog.setLocationRelativeTo(dialog.getParent());
-      dialog.setVisible(true);
-   }
+        dialog.pack();
+        dialog.setLocationRelativeTo(dialog.getParent());
+        dialog.setVisible(true);
+    }
 
-   public void hide() {
+    public void hide() {
 
-      dialog.setVisible(false);
-   }
+        dialog.setVisible(false);
+    }
 
-   public void create() {
+    public void create() {
 
-      task = ClientTasks.ConnectorAdd;
-      dialog.setTitle("Add Server Connection");
+        task = ClientTasks.ConnectorAdd;
+        dialog.setTitle("Add Server Connection");
 
-      show();
-   }
+        show();
+    }
 
-   public void modify(ConnectorOutput conOut) {
+    public void modify(ConnectorOutput conOut) {
 
-      conId = conOut.getId();
-      task = ClientTasks.ConnectorModify;
-      dialog.setTitle("Edit Server Connection");
+        conId = conOut.getId();
+        task = ClientTasks.ConnectorModify;
+        dialog.setTitle("Edit Server Connection");
 
-      labelField.setText(conOut.getLabel());
-      hostnameField.setText(conOut.getAddress());
-      userField.setText(conOut.getUsername());
+        labelField.setText(conOut.getLabel());
+        hostnameField.setText(conOut.getAddress());
+        userField.setText(conOut.getUsername());
 
-      show();
-   }
+        show();
+    }
 
-   @Override
-   public void save() {
-      ConnectorInput conIn = new ConnectorInput(conId);
-      conIn.setAddress(hostnameField.getText());
-      conIn.setLabel(labelField.getText());
-      conIn.setBackendId(((BackendOutput) connectorValue.getSelectedItem()).getId());
+    @Override
+    public void save() {
+        ConnectorInput conIn = new ConnectorInput(conId);
+        conIn.setAddress(hostnameField.getText());
+        conIn.setLabel(labelField.getText());
+        conIn.setBackendId(((BackendOutput) connectorValue.getSelectedItem()).getId());
 
-      if (task.equals(ClientTasks.ConnectorAdd)) {
-         UserIn uIn = new UserIn(userField.getText(), passField.getPassword());
-         Gui.post(new Request(task, uIn, conIn));
-      } else {
-         if (!userField.getText().isEmpty()) {
-            char[] pass = passField.getPassword();
-            if (pass.length > 0) {
-               UserIn uIn = new UserIn(userField.getText(), passField.getPassword());
-               Gui.post(new Request(task, uIn, conIn));
+        if (task.equals(ClientTasks.ConnectorAdd)) {
+            UserIn uIn = new UserIn(userField.getText(), passField.getPassword());
+            Gui.post(new Request(task, uIn, conIn));
+        } else {
+            if (!userField.getText().isEmpty()) {
+                char[] pass = passField.getPassword();
+                if (pass.length > 0) {
+                    UserIn uIn = new UserIn(userField.getText(), passField.getPassword());
+                    Gui.post(new Request(task, uIn, conIn));
+                } else {
+                    Gui.post(new Request(task, conIn));
+                }
             } else {
-               Gui.post(new Request(task, conIn));
+                Gui.post(new Request(task, conIn));
             }
-         } else {
-            Gui.post(new Request(task, conIn));
-         }
-      }
+        }
 
-      passField.setText(null);
-      hide();
-   }
+        passField.setText(null);
+        hide();
+    }
 
-   @Override
-   public void cancel() {
-      hide();
-   }
+    @Override
+    public void cancel() {
+        hide();
+    }
 
-   public static void add() {
-      new ConnectorEditorDialog().create();
-   }
+    public static void add() {
+        new ConnectorEditorDialog().create();
+    }
 
-   public static void edit(ConnectorOutput srvOut) {
-      new ConnectorEditorDialog().modify(srvOut);
-   }
+    public static void edit(ConnectorOutput srvOut) {
+        new ConnectorEditorDialog().modify(srvOut);
+    }
 
 }

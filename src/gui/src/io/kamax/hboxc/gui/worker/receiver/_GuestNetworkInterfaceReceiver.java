@@ -24,6 +24,6 @@ import io.kamax.hbox.comm.out.hypervisor.GuestNetworkInterfaceOut;
 
 public interface _GuestNetworkInterfaceReceiver extends _WorkerDataReceiver {
 
-   public void put(GuestNetworkInterfaceOut gNicOut);
+    public void put(GuestNetworkInterfaceOut gNicOut);
 
 }

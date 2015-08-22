@@ -26,10 +26,10 @@ import javax.swing.JComponent;
 
 public interface _NetAdaptorConfigureView {
 
-   public JComponent getComponent();
+    public JComponent getComponent();
 
-   public void update(NetAdaptorOut nicOut);
+    public void update(NetAdaptorOut nicOut);
 
-   public NetAdaptorIn getInput();
+    public NetAdaptorIn getInput();
 
 }

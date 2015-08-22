@@ -28,31 +28,31 @@ import java.util.List;
 
 public class NetAdaptorListWorker extends AxSwingWorker<_NetAdaptorListReceiver, Void, NetAdaptorOut> {
 
-   private String srvId;
-   private String modeId;
+    private String srvId;
+    private String modeId;
 
-   public NetAdaptorListWorker(_NetAdaptorListReceiver recv, String srvId, String modeId) {
-      super(recv);
-      this.srvId = srvId;
-      this.modeId = modeId;
-   }
+    public NetAdaptorListWorker(_NetAdaptorListReceiver recv, String srvId, String modeId) {
+        super(recv);
+        this.srvId = srvId;
+        this.modeId = modeId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      for (NetAdaptorOut adaptOut : Gui.getServer(srvId).getHypervisor().listAdaptors(modeId)) {
-         publish(adaptOut);
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        for (NetAdaptorOut adaptOut : Gui.getServer(srvId).getHypervisor().listAdaptors(modeId)) {
+            publish(adaptOut);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<NetAdaptorOut> adaptOutList) {
-      getReceiver().add(adaptOutList);
-   }
+    @Override
+    protected void process(List<NetAdaptorOut> adaptOutList) {
+        getReceiver().add(adaptOutList);
+    }
 
-   public static void execute(_NetAdaptorListReceiver recv, String srvId, String modeId) {
-      (new NetAdaptorListWorker(recv, srvId, modeId)).execute();
-   }
+    public static void execute(_NetAdaptorListReceiver recv, String srvId, String modeId) {
+        (new NetAdaptorListWorker(recv, srvId, modeId)).execute();
+    }
 
 }

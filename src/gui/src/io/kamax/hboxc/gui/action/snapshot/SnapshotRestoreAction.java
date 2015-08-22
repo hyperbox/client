@@ -30,22 +30,22 @@ import io.kamax.hboxc.gui.snapshot._SnapshotSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class SnapshotRestoreAction extends AbstractAction {
 
-   private _SnapshotSelector selector;
+    private static final long serialVersionUID = 3466077525649598001L;
+    private _SnapshotSelector selector;
 
-   public SnapshotRestoreAction(_SnapshotSelector selector) {
-      this.selector = selector;
-      putValue(SHORT_DESCRIPTION, "Restore the machine state to the selected snapshot");
-   }
+    public SnapshotRestoreAction(_SnapshotSelector selector) {
+        this.selector = selector;
+        putValue(SHORT_DESCRIPTION, "Restore the machine state to the selected snapshot");
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotRestore);
-      req.set(new MachineIn(selector.getMachine()));
-      req.set(new SnapshotIn(selector.getSelection().get(0).getUuid()));
-      Gui.post(req);
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotRestore);
+        req.set(new MachineIn(selector.getMachine()));
+        req.set(new SnapshotIn(selector.getSelection().get(0).getUuid()));
+        Gui.post(req);
+    }
 
 }

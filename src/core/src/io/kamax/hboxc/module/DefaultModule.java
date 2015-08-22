@@ -30,54 +30,54 @@ import java.util.Set;
 
 public class DefaultModule implements _Module {
 
-   private String id;
-   private String base;
-   private ModuleClassLoader loader;
+    private String id;
+    private String base;
+    private ModuleClassLoader loader;
 
-   public DefaultModule(String path) {
-      this.base = path;
-      this.id = (new File(path)).getName();
-   }
+    public DefaultModule(String path) {
+        this.base = path;
+        this.id = (new File(path)).getName();
+    }
 
-   @Override
-   public String getId() {
-      return id;
-   }
+    @Override
+    public String getId() {
+        return id;
+    }
 
-   @Override
-   public String getLocation() {
-      return base;
-   }
+    @Override
+    public String getLocation() {
+        return base;
+    }
 
-   @Override
-   public Set<URL> getRessources() {
-      if (!isReady()) {
-         throw new ModuleException("Module must be enabled and loaded before retrieving list of ressources");
-      }
+    @Override
+    public Set<URL> getRessources() {
+        if (!isReady()) {
+            throw new ModuleException("Module must be enabled and loaded before retrieving list of ressources");
+        }
 
-      return loader.getRessources();
-   }
+        return loader.getRessources();
+    }
 
-   @Override
-   public void load() throws ClientModuleException {
-      if (isLoaded()) {
-         throw new ModuleAlreadyLoadedException(getId());
-      }
+    @Override
+    public void load() throws ClientModuleException {
+        if (isLoaded()) {
+            throw new ModuleAlreadyLoadedException(getId());
+        }
 
-      loader = new ModuleClassLoader();
-      loader.load(getLocation());
+        loader = new ModuleClassLoader();
+        loader.load(getLocation());
 
-      ClassManager.reload(getRessources(), loader.getClassLoader());
-   }
+        ClassManager.reload(getRessources(), loader.getClassLoader());
+    }
 
-   @Override
-   public boolean isLoaded() {
-      return loader != null;
-   }
+    @Override
+    public boolean isLoaded() {
+        return loader != null;
+    }
 
-   @Override
-   public boolean isReady() {
-      return isLoaded();
-   }
+    @Override
+    public boolean isReady() {
+        return isLoaded();
+    }
 
 }

@@ -25,12 +25,12 @@ import io.kamax.hboxc.module._ModuleManager;
 
 public class ModuleManagerFactory {
 
-   private ModuleManagerFactory() {
-      throw new RuntimeException("Not allowed");
-   }
+    private ModuleManagerFactory() {
+        throw new RuntimeException("Not allowed");
+    }
 
-   public static _ModuleManager get() {
-      return new DefaultModuleManager();
-   }
+    public static _ModuleManager get() {
+        return new DefaultModuleManager();
+    }
 
 }

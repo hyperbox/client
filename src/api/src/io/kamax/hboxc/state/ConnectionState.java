@@ -22,9 +22,9 @@ package io.kamax.hboxc.state;
 
 public enum ConnectionState {
 
-   Connecting,
-   Connected,
-   Disconnecting,
-   Disconnected,
+    Connecting,
+    Connected,
+    Disconnecting,
+    Disconnected,
 
 }

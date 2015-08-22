@@ -27,15 +27,15 @@ import io.kamax.hboxc.updater._Updater;
 
 public class UpdaterFactory {
 
-   public static final String CFGKEY_UPDATER_CLASS = "updater.class";
-   public static final String CFGVAL_UPDATER_CLASS = Updater.class.getName();
+    public static final String CFGKEY_UPDATER_CLASS = "updater.class";
+    public static final String CFGVAL_UPDATER_CLASS = Updater.class.getName();
 
-   private UpdaterFactory() {
-      // only static
-   }
+    private UpdaterFactory() {
+        // only static
+    }
 
-   public static _Updater get() {
-      return ClassManager.loadClass(_Updater.class, Configuration.getSetting(CFGKEY_UPDATER_CLASS, CFGVAL_UPDATER_CLASS));
-   }
+    public static _Updater get() {
+        return ClassManager.loadClass(_Updater.class, Configuration.getSetting(CFGKEY_UPDATER_CLASS, CFGVAL_UPDATER_CLASS));
+    }
 
 }

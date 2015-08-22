@@ -33,36 +33,37 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class HypervisorConfigureAction extends AbstractAction {
 
-   private _SingleServerSelector selector;
+    private static final long serialVersionUID = -3200454057687716578L;
+    private _SingleServerSelector selector;
 
-   public HypervisorConfigureAction(_SingleServerSelector selector) {
-      this(selector, "Configure");
-   }
+    public HypervisorConfigureAction(_SingleServerSelector selector) {
+        this(selector, "Configure");
+    }
 
-   public HypervisorConfigureAction(_SingleServerSelector selector, String label) {
-      super(label);
-      this.selector = selector;
-   }
+    public HypervisorConfigureAction(_SingleServerSelector selector, String label) {
+        super(label);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
+    @Override
+    public void actionPerformed(ActionEvent ae) {
 
-      ServerOut srvOut = selector.getServer();
-      if (srvOut != null) {
-         HypervisorIn hypIn = HypervisorConfigureDialog.getInput(srvOut.getId());
-         if (hypIn != null) {
-            Logger.debug("Got user input to configure hypervisor");
-            Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorConfigure);
-            req.set(new ServerIn(srvOut.getId()));
-            req.set(hypIn);
-            Gui.post(req);
-         }
-      } else {
-         Logger.debug("No server was selected");
-      }
-   }
+        ServerOut srvOut = selector.getServer();
+        if (srvOut != null) {
+            HypervisorIn hypIn = HypervisorConfigureDialog.getInput(srvOut.getId());
+            if (hypIn != null) {
+                Logger.debug("Got user input to configure hypervisor");
+                Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorConfigure);
+                req.set(new ServerIn(srvOut.getId()));
+                req.set(hypIn);
+                Gui.post(req);
+            }
+        } else {
+            Logger.debug("No server was selected");
+        }
+    }
 
 }

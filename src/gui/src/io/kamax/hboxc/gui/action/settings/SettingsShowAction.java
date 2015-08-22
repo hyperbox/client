@@ -25,16 +25,17 @@ import io.kamax.hboxc.gui.settings.SettingsManager;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class SettingsShowAction extends AbstractAction {
 
-   public SettingsShowAction() {
-      super("Settings...");
-   }
+    private static final long serialVersionUID = 1407011512892626961L;
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      SettingsManager.show();
-   }
+    public SettingsShowAction() {
+        super("Settings...");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        SettingsManager.show();
+    }
 
 }

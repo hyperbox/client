@@ -25,19 +25,21 @@ import io.kamax.hbox.exception.HyperboxException;
 
 /**
  * If the server disconnected during a transaction
- * 
+ *
  * @author max
- * 
+ *
  */
-@SuppressWarnings("serial")
+
 public class ServerDisconnectedException extends HyperboxException {
 
-   public ServerDisconnectedException() {
-      this("Server disconnected during the transaction");
-   }
+    private static final long serialVersionUID = 8391654595035429555L;
 
-   public ServerDisconnectedException(String s) {
-      super(s);
-   }
+    public ServerDisconnectedException() {
+        this("Server disconnected during the transaction");
+    }
+
+    public ServerDisconnectedException(String s) {
+        super(s);
+    }
 
 }

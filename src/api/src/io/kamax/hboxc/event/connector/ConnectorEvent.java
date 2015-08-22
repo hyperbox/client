@@ -26,13 +26,13 @@ import io.kamax.hboxc.comm.output.ConnectorOutput;
 
 public class ConnectorEvent extends Event {
 
-   public ConnectorEvent(Enum<?> s, ConnectorOutput conOut) {
-      super(s);
-      set(ConnectorOutput.class, conOut);
-   }
+    public ConnectorEvent(Enum<?> s, ConnectorOutput conOut) {
+        super(s);
+        set(ConnectorOutput.class, conOut);
+    }
 
-   public ConnectorOutput getConnector() {
-      return get(ConnectorOutput.class);
-   }
+    public ConnectorOutput getConnector() {
+        return get(ConnectorOutput.class);
+    }
 
 }

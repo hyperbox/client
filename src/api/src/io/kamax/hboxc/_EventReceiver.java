@@ -24,6 +24,6 @@ import io.kamax.hbox.comm.out.event.EventOut;
 
 public interface _EventReceiver {
 
-   public void post(EventOut evOut);
+    public void post(EventOut evOut);
 
 }

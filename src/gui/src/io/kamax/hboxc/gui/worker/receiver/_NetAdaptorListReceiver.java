@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _NetAdaptorListReceiver extends _WorkerDataReceiver {
 
-   public void add(List<NetAdaptorOut> adaptOutList);
+    public void add(List<NetAdaptorOut> adaptOutList);
 
 }

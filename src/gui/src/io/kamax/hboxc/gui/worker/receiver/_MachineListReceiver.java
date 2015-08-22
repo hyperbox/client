@@ -26,6 +26,6 @@ import java.util.List;
 
 public interface _MachineListReceiver extends _WorkerDataReceiver {
 
-   public void add(List<MachineOut> objOutList);
+    public void add(List<MachineOut> objOutList);
 
 }

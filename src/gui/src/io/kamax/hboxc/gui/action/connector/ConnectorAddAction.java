@@ -25,20 +25,22 @@ import io.kamax.hboxc.gui.connector.ConnectorEditorDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class ConnectorAddAction extends AbstractAction {
 
-   public ConnectorAddAction() {
-      this("Add");
-   }
+    private static final long serialVersionUID = 3872932005030249096L;
 
-   public ConnectorAddAction(String label) {
-      super(label);
-   }
+    public ConnectorAddAction() {
+        this("Add");
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      ConnectorEditorDialog.add();
-   }
+    public ConnectorAddAction(String label) {
+        super(label);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        ConnectorEditorDialog.add();
+    }
 
 }

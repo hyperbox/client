@@ -28,29 +28,29 @@ import java.util.List;
 
 public class ModuleListWorker extends AxSwingWorker<_ModuleListReceiver, Void, ModuleOut> {
 
-   private String srvId;
+    private String srvId;
 
-   public ModuleListWorker(_ModuleListReceiver recv, String srvId) {
-      super(recv);
-      this.srvId = srvId;
-   }
+    public ModuleListWorker(_ModuleListReceiver recv, String srvId) {
+        super(recv);
+        this.srvId = srvId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      for (ModuleOut modOut : Gui.getServer(srvId).listModules()) {
-         publish(modOut);
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        for (ModuleOut modOut : Gui.getServer(srvId).listModules()) {
+            publish(modOut);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<ModuleOut> objOutList) {
-      getReceiver().add(objOutList);
-   }
+    @Override
+    protected void process(List<ModuleOut> objOutList) {
+        getReceiver().add(objOutList);
+    }
 
-   public static void execute(_ModuleListReceiver recv, String srvId) {
-      (new ModuleListWorker(recv, srvId)).execute();
-   }
+    public static void execute(_ModuleListReceiver recv, String srvId) {
+        (new ModuleListWorker(recv, srvId)).execute();
+    }
 
 }

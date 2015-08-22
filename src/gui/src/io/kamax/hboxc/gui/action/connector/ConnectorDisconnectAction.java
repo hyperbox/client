@@ -31,26 +31,27 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class ConnectorDisconnectAction extends AbstractAction {
 
-   private _ConnectorSelector select;
+    private static final long serialVersionUID = -4932630962100864301L;
+    private _ConnectorSelector select;
 
-   public ConnectorDisconnectAction(_ConnectorSelector select) {
-      this(select, "Disconnect");
-   }
+    public ConnectorDisconnectAction(_ConnectorSelector select) {
+        this(select, "Disconnect");
+    }
 
-   public ConnectorDisconnectAction(_ConnectorSelector select, String label) {
-      super(label);
-      this.select = select;
-   }
+    public ConnectorDisconnectAction(_ConnectorSelector select, String label) {
+        super(label);
+        this.select = select;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      List<ConnectorOutput> cons = select.listConnectors();
-      for (ConnectorOutput conOut : cons) {
-         Gui.post(new Request(ClientTasks.ConnectorDisconnect, new ConnectorInput(conOut.getId())));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        List<ConnectorOutput> cons = select.listConnectors();
+        for (ConnectorOutput conOut : cons) {
+            Gui.post(new Request(ClientTasks.ConnectorDisconnect, new ConnectorInput(conOut.getId())));
+        }
+    }
 
 }

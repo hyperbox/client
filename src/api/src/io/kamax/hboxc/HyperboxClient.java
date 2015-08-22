@@ -24,19 +24,19 @@ import io.kamax.hboxc.front._Front;
 
 public class HyperboxClient {
 
-   public static final String CFGKEY_BASE_DIR = "client.base.dir";
-   public static final String CFGVAL_BASE_DIR = ".";
+    public static final String CFGKEY_BASE_DIR = "client.base.dir";
+    public static final String CFGVAL_BASE_DIR = ".";
 
-   private static _Front view;
+    private static _Front view;
 
-   public static void initView(_Front view) {
-      if (HyperboxClient.view == null) {
-         HyperboxClient.view = view;
-      }
-   }
+    public static void initView(_Front view) {
+        if (HyperboxClient.view == null) {
+            HyperboxClient.view = view;
+        }
+    }
 
-   public static _Front getView() {
-      return view;
-   }
+    public static _Front getView() {
+        return view;
+    }
 
 }

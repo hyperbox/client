@@ -26,13 +26,13 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class TaskStateChangedEvent extends TaskEvent {
 
-   public TaskStateChangedEvent(ServerOut srvOut, TaskOut taskOut) {
-      super(ClientEvents.TaskStateChanged, srvOut, taskOut);
-   }
+    public TaskStateChangedEvent(ServerOut srvOut, TaskOut taskOut) {
+        super(ClientEvents.TaskStateChanged, srvOut, taskOut);
+    }
 
-   @Override
-   public String toString() {
-      return "Task #" + getTask().getId() + " changed to " + getTask().getState() + " on Server " + getServer().getId() + " @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Task #" + getTask().getId() + " changed to " + getTask().getState() + " on Server " + getServer().getId() + " @ " + getTime();
+    }
 
 }

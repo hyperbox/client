@@ -20,15 +20,17 @@
 
 package io.kamax.hboxc.exception;
 
-@SuppressWarnings("serial")
+
 public class UpdaterNotEnabledException extends UpdaterException {
 
-   public UpdaterNotEnabledException() {
-      super("Updater Scheduled checks are not enabled");
-   }
+    private static final long serialVersionUID = 3099018976890762344L;
 
-   public UpdaterNotEnabledException(String s) {
-      super(s);
-   }
+    public UpdaterNotEnabledException() {
+        super("Updater Scheduled checks are not enabled");
+    }
+
+    public UpdaterNotEnabledException(String s) {
+        super(s);
+    }
 
 }

@@ -24,27 +24,28 @@ package io.kamax.hboxc.gui.security.user;
 import io.kamax.hbox.comm.out.security.UserOut;
 import io.kamax.hboxc.gui.utils.AbstractOutputListTableModel;
 
-@SuppressWarnings("serial")
+
 public class UserTableModel extends AbstractOutputListTableModel<UserOut> {
 
-   private final String ID = "ID";
-   private final String USERNAME = "Username";
+    private static final long serialVersionUID = -6692630117811604281L;
+    private final String ID = "ID";
+    private final String USERNAME = "Username";
 
-   @Override
-   protected void addColumns() {
-      addColumn(ID);
-      addColumn(USERNAME);
-   }
+    @Override
+    protected void addColumns() {
+        addColumn(ID);
+        addColumn(USERNAME);
+    }
 
-   @Override
-   protected Object getValueAt(UserOut obj, String columnName) {
-      if (ID.equalsIgnoreCase(columnName)) {
-         return obj.getId();
-      }
-      if (USERNAME.equalsIgnoreCase(columnName)) {
-         return obj.getDomainLogonName();
-      }
-      return null;
-   }
+    @Override
+    protected Object getValueAt(UserOut obj, String columnName) {
+        if (ID.equalsIgnoreCase(columnName)) {
+            return obj.getId();
+        }
+        if (USERNAME.equalsIgnoreCase(columnName)) {
+            return obj.getDomainLogonName();
+        }
+        return null;
+    }
 
 }

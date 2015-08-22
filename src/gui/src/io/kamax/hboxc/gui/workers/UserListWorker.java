@@ -28,29 +28,29 @@ import java.util.List;
 
 public class UserListWorker extends AxSwingWorker<_UserListReceiver, Void, UserOut> {
 
-   private String srvId;
+    private String srvId;
 
-   public UserListWorker(_UserListReceiver recv, String srvId) {
-      super(recv);
-      this.srvId = srvId;
-   }
+    public UserListWorker(_UserListReceiver recv, String srvId) {
+        super(recv);
+        this.srvId = srvId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      for (UserOut usrOut : Gui.getServer(srvId).listUsers()) {
-         publish(usrOut);
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        for (UserOut usrOut : Gui.getServer(srvId).listUsers()) {
+            publish(usrOut);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<UserOut> usrOutList) {
-      getReceiver().add(usrOutList);
-   }
+    @Override
+    protected void process(List<UserOut> usrOutList) {
+        getReceiver().add(usrOutList);
+    }
 
-   public static void execute(_UserListReceiver recv, String srvId) {
-      (new UserListWorker(recv, srvId)).execute();
-   }
+    public static void execute(_UserListReceiver recv, String srvId) {
+        (new UserListWorker(recv, srvId)).execute();
+    }
 
 }

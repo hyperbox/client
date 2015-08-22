@@ -23,12 +23,12 @@ package io.kamax.hboxc.core;
 
 public interface _ConsoleViewerWriter {
 
-   public void setHypervisorId(String hypervisorId);
+    public void setHypervisorId(String hypervisorId);
 
-   public void setModuleId(String moduleId);
+    public void setModuleId(String moduleId);
 
-   public void setViewer(String viewerPath);
+    public void setViewer(String viewerPath);
 
-   public void setArgs(String args);
+    public void setArgs(String args);
 
 }

@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _StoreListReceiver extends _WorkerDataReceiver {
 
-   public void add(List<StoreOut> stoOutList);
+    public void add(List<StoreOut> stoOutList);
 
 }

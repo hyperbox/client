@@ -29,193 +29,193 @@ import javax.swing.tree.TreeNode;
 
 public class EntityGui implements MutableTreeNode {
 
-   private String typeId;
-   private String id;
-   private boolean isGeneric;
+    private String typeId;
+    private String id;
+    private boolean isGeneric;
 
-   private EntityGui parent;
-   private List<EntityGui> childs = new ArrayList<EntityGui>();
+    private EntityGui parent;
+    private List<EntityGui> childs = new ArrayList<EntityGui>();
 
-   public EntityGui(String typeId, String id, boolean isGeneric) {
-      this.typeId = typeId;
-      this.id = id;
-      this.isGeneric = isGeneric;
-   }
+    public EntityGui(String typeId, String id, boolean isGeneric) {
+        this.typeId = typeId;
+        this.id = id;
+        this.isGeneric = isGeneric;
+    }
 
-   public EntityGui(String typeId, String id) {
-      this(typeId, id, false);
-   }
+    public EntityGui(String typeId, String id) {
+        this(typeId, id, false);
+    }
 
-   @Override
-   public String toString() {
-      return typeId + " #" + id;
-   }
+    @Override
+    public String toString() {
+        return typeId + " #" + id;
+    }
 
-   /**
-    * @return the typeId
-    */
-   public String getEntityTypeId() {
-      return typeId;
-   }
+    /**
+     * @return the typeId
+     */
+    public String getEntityTypeId() {
+        return typeId;
+    }
 
-   /**
-    * @return the id
-    */
-   public String getId() {
-      return id;
-   }
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
 
-   public boolean isGeneric() {
-      return isGeneric;
-   }
+    public boolean isGeneric() {
+        return isGeneric;
+    }
 
-   @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = (prime * result) + ((id == null) ? 0 : id.hashCode());
-      result = (prime * result) + ((typeId == null) ? 0 : typeId.hashCode());
-      return result;
-   }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result) + ((id == null) ? 0 : id.hashCode());
+        result = (prime * result) + ((typeId == null) ? 0 : typeId.hashCode());
+        return result;
+    }
 
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) {
-         return true;
-      }
-      if (obj == null) {
-         return false;
-      }
-      if (!(obj instanceof EntityGui)) {
-         return false;
-      }
-      EntityGui other = (EntityGui) obj;
-      if (id == null) {
-         if (other.id != null) {
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
-         }
-      } else if (!id.equals(other.id)) {
-         return false;
-      }
-      if (typeId == null) {
-         if (other.typeId != null) {
+        }
+        if (!(obj instanceof EntityGui)) {
             return false;
-         }
-      } else if (!typeId.equals(other.typeId)) {
-         return false;
-      }
-      return true;
-   }
-
-   /*--------------------- TreeNode methods ---------------------*/
-   @Override
-   public EntityGui getChildAt(int childIndex) {
-      return childs.get(childIndex);
-   }
-
-   @Override
-   public int getChildCount() {
-      return childs.size();
-   }
-
-   @Override
-   public EntityGui getParent() {
-      return parent;
-   }
-
-   @Override
-   public int getIndex(TreeNode node) {
-      return childs.indexOf(node);
-   }
-
-   @Override
-   public boolean getAllowsChildren() {
-      return true;
-   }
-
-   @Override
-   public boolean isLeaf() {
-      return childs.isEmpty();
-   }
-
-   @Override
-   public Enumeration<EntityGui> children() {
-      return Collections.enumeration(childs);
-   }
-
-   /*--------------------- Custom Node methods ---------------------*/
-   public void setParent(EntityGui parent) {
-      this.parent = parent;
-   }
-
-   public void add(EntityGui child) {
-      childs.add(childs.size(), child);
-   }
-
-   public void update(EntityGui child) {
-      childs.add(childs.indexOf(child), child);
-   }
-
-   public boolean findAndUpdate(EntityGui potentialChild) {
-      if (childs.contains(potentialChild)) {
-         update(potentialChild);
-         return true;
-      } else {
-         if (isLeaf()) {
-            return false;
-         }
-         for (EntityGui child : childs) {
-            if (child.findAndUpdate(potentialChild)) {
-               return true;
+        }
+        EntityGui other = (EntityGui) obj;
+        if (id == null) {
+            if (other.id != null) {
+                return false;
             }
-         }
-         return false;
-      }
-   }
+        } else if (!id.equals(other.id)) {
+            return false;
+        }
+        if (typeId == null) {
+            if (other.typeId != null) {
+                return false;
+            }
+        } else if (!typeId.equals(other.typeId)) {
+            return false;
+        }
+        return true;
+    }
 
-   public void remove(EntityGui child) {
-      childs.remove(child);
-   }
+    /*--------------------- TreeNode methods ---------------------*/
+    @Override
+    public EntityGui getChildAt(int childIndex) {
+        return childs.get(childIndex);
+    }
 
-   public void remove(String id) {
-      childs.remove(id);
-   }
+    @Override
+    public int getChildCount() {
+        return childs.size();
+    }
 
-   public void removeAll() {
-      childs.clear();
-   }
+    @Override
+    public EntityGui getParent() {
+        return parent;
+    }
 
-   /*--------------------- MutableTreeNode methods ---------------------*/
-   @Override
-   public void insert(MutableTreeNode child, int index) {
-      childs.add(index, (EntityGui) child);
-   }
+    @Override
+    public int getIndex(TreeNode node) {
+        return childs.indexOf(node);
+    }
 
-   @Override
-   public void remove(int index) {
-      childs.remove(index);
-   }
+    @Override
+    public boolean getAllowsChildren() {
+        return true;
+    }
 
-   @Override
-   public void remove(MutableTreeNode node) {
-      remove((EntityGui) node);
-   }
+    @Override
+    public boolean isLeaf() {
+        return childs.isEmpty();
+    }
 
-   @Override
-   public void setUserObject(Object object) {
-      // stub
-   }
+    @Override
+    public Enumeration<EntityGui> children() {
+        return Collections.enumeration(childs);
+    }
 
-   @Override
-   public void removeFromParent() {
-      if (getParent() != null) {
-         getParent().remove(this);
-      }
-   }
+    /*--------------------- Custom Node methods ---------------------*/
+    public void setParent(EntityGui parent) {
+        this.parent = parent;
+    }
 
-   @Override
-   public void setParent(MutableTreeNode newParent) {
-      setParent((EntityGui) newParent);
-   }
+    public void add(EntityGui child) {
+        childs.add(childs.size(), child);
+    }
+
+    public void update(EntityGui child) {
+        childs.add(childs.indexOf(child), child);
+    }
+
+    public boolean findAndUpdate(EntityGui potentialChild) {
+        if (childs.contains(potentialChild)) {
+            update(potentialChild);
+            return true;
+        } else {
+            if (isLeaf()) {
+                return false;
+            }
+            for (EntityGui child : childs) {
+                if (child.findAndUpdate(potentialChild)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public void remove(EntityGui child) {
+        childs.remove(child);
+    }
+
+    public void remove(String id) {
+        childs.remove(id);
+    }
+
+    public void removeAll() {
+        childs.clear();
+    }
+
+    /*--------------------- MutableTreeNode methods ---------------------*/
+    @Override
+    public void insert(MutableTreeNode child, int index) {
+        childs.add(index, (EntityGui) child);
+    }
+
+    @Override
+    public void remove(int index) {
+        childs.remove(index);
+    }
+
+    @Override
+    public void remove(MutableTreeNode node) {
+        remove((EntityGui) node);
+    }
+
+    @Override
+    public void setUserObject(Object object) {
+        // stub
+    }
+
+    @Override
+    public void removeFromParent() {
+        if (getParent() != null) {
+            getParent().remove(this);
+        }
+    }
+
+    @Override
+    public void setParent(MutableTreeNode newParent) {
+        setParent((EntityGui) newParent);
+    }
 
 }

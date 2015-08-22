@@ -73,558 +73,563 @@ import net.miginfocom.swing.MigLayout;
 
 public class StorageVmEdit {
 
-   private Map<StorageControllerIn, DefaultMutableTreeNode> scInToNode;
-   private Map<StorageDeviceAttachmentIn, DefaultMutableTreeNode> matInToNode;
+    private Map<StorageControllerIn, DefaultMutableTreeNode> scInToNode;
+    private Map<StorageDeviceAttachmentIn, DefaultMutableTreeNode> matInToNode;
 
-   private String srvId;
-   private MachineIn mIn;
+    private String srvId;
+    private MachineIn mIn;
 
-   private DefaultMutableTreeNode topNode;
-   private DefaultTreeModel treeModel;
-   private JTree tree;
-   private JScrollPane treeView;
+    private DefaultMutableTreeNode topNode;
+    private DefaultTreeModel treeModel;
+    private JTree tree;
+    private JScrollPane treeView;
 
-   private JPanel actionsPanel;
-   private JButton addScButton;
-   private JButton removeScButton;
-   private JButton addAttachmentButton;
-   private JButton removeAttachmentButton;
+    private JPanel actionsPanel;
+    private JButton addScButton;
+    private JButton removeScButton;
+    private JButton addAttachmentButton;
+    private JButton removeAttachmentButton;
 
-   private JMenuItem addIdeMenuItem;
-   private JMenuItem addSataMenuItem;
-   private JMenuItem addScsiMenuItem;
-   private JMenuItem addSasMenuItem;
-   private JMenuItem addFloppyMenuItem;
+    private JMenuItem addIdeMenuItem;
+    private JMenuItem addSataMenuItem;
+    private JMenuItem addScsiMenuItem;
+    private JMenuItem addSasMenuItem;
+    private JMenuItem addFloppyMenuItem;
 
-   private JMenuItem addDvdDriveMenuItem;
-   private JMenuItem addDvdImgMenuItem;
+    private JMenuItem addDvdDriveMenuItem;
+    private JMenuItem addDvdImgMenuItem;
 
-   private JMenuItem addFloppyDriveMenuItem;
-   private JMenuItem addFloppyImgMenuItem;
+    private JMenuItem addFloppyDriveMenuItem;
+    private JMenuItem addFloppyImgMenuItem;
 
-   private JMenuItem addDiskNewMenuItem;
-   private JMenuItem addDiskExistingMenuItem;
+    private JMenuItem addDiskNewMenuItem;
+    private JMenuItem addDiskExistingMenuItem;
 
-   private JMenuItem removeMediumMenuItem;
-   private JMenuItem removeDeviceMenuItem;
+    private JMenuItem removeMediumMenuItem;
+    private JMenuItem removeDeviceMenuItem;
 
-   private CardLayout viewerLayout;
-   private JPanel viewer;
+    private CardLayout viewerLayout;
+    private JPanel viewer;
 
-   private JPanel emptyViewer;
-   private StorageControllerViewer scViewer;
-   private StorageDeviceAttachmentViewer sdaViewer;
+    private JPanel emptyViewer;
+    private StorageControllerViewer scViewer;
+    private StorageDeviceAttachmentViewer sdaViewer;
 
-   private JPanel panel;
+    private JPanel panel;
 
-   public StorageVmEdit(_WorkerTracker tracker) {
-      scInToNode = new HashMap<StorageControllerIn, DefaultMutableTreeNode>();
-      matInToNode = new HashMap<StorageDeviceAttachmentIn, DefaultMutableTreeNode>();
+    public StorageVmEdit(_WorkerTracker tracker) {
+        scInToNode = new HashMap<StorageControllerIn, DefaultMutableTreeNode>();
+        matInToNode = new HashMap<StorageDeviceAttachmentIn, DefaultMutableTreeNode>();
 
-      emptyViewer = new JPanel();
-      emptyViewer.add(new JLabel("Select an item on the left"));
+        emptyViewer = new JPanel();
+        emptyViewer.add(new JLabel("Select an item on the left"));
 
-      scViewer = new StorageControllerViewer();
-      sdaViewer = new StorageDeviceAttachmentViewer();
+        scViewer = new StorageControllerViewer();
+        sdaViewer = new StorageDeviceAttachmentViewer();
 
-      topNode = new DefaultMutableTreeNode("Controllers");
-      treeModel = new DefaultTreeModel(topNode);
-      tree = new JTree(treeModel);
-      tree.setRootVisible(false);
-      tree.setShowsRootHandles(true);
-      tree.addTreeSelectionListener(new TreeListener());
-      tree.setCellRenderer(new StorageTreeCellRenderer());
+        topNode = new DefaultMutableTreeNode("Controllers");
+        treeModel = new DefaultTreeModel(topNode);
+        tree = new JTree(treeModel);
+        tree.setRootVisible(false);
+        tree.setShowsRootHandles(true);
+        tree.addTreeSelectionListener(new TreeListener());
+        tree.setCellRenderer(new StorageTreeCellRenderer());
 
-      treeView = new JScrollPane(tree);
+        treeView = new JScrollPane(tree);
 
-      viewerLayout = new CardLayout();
-      viewer = new JPanel(viewerLayout);
-      viewer.add(emptyViewer, "");
-      viewer.add(scViewer.getPanel(), EntityType.StorageController.getId());
-      viewer.add(sdaViewer.getPanel(), EntityType.StorageAttachment.getId());
+        viewerLayout = new CardLayout();
+        viewer = new JPanel(viewerLayout);
+        viewer.add(emptyViewer, "");
+        viewer.add(scViewer.getPanel(), EntityType.StorageController.getId());
+        viewer.add(sdaViewer.getPanel(), EntityType.StorageAttachment.getId());
 
-      initMedMenu();
-      initScMenu();
-      initButtons();
+        initMedMenu();
+        initScMenu();
+        initButtons();
 
-      panel = new JPanel(new MigLayout());
-      panel.add(treeView, "grow, pushy");
-      panel.add(new JSeparator(SwingConstants.VERTICAL), "growy, pushy, spany 2");
-      panel.add(viewer, "grow, push, spany 2, wrap");
-      panel.add(actionsPanel, "growx");
-   }
+        panel = new JPanel(new MigLayout());
+        panel.add(treeView, "grow, pushy");
+        panel.add(new JSeparator(SwingConstants.VERTICAL), "growy, pushy, spany 2");
+        panel.add(viewer, "grow, push, spany 2, wrap");
+        panel.add(actionsPanel, "growx");
+    }
 
-   private void initMedMenu() {
-      addDvdDriveMenuItem = new JMenuItem("Empty CD/DVD Drive");
-      addDvdDriveMenuItem.setIcon(IconBuilder.getEntityType(EntityType.DvdDrive));
-      addDvdDriveMenuItem.addActionListener(new AddDeviceListener());
+    private void initMedMenu() {
+        addDvdDriveMenuItem = new JMenuItem("Empty CD/DVD Drive");
+        addDvdDriveMenuItem.setIcon(IconBuilder.getEntityType(EntityType.DvdDrive));
+        addDvdDriveMenuItem.addActionListener(new AddDeviceListener());
 
-      addDvdImgMenuItem = new JMenuItem("Existing CD/DVD Image");
-      addDvdImgMenuItem.setIcon(IconBuilder.getEntityType(EntityType.DvdDrive));
-      addDvdImgMenuItem.addActionListener(new AddDeviceListener());
+        addDvdImgMenuItem = new JMenuItem("Existing CD/DVD Image");
+        addDvdImgMenuItem.setIcon(IconBuilder.getEntityType(EntityType.DvdDrive));
+        addDvdImgMenuItem.addActionListener(new AddDeviceListener());
 
-      addFloppyDriveMenuItem = new JMenuItem("Empty Floppy Drive");
-      addFloppyDriveMenuItem.setIcon(IconBuilder.getEntityType(EntityType.FloppyDrive));
-      addFloppyDriveMenuItem.addActionListener(new AddDeviceListener());
+        addFloppyDriveMenuItem = new JMenuItem("Empty Floppy Drive");
+        addFloppyDriveMenuItem.setIcon(IconBuilder.getEntityType(EntityType.FloppyDrive));
+        addFloppyDriveMenuItem.addActionListener(new AddDeviceListener());
 
-      addFloppyImgMenuItem = new JMenuItem("Existing Floppy Image");
-      addFloppyImgMenuItem.setIcon(IconBuilder.getEntityType(EntityType.FloppyDrive));
-      addFloppyImgMenuItem.addActionListener(new AddDeviceListener());
+        addFloppyImgMenuItem = new JMenuItem("Existing Floppy Image");
+        addFloppyImgMenuItem.setIcon(IconBuilder.getEntityType(EntityType.FloppyDrive));
+        addFloppyImgMenuItem.addActionListener(new AddDeviceListener());
 
-      addDiskNewMenuItem = new JMenuItem("New Disk Image");
-      addDiskNewMenuItem.setIcon(IconBuilder.getTask(HypervisorTasks.MediumCreate));
-      addDiskNewMenuItem.addActionListener(new AddDeviceListener());
+        addDiskNewMenuItem = new JMenuItem("New Disk Image");
+        addDiskNewMenuItem.setIcon(IconBuilder.getTask(HypervisorTasks.MediumCreate));
+        addDiskNewMenuItem.addActionListener(new AddDeviceListener());
 
-      addDiskExistingMenuItem = new JMenuItem("Existing Disk Image");
-      addDiskExistingMenuItem.setIcon(IconBuilder.getTask(HypervisorTasks.MediumRegister));
-      addDiskExistingMenuItem.addActionListener(new AddDeviceListener());
+        addDiskExistingMenuItem = new JMenuItem("Existing Disk Image");
+        addDiskExistingMenuItem.setIcon(IconBuilder.getTask(HypervisorTasks.MediumRegister));
+        addDiskExistingMenuItem.addActionListener(new AddDeviceListener());
 
-      removeMediumMenuItem = new JMenuItem("Remove Medium");
-      removeMediumMenuItem.addActionListener(new RemoveMediumListener());
+        removeMediumMenuItem = new JMenuItem("Remove Medium");
+        removeMediumMenuItem.addActionListener(new RemoveMediumListener());
 
-      removeDeviceMenuItem = new JMenuItem("Remove Device");
-      removeDeviceMenuItem.addActionListener(new RemoveDeviceListener());
-   }
+        removeDeviceMenuItem = new JMenuItem("Remove Device");
+        removeDeviceMenuItem.addActionListener(new RemoveDeviceListener());
+    }
 
-   private void initScMenu() {
-      addIdeMenuItem = new JMenuItem(StorageControllerType.IDE.getId());
-      addIdeMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.IDE.getId()));
-      addIdeMenuItem.addActionListener(new AddScListener());
+    private void initScMenu() {
+        addIdeMenuItem = new JMenuItem(StorageControllerType.IDE.getId());
+        addIdeMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.IDE.getId()));
+        addIdeMenuItem.addActionListener(new AddScListener());
 
-      addSataMenuItem = new JMenuItem(StorageControllerType.SATA.getId());
-      addSataMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.SATA.getId()));
-      addSataMenuItem.addActionListener(new AddScListener());
+        addSataMenuItem = new JMenuItem(StorageControllerType.SATA.getId());
+        addSataMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.SATA.getId()));
+        addSataMenuItem.addActionListener(new AddScListener());
 
-      addScsiMenuItem = new JMenuItem(StorageControllerType.SCSI.getId());
-      addScsiMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.SCSI.getId()));
-      addScsiMenuItem.addActionListener(new AddScListener());
+        addScsiMenuItem = new JMenuItem(StorageControllerType.SCSI.getId());
+        addScsiMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.SCSI.getId()));
+        addScsiMenuItem.addActionListener(new AddScListener());
 
-      addSasMenuItem = new JMenuItem(StorageControllerType.SAS.getId());
-      addSasMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.SAS.getId()));
-      addSasMenuItem.addActionListener(new AddScListener());
+        addSasMenuItem = new JMenuItem(StorageControllerType.SAS.getId());
+        addSasMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.SAS.getId()));
+        addSasMenuItem.addActionListener(new AddScListener());
 
-      addFloppyMenuItem = new JMenuItem(StorageControllerType.Floppy.getId());
-      addFloppyMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.Floppy.getId()));
-      addFloppyMenuItem.addActionListener(new AddScListener());
-   }
+        addFloppyMenuItem = new JMenuItem(StorageControllerType.Floppy.getId());
+        addFloppyMenuItem.setIcon(IconBuilder.getStorageControllerType(StorageControllerType.Floppy.getId()));
+        addFloppyMenuItem.addActionListener(new AddScListener());
+    }
 
-   private void initButtons() {
-      addScButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerAdd));
-      addScButton.addActionListener(new AddScListener());
+    private void initButtons() {
+        addScButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerAdd));
+        addScButton.addActionListener(new AddScListener());
 
-      removeScButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerRemove));
-      removeScButton.setEnabled(false);
-      removeScButton.addActionListener(new RemoveNodeListener());
+        removeScButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerRemove));
+        removeScButton.setEnabled(false);
+        removeScButton.addActionListener(new RemoveNodeListener());
 
-      addAttachmentButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerMediumAttachmentAdd));
-      addAttachmentButton.setToolTipText("Add/Modify attachment");
-      addAttachmentButton.setEnabled(false);
-      addAttachmentButton.addActionListener(new AddAttachmentListener());
+        addAttachmentButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerMediumAttachmentAdd));
+        addAttachmentButton.setToolTipText("Add/Modify attachment");
+        addAttachmentButton.setEnabled(false);
+        addAttachmentButton.addActionListener(new AddAttachmentListener());
 
-      removeAttachmentButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerMediumAttachmentRemove));
-      removeAttachmentButton.setEnabled(false);
-      removeAttachmentButton.addActionListener(new RemoveNodeListener());
+        removeAttachmentButton = new JButton(IconBuilder.getTask(HypervisorTasks.StorageControllerMediumAttachmentRemove));
+        removeAttachmentButton.setEnabled(false);
+        removeAttachmentButton.addActionListener(new RemoveNodeListener());
 
-      actionsPanel = new JPanel(new MigLayout("ins 0, fill"));
-      actionsPanel.add(addScButton);
-      actionsPanel.add(removeScButton);
-      actionsPanel.add(addAttachmentButton);
-      actionsPanel.add(removeAttachmentButton);
-   }
+        actionsPanel = new JPanel(new MigLayout("ins 0, fill"));
+        actionsPanel.add(addScButton);
+        actionsPanel.add(removeScButton);
+        actionsPanel.add(addAttachmentButton);
+        actionsPanel.add(removeAttachmentButton);
+    }
 
-   public Component getComp() {
-      return panel;
-   }
+    public Component getComp() {
+        return panel;
+    }
 
-   private void add(StorageControllerIn scIn) {
-      mIn.addStorageController(scIn);
+    private void add(StorageControllerIn scIn) {
+        mIn.addStorageController(scIn);
 
-      DefaultMutableTreeNode node = new DefaultMutableTreeNode(scIn);
-      treeModel.insertNodeInto(node, topNode, topNode.getChildCount());
-      tree.scrollPathToVisible(new TreePath(node.getPath()));
-      scInToNode.put(scIn, node);
-   }
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(scIn);
+        treeModel.insertNodeInto(node, topNode, topNode.getChildCount());
+        tree.scrollPathToVisible(new TreePath(node.getPath()));
+        scInToNode.put(scIn, node);
+    }
 
-   private void add(StorageControllerOut scOut) {
-      StorageControllerIn scIn = StorageControllerIoFactory.get(scOut);
-      scIn.setMachineUuid(mIn.getUuid());
-      add(scIn);
+    private void add(StorageControllerOut scOut) {
+        StorageControllerIn scIn = StorageControllerIoFactory.get(scOut);
+        scIn.setMachineUuid(mIn.getUuid());
+        add(scIn);
 
-      List<StorageDeviceAttachmentOut> matOutList = Gui.getServer(srvId).listAttachments(scIn);
-      for (StorageDeviceAttachmentOut matOut : matOutList) {
-         add(scIn, matOut);
-      }
-   }
+        List<StorageDeviceAttachmentOut> matOutList = Gui.getServer(srvId).listAttachments(scIn);
+        for (StorageDeviceAttachmentOut matOut : matOutList) {
+            add(scIn, matOut);
+        }
+    }
 
-   private void add(StorageControllerIn scIn, StorageDeviceAttachmentIn matIn) {
-      scIn.addMediumAttachment(matIn);
+    private void add(StorageControllerIn scIn, StorageDeviceAttachmentIn matIn) {
+        scIn.addMediumAttachment(matIn);
 
-      DefaultMutableTreeNode node = new DefaultMutableTreeNode(matIn);
-      treeModel.insertNodeInto(node, scInToNode.get(scIn), scInToNode.get(scIn).getChildCount());
-      tree.scrollPathToVisible(new TreePath(node.getPath()));
-      matInToNode.put(matIn, node);
-   }
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(matIn);
+        treeModel.insertNodeInto(node, scInToNode.get(scIn), scInToNode.get(scIn).getChildCount());
+        tree.scrollPathToVisible(new TreePath(node.getPath()));
+        matInToNode.put(matIn, node);
+    }
 
-   private void add(StorageControllerIn scIn, StorageDeviceAttachmentOut matOut) {
-      StorageDeviceAttachmentIn matIn = StorageDeviceAttachmentIoFactory.get(matOut);
-      matIn.setAction(Action.Modify);
-      add(scIn, matIn);
+    private void add(StorageControllerIn scIn, StorageDeviceAttachmentOut matOut) {
+        StorageDeviceAttachmentIn matIn = StorageDeviceAttachmentIoFactory.get(matOut);
+        matIn.setAction(Action.Modify);
+        add(scIn, matIn);
 
-      if (matOut.hasMediumInserted()) {
-         MediumOut medOut = Gui.getServer(srvId).getMedium(new MediumIn(matOut.getMediumUuid()));
-         MediumIn medIn = MediumIoFactory.get(medOut);
-         matIn.attachMedium(medIn);
-      }
-   }
+        if (matOut.hasMediumInserted()) {
+            MediumOut medOut = Gui.getServer(srvId).getMedium(new MediumIn(matOut.getMediumUuid()));
+            MediumIn medIn = MediumIoFactory.get(medOut);
+            matIn.attachMedium(medIn);
+        }
+    }
 
-   public void update(MachineOut mOut, MachineIn mIn) {
-      srvId = mOut.getServerId();
-      this.mIn = mIn;
+    public void update(MachineOut mOut, MachineIn mIn) {
+        srvId = mOut.getServerId();
+        this.mIn = mIn;
 
-      topNode.removeAllChildren();
-      treeModel.reload();
-      for (StorageControllerOut scOut : mOut.listStorageController()) {
-         add(scOut);
-      }
-   }
+        topNode.removeAllChildren();
+        treeModel.reload();
+        for (StorageControllerOut scOut : mOut.listStorageController()) {
+            add(scOut);
+        }
+    }
 
-   public void save() {
-      // TODO
-   }
+    public void save() {
+        // TODO
+    }
 
-   // TODO should throw exception if no slot is found
-   // TODO move into StorageControllerInput object
-   private StorageDeviceAttachmentIn attachDeviceNextFreeSlot(StorageControllerIn scIn, String deviceType) {
-      StorageControllerTypeOut sctOut = Gui.getServer(srvId).getStorageControllerType(
-            new StorageControllerTypeIn(scIn.getType()));
-      boolean notFound = true;
-      for (long i = sctOut.getMinPort() - 1; (i < sctOut.getMaxPort()) && notFound; i++) {
-         for (long j = 0; (j < sctOut.getMaxDevicePerPort()) && notFound; j++) {
-            StorageDeviceAttachmentIn sdaIn = new StorageDeviceAttachmentIn(scIn.getName(), i, j, deviceType);
-            if (scIn.addMediumAttachment(sdaIn)) {
-               notFound = false;
-               add(scIn, sdaIn);
-               return sdaIn;
+    // TODO should throw exception if no slot is found
+    // TODO move into StorageControllerInput object
+    private StorageDeviceAttachmentIn attachDeviceNextFreeSlot(StorageControllerIn scIn, String deviceType) {
+        StorageControllerTypeOut sctOut = Gui.getServer(srvId).getStorageControllerType(
+                new StorageControllerTypeIn(scIn.getType()));
+        boolean notFound = true;
+        for (long i = sctOut.getMinPort() - 1; (i < sctOut.getMaxPort()) && notFound; i++) {
+            for (long j = 0; (j < sctOut.getMaxDevicePerPort()) && notFound; j++) {
+                StorageDeviceAttachmentIn sdaIn = new StorageDeviceAttachmentIn(scIn.getName(), i, j, deviceType);
+                if (scIn.addMediumAttachment(sdaIn)) {
+                    notFound = false;
+                    add(scIn, sdaIn);
+                    return sdaIn;
+                }
             }
-         }
-      }
-      HyperboxClient.getView().postError("No free slot", new Exception());
-      return null;
-   }
+        }
+        HyperboxClient.getView().postError("No free slot", new Exception());
+        return null;
+    }
 
-   private class TreeListener implements TreeSelectionListener {
+    private class TreeListener implements TreeSelectionListener {
 
-      @Override
-      public void valueChanged(TreeSelectionEvent ev) {
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-         if (node != null) {
-            DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) node.getParent();
-            if (node.getUserObject() instanceof StorageControllerIn) {
-               StorageControllerIn scIn = (StorageControllerIn) node.getUserObject();
-               addScButton.setEnabled(true);
-               removeScButton.setEnabled(true);
-               addAttachmentButton.setEnabled(true);
-               removeAttachmentButton.setEnabled(false);
-               scViewer.display(srvId, scIn);
-               viewerLayout.show(viewer, EntityType.StorageController.getId());
+        @Override
+        public void valueChanged(TreeSelectionEvent ev) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (node != null) {
+                DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) node.getParent();
+                if (node.getUserObject() instanceof StorageControllerIn) {
+                    StorageControllerIn scIn = (StorageControllerIn) node.getUserObject();
+                    addScButton.setEnabled(true);
+                    removeScButton.setEnabled(true);
+                    addAttachmentButton.setEnabled(true);
+                    removeAttachmentButton.setEnabled(false);
+                    scViewer.display(srvId, scIn);
+                    viewerLayout.show(viewer, EntityType.StorageController.getId());
+                }
+                if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
+                    StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) node.getUserObject();
+                    Logger.debug(matIn);
+                    StorageControllerIn scIn = (StorageControllerIn) parentNode.getUserObject();
+                    addScButton.setEnabled(true);
+                    removeScButton.setEnabled(false);
+                    addAttachmentButton.setEnabled(true);
+                    removeAttachmentButton.setEnabled(true);
+                    sdaViewer.show(srvId, scIn.getType(), matIn);
+                    viewerLayout.show(viewer, EntityType.StorageAttachment.getId());
+                }
+            } else {
+                viewerLayout.show(viewer, "");
             }
-            if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
-               StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) node.getUserObject();
-               Logger.debug(matIn);
-               StorageControllerIn scIn = (StorageControllerIn) parentNode.getUserObject();
-               addScButton.setEnabled(true);
-               removeScButton.setEnabled(false);
-               addAttachmentButton.setEnabled(true);
-               removeAttachmentButton.setEnabled(true);
-               sdaViewer.show(srvId, scIn.getType(), matIn);
-               viewerLayout.show(viewer, EntityType.StorageAttachment.getId());
+        }
+
+    }
+
+    
+    private class StorageTreeCellRenderer extends DefaultTreeCellRenderer {
+
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1518358394840551354L;
+
+        @Override
+        public Component getTreeCellRendererComponent(JTree rawTree, Object value, boolean isSelected, boolean isExpanded, boolean isLeaf, int row,
+                boolean hasFocus) {
+            super.getTreeCellRendererComponent(rawTree, value, isSelected, isExpanded, isLeaf, row, hasFocus);
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+            if (node != topNode) {
+                if (node.getUserObject() instanceof StorageControllerIn) {
+                    StorageControllerIn obj = (StorageControllerIn) node.getUserObject();
+                    setIcon(IconBuilder.getStorageControllerType(obj.getType()));
+                }
+                if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
+                    StorageDeviceAttachmentIn sdaIn = (StorageDeviceAttachmentIn) node.getUserObject();
+                    String obj = sdaIn.getDeviceType();
+                    if (obj.contentEquals(EntityType.HardDisk.getId())) {
+                        obj = EntityType.DiskDrive.getId();
+                    }
+                    if (obj.contentEquals(EntityType.DVD.getId())) {
+                        obj = EntityType.DvdDrive.getId();
+                    }
+                    if (obj.contentEquals(EntityType.Floppy.getId())) {
+                        obj = EntityType.FloppyDrive.getId();
+                    }
+                    setIcon(IconBuilder.getDeviceType(obj));
+
+                    if (sdaIn.hasMedium()) {
+                        if (sdaIn.getMedium().hasParent()) {
+                            // TODO create a getBase() directly in core
+                            setText(Gui.getServer(srvId).getMedium(new MediumIn(Gui.getServer(srvId).getMedium(sdaIn.getMedium()).getBaseUuid())).toString());
+                        } else {
+                            setText(sdaIn.getMedium().toString());
+                        }
+                    } else {
+                        setText("No medium");
+                    }
+                }
             }
-         } else {
-            viewerLayout.show(viewer, "");
-         }
-      }
 
-   }
+            return this;
+        }
 
-   @SuppressWarnings("serial")
-   private class StorageTreeCellRenderer extends DefaultTreeCellRenderer {
+    }
 
-      @Override
-      public Component getTreeCellRendererComponent(JTree rawTree, Object value, boolean isSelected, boolean isExpanded, boolean isLeaf, int row,
-            boolean hasFocus) {
-         super.getTreeCellRendererComponent(rawTree, value, isSelected, isExpanded, isLeaf, row, hasFocus);
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-         if (node != topNode) {
-            if (node.getUserObject() instanceof StorageControllerIn) {
-               StorageControllerIn obj = (StorageControllerIn) node.getUserObject();
-               setIcon(IconBuilder.getStorageControllerType(obj.getType()));
+    private class AddScListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(addScButton)) {
+                JPopupMenu menu = new JPopupMenu();
+                menu.add(addIdeMenuItem);
+                menu.add(addSataMenuItem);
+                menu.add(addScsiMenuItem);
+                menu.add(addSasMenuItem);
+                menu.add(addFloppyMenuItem);
+                menu.show(addScButton, 0, addScButton.getHeight());
             }
-            if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
-               StorageDeviceAttachmentIn sdaIn = (StorageDeviceAttachmentIn) node.getUserObject();
-               String obj = sdaIn.getDeviceType();
-               if (obj.contentEquals(EntityType.HardDisk.getId())) {
-                  obj = EntityType.DiskDrive.getId();
-               }
-               if (obj.contentEquals(EntityType.DVD.getId())) {
-                  obj = EntityType.DvdDrive.getId();
-               }
-               if (obj.contentEquals(EntityType.Floppy.getId())) {
-                  obj = EntityType.FloppyDrive.getId();
-               }
-               setIcon(IconBuilder.getDeviceType(obj));
-
-               if (sdaIn.hasMedium()) {
-                  if (sdaIn.getMedium().hasParent()) {
-                     // TODO create a getBase() directly in core
-                     setText(Gui.getServer(srvId).getMedium(new MediumIn(Gui.getServer(srvId).getMedium(sdaIn.getMedium()).getBaseUuid())).toString());
-                  } else {
-                     setText(sdaIn.getMedium().toString());
-                  }
-               } else {
-                  setText("No medium");
-               }
+            else if (e.getSource().equals(addIdeMenuItem)) {
+                Logger.debug("Adding IDE controller");
+                StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.IDE.getId(), StorageControllerType.IDE.getId());
+                add(scIn);
             }
-         }
-
-         return this;
-      }
-
-   }
-
-   private class AddScListener implements ActionListener {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         if (e.getSource().equals(addScButton)) {
-            JPopupMenu menu = new JPopupMenu();
-            menu.add(addIdeMenuItem);
-            menu.add(addSataMenuItem);
-            menu.add(addScsiMenuItem);
-            menu.add(addSasMenuItem);
-            menu.add(addFloppyMenuItem);
-            menu.show(addScButton, 0, addScButton.getHeight());
-         }
-         else if (e.getSource().equals(addIdeMenuItem)) {
-            Logger.debug("Adding IDE controller");
-            StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.IDE.getId(), StorageControllerType.IDE.getId());
-            add(scIn);
-         }
-         else if (e.getSource().equals(addSataMenuItem)) {
-            Logger.debug("Adding SATA controller");
-            StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SATA.getId(), StorageControllerType.SATA.getId());
-            add(scIn);
-         }
-         else if (e.getSource().equals(addScsiMenuItem)) {
-            Logger.debug("Adding SCSI controller");
-            StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SCSI.getId(), StorageControllerType.SCSI.getId());
-            add(scIn);
-         }
-         else if (e.getSource().equals(addSasMenuItem)) {
-            Logger.debug("Adding SAS controller");
-            StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SAS.getId(), StorageControllerType.SAS.getId());
-            add(scIn);
-         }
-         else if (e.getSource().equals(addFloppyMenuItem)) {
-            Logger.debug("Adding Floppy controller");
-            StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.Floppy.getId(), StorageControllerType.Floppy.getId());
-            add(scIn);
-         }
-         else {
-            Logger.error("Unknown source @ AddScListener");
-         }
-      }
-
-   }
-
-   private class RemoveNodeListener implements ActionListener {
-
-      @Override
-      public void actionPerformed(ActionEvent ae) {
-         DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-         if (dmtn != null) {
-            if ((ae.getSource() == removeScButton) && (dmtn.getUserObject() instanceof StorageControllerIn)) {
-               StorageControllerIn scIn = (StorageControllerIn) dmtn.getUserObject();
-               mIn.removeStorageController(scIn.getName());
-               treeModel.removeNodeFromParent(scInToNode.get(scIn));
-               scInToNode.remove(scIn);
+            else if (e.getSource().equals(addSataMenuItem)) {
+                Logger.debug("Adding SATA controller");
+                StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SATA.getId(), StorageControllerType.SATA.getId());
+                add(scIn);
             }
-            else if (dmtn.getUserObject() instanceof StorageDeviceAttachmentIn) {
-               StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) dmtn.getUserObject();
-
-               if (!matIn.getDeviceType().contentEquals(EntityType.HardDisk.getId()) && matIn.hasMedium()) {
-                  JPopupMenu menu = new JPopupMenu();
-                  menu.add(removeMediumMenuItem);
-                  menu.add(removeDeviceMenuItem);
-                  menu.show(removeAttachmentButton, 0, removeAttachmentButton.getHeight());
-               } else {
-                  removeDeviceMenuItem.doClick();
-               }
+            else if (e.getSource().equals(addScsiMenuItem)) {
+                Logger.debug("Adding SCSI controller");
+                StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SCSI.getId(), StorageControllerType.SCSI.getId());
+                add(scIn);
+            }
+            else if (e.getSource().equals(addSasMenuItem)) {
+                Logger.debug("Adding SAS controller");
+                StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SAS.getId(), StorageControllerType.SAS.getId());
+                add(scIn);
+            }
+            else if (e.getSource().equals(addFloppyMenuItem)) {
+                Logger.debug("Adding Floppy controller");
+                StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.Floppy.getId(), StorageControllerType.Floppy.getId());
+                add(scIn);
             }
             else {
-               Logger.error("Unknown user object @ RemoveNodeListener");
+                Logger.error("Unknown source @ AddScListener");
             }
-         }
-      }
+        }
 
-   }
+    }
 
-   private class RemoveMediumListener implements ActionListener {
+    private class RemoveNodeListener implements ActionListener {
 
-      @Override
-      public void actionPerformed(ActionEvent ae) {
-         DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-         if (dmtn != null) {
-            StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) dmtn.getUserObject();
-            matIn.detachMedium();
-            treeModel.reload(dmtn);
-            sdaViewer.refresh();
-         }
-      }
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (dmtn != null) {
+                if ((ae.getSource() == removeScButton) && (dmtn.getUserObject() instanceof StorageControllerIn)) {
+                    StorageControllerIn scIn = (StorageControllerIn) dmtn.getUserObject();
+                    mIn.removeStorageController(scIn.getName());
+                    treeModel.removeNodeFromParent(scInToNode.get(scIn));
+                    scInToNode.remove(scIn);
+                }
+                else if (dmtn.getUserObject() instanceof StorageDeviceAttachmentIn) {
+                    StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) dmtn.getUserObject();
 
-   }
-
-   private class RemoveDeviceListener implements ActionListener {
-
-      @Override
-      public void actionPerformed(ActionEvent ae) {
-         DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-         if (dmtn != null) {
-            StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) dmtn.getUserObject();
-            StorageControllerIn scIn = (StorageControllerIn) ((DefaultMutableTreeNode) dmtn.getParent()).getUserObject();
-            scIn.removeAttachment(matIn);
-            treeModel.removeNodeFromParent(dmtn);
-         }
-      }
-
-   }
-
-   private StorageDeviceAttachmentIn addEmpty(StorageControllerIn scIn, String devType) {
-      return attachDeviceNextFreeSlot(scIn, devType);
-   }
-
-   private StorageDeviceAttachmentIn addMedium(StorageControllerIn scIn, String devType) {
-      MediumOut medOut = MediumBrowser.browse(new ServerOut(srvId), devType);
-      if (medOut == null) {
-         return null;
-      }
-      MediumIn medIn = MediumIoFactory.get(medOut);
-      return add(scIn, devType, medIn);
-   }
-
-   private StorageDeviceAttachmentIn add(StorageControllerIn scIn, String devType, MediumIn medIn) {
-      StorageDeviceAttachmentIn sdaIn = attachDeviceNextFreeSlot(scIn, devType);
-      if (sdaIn == null) {
-         return null;
-      }
-      add(sdaIn, medIn);
-      return sdaIn;
-   }
-
-   private void add(StorageDeviceAttachmentIn sdaIn, MediumIn medIn) {
-      sdaIn.attachMedium(medIn);
-      StorageControllerIn scIn = (StorageControllerIn) ((DefaultMutableTreeNode) matInToNode.get(sdaIn).getParent()).getUserObject();
-      sdaViewer.show(srvId, scIn.getType(), sdaIn);
-   }
-
-   private void add(StorageDeviceAttachmentIn sdaIn) {
-      MediumOut medOut = MediumBrowser.browse(new ServerOut(srvId), sdaIn.getDeviceType());
-      if (medOut != null) {
-         MediumIn medIn = MediumIoFactory.get(medOut);
-         add(sdaIn, medIn);
-      }
-   }
-
-   private class AddAttachmentListener implements ActionListener {
-
-      @Override
-      public void actionPerformed(ActionEvent ae) {
-
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-         if (node != null) {
-            if (node.getUserObject() instanceof StorageControllerIn) {
-               StorageControllerIn scIn = (StorageControllerIn) node.getUserObject();
-               JPopupMenu menu = new JPopupMenu();
-               if (scIn.getType().contentEquals(StorageControllerType.Floppy.getId())) {
-                  menu.add(addFloppyDriveMenuItem);
-                  menu.add(addFloppyImgMenuItem);
-               } else {
-                  menu.add(addDvdDriveMenuItem);
-                  menu.add(addDvdImgMenuItem);
-                  menu.add(addDiskNewMenuItem);
-                  menu.add(addDiskExistingMenuItem);
-               }
-               menu.show(addAttachmentButton, 0, addAttachmentButton.getHeight());
+                    if (!matIn.getDeviceType().contentEquals(EntityType.HardDisk.getId()) && matIn.hasMedium()) {
+                        JPopupMenu menu = new JPopupMenu();
+                        menu.add(removeMediumMenuItem);
+                        menu.add(removeDeviceMenuItem);
+                        menu.show(removeAttachmentButton, 0, removeAttachmentButton.getHeight());
+                    } else {
+                        removeDeviceMenuItem.doClick();
+                    }
+                }
+                else {
+                    Logger.error("Unknown user object @ RemoveNodeListener");
+                }
             }
-            else if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
-               StorageDeviceAttachmentIn sdaIn = (StorageDeviceAttachmentIn) node.getUserObject();
-               if (sdaIn.getDeviceType().contentEquals(EntityType.HardDisk.getId())) {
-                  JPopupMenu menu = new JPopupMenu();
-                  menu.add(addDiskNewMenuItem);
-                  menu.add(addDiskExistingMenuItem);
-                  menu.show(addAttachmentButton, 0, addAttachmentButton.getHeight());
-               } else {
-                  add((StorageDeviceAttachmentIn) node.getUserObject());
-                  treeModel.reload(node);
-               }
+        }
+
+    }
+
+    private class RemoveMediumListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (dmtn != null) {
+                StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) dmtn.getUserObject();
+                matIn.detachMedium();
+                treeModel.reload(dmtn);
+                sdaViewer.refresh();
             }
-            else {
-               Logger.error("Unknown user object @ AddAttachmentListener");
+        }
+
+    }
+
+    private class RemoveDeviceListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (dmtn != null) {
+                StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) dmtn.getUserObject();
+                StorageControllerIn scIn = (StorageControllerIn) ((DefaultMutableTreeNode) dmtn.getParent()).getUserObject();
+                scIn.removeAttachment(matIn);
+                treeModel.removeNodeFromParent(dmtn);
             }
-            treeModel.reload(node);
-         }
-      }
-   }
+        }
 
-   private class AddDeviceListener implements ActionListener {
+    }
 
-      @Override
-      public void actionPerformed(ActionEvent ae) {
+    private StorageDeviceAttachmentIn addEmpty(StorageControllerIn scIn, String devType) {
+        return attachDeviceNextFreeSlot(scIn, devType);
+    }
 
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-         if (node != null) {
-            if (node.getUserObject() instanceof StorageControllerIn) {
-               StorageControllerIn scIn = (StorageControllerIn) node.getUserObject();
-               if (ae.getSource().equals(addDvdDriveMenuItem)) {
-                  addEmpty(scIn, EntityType.DVD.getId());
-               }
-               if (ae.getSource().equals(addDvdImgMenuItem)) {
-                  addMedium(scIn, EntityType.DVD.getId());
-               }
+    private StorageDeviceAttachmentIn addMedium(StorageControllerIn scIn, String devType) {
+        MediumOut medOut = MediumBrowser.browse(new ServerOut(srvId), devType);
+        if (medOut == null) {
+            return null;
+        }
+        MediumIn medIn = MediumIoFactory.get(medOut);
+        return add(scIn, devType, medIn);
+    }
 
-               if (ae.getSource().equals(addDiskNewMenuItem)) {
-                  MediumIn medIn = HarddiskCreateDialog.show(new ServerOut(srvId));
-                  if (medIn != null) {
-                     add(scIn, EntityType.HardDisk.getId(), medIn);
-                  }
-               }
-               if (ae.getSource().equals(addDiskExistingMenuItem)) {
-                  addMedium(scIn, EntityType.HardDisk.getId());
-               }
+    private StorageDeviceAttachmentIn add(StorageControllerIn scIn, String devType, MediumIn medIn) {
+        StorageDeviceAttachmentIn sdaIn = attachDeviceNextFreeSlot(scIn, devType);
+        if (sdaIn == null) {
+            return null;
+        }
+        add(sdaIn, medIn);
+        return sdaIn;
+    }
 
-               if (ae.getSource().equals(addFloppyDriveMenuItem)) {
-                  addEmpty(scIn, EntityType.Floppy.getId());
-               }
-               if (ae.getSource().equals(addFloppyImgMenuItem)) {
-                  addMedium(scIn, EntityType.Floppy.getId());
-               }
+    private void add(StorageDeviceAttachmentIn sdaIn, MediumIn medIn) {
+        sdaIn.attachMedium(medIn);
+        StorageControllerIn scIn = (StorageControllerIn) ((DefaultMutableTreeNode) matInToNode.get(sdaIn).getParent()).getUserObject();
+        sdaViewer.show(srvId, scIn.getType(), sdaIn);
+    }
+
+    private void add(StorageDeviceAttachmentIn sdaIn) {
+        MediumOut medOut = MediumBrowser.browse(new ServerOut(srvId), sdaIn.getDeviceType());
+        if (medOut != null) {
+            MediumIn medIn = MediumIoFactory.get(medOut);
+            add(sdaIn, medIn);
+        }
+    }
+
+    private class AddAttachmentListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (node != null) {
+                if (node.getUserObject() instanceof StorageControllerIn) {
+                    StorageControllerIn scIn = (StorageControllerIn) node.getUserObject();
+                    JPopupMenu menu = new JPopupMenu();
+                    if (scIn.getType().contentEquals(StorageControllerType.Floppy.getId())) {
+                        menu.add(addFloppyDriveMenuItem);
+                        menu.add(addFloppyImgMenuItem);
+                    } else {
+                        menu.add(addDvdDriveMenuItem);
+                        menu.add(addDvdImgMenuItem);
+                        menu.add(addDiskNewMenuItem);
+                        menu.add(addDiskExistingMenuItem);
+                    }
+                    menu.show(addAttachmentButton, 0, addAttachmentButton.getHeight());
+                }
+                else if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
+                    StorageDeviceAttachmentIn sdaIn = (StorageDeviceAttachmentIn) node.getUserObject();
+                    if (sdaIn.getDeviceType().contentEquals(EntityType.HardDisk.getId())) {
+                        JPopupMenu menu = new JPopupMenu();
+                        menu.add(addDiskNewMenuItem);
+                        menu.add(addDiskExistingMenuItem);
+                        menu.show(addAttachmentButton, 0, addAttachmentButton.getHeight());
+                    } else {
+                        add((StorageDeviceAttachmentIn) node.getUserObject());
+                        treeModel.reload(node);
+                    }
+                }
+                else {
+                    Logger.error("Unknown user object @ AddAttachmentListener");
+                }
+                treeModel.reload(node);
             }
-            else if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
-               StorageDeviceAttachmentIn sdaIn = (StorageDeviceAttachmentIn) node.getUserObject();
-               if (ae.getSource().equals(addDiskNewMenuItem)) {
-                  MediumIn medIn = HarddiskCreateDialog.show(new ServerOut(srvId));
-                  add(sdaIn, medIn);
-               }
-               if (ae.getSource().equals(addDiskExistingMenuItem)) {
-                  add(sdaIn);
-               }
-            }
-            else {
-               Logger.error("Unknown user object @ AddDeviceListener");
-            }
-            treeModel.reload(node);
-         }
-      }
+        }
+    }
 
-   }
+    private class AddDeviceListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (node != null) {
+                if (node.getUserObject() instanceof StorageControllerIn) {
+                    StorageControllerIn scIn = (StorageControllerIn) node.getUserObject();
+                    if (ae.getSource().equals(addDvdDriveMenuItem)) {
+                        addEmpty(scIn, EntityType.DVD.getId());
+                    }
+                    if (ae.getSource().equals(addDvdImgMenuItem)) {
+                        addMedium(scIn, EntityType.DVD.getId());
+                    }
+
+                    if (ae.getSource().equals(addDiskNewMenuItem)) {
+                        MediumIn medIn = HarddiskCreateDialog.show(new ServerOut(srvId));
+                        if (medIn != null) {
+                            add(scIn, EntityType.HardDisk.getId(), medIn);
+                        }
+                    }
+                    if (ae.getSource().equals(addDiskExistingMenuItem)) {
+                        addMedium(scIn, EntityType.HardDisk.getId());
+                    }
+
+                    if (ae.getSource().equals(addFloppyDriveMenuItem)) {
+                        addEmpty(scIn, EntityType.Floppy.getId());
+                    }
+                    if (ae.getSource().equals(addFloppyImgMenuItem)) {
+                        addMedium(scIn, EntityType.Floppy.getId());
+                    }
+                }
+                else if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
+                    StorageDeviceAttachmentIn sdaIn = (StorageDeviceAttachmentIn) node.getUserObject();
+                    if (ae.getSource().equals(addDiskNewMenuItem)) {
+                        MediumIn medIn = HarddiskCreateDialog.show(new ServerOut(srvId));
+                        add(sdaIn, medIn);
+                    }
+                    if (ae.getSource().equals(addDiskExistingMenuItem)) {
+                        add(sdaIn);
+                    }
+                }
+                else {
+                    Logger.error("Unknown user object @ AddDeviceListener");
+                }
+                treeModel.reload(node);
+            }
+        }
+
+    }
 
 }

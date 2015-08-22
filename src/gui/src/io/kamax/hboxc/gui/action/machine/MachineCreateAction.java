@@ -27,23 +27,24 @@ import io.kamax.hboxc.gui.vm.VmCreateDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public final class MachineCreateAction extends AbstractAction {
 
-   private _SingleServerSelector select;
+    private static final long serialVersionUID = 7550903144818374886L;
+    private _SingleServerSelector select;
 
-   public MachineCreateAction(_SingleServerSelector select, String label) {
-      super(label, IconBuilder.getTask(HypervisorTasks.MachineCreate));
-      this.select = select;
-   }
+    public MachineCreateAction(_SingleServerSelector select, String label) {
+        super(label, IconBuilder.getTask(HypervisorTasks.MachineCreate));
+        this.select = select;
+    }
 
-   public MachineCreateAction(_SingleServerSelector select) {
-      this(select, "Create");
-   }
+    public MachineCreateAction(_SingleServerSelector select) {
+        this(select, "Create");
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      VmCreateDialog.show(select.getServer());
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        VmCreateDialog.show(select.getServer());
+    }
 
 }

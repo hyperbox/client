@@ -31,22 +31,22 @@ import net.engio.mbassy.PublicationError;
 
 public class ErrorDisplay implements IPublicationErrorHandler {
 
-   public static void display(String description, Throwable t) {
-      JTextArea textArea = new JTextArea();
-      textArea.setEditable(false);
-      StringWriter writer = new StringWriter();
-      t.printStackTrace(new PrintWriter(writer));
-      textArea.setText(writer.toString());
+    public static void display(String description, Throwable t) {
+        JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        StringWriter writer = new StringWriter();
+        t.printStackTrace(new PrintWriter(writer));
+        textArea.setText(writer.toString());
 
-      JScrollPane scrollPane = new JScrollPane(textArea);
-      scrollPane.setPreferredSize(new Dimension(750, 300));
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(750, 300));
 
-      JOptionPane.showMessageDialog(null, scrollPane, "An Error Has Occurred", JOptionPane.ERROR_MESSAGE);
-   }
+        JOptionPane.showMessageDialog(null, scrollPane, "An Error Has Occurred", JOptionPane.ERROR_MESSAGE);
+    }
 
-   @Override
-   public void handleError(PublicationError error) {
-      display(error.getMessage(), error.getCause());
-   }
+    @Override
+    public void handleError(PublicationError error) {
+        display(error.getMessage(), error.getCause());
+    }
 
 }

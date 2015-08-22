@@ -24,16 +24,16 @@ import io.kamax.hbox.exception.HyperboxException;
 
 public interface _EventManager extends _EventProcessor {
 
-   public void start() throws HyperboxException;
+    public void start() throws HyperboxException;
 
-   public void start(_EventProcessor postProcessor) throws HyperboxException;
+    public void start(_EventProcessor postProcessor) throws HyperboxException;
 
-   public void stop();
+    public void stop();
 
-   public void register(Object o);
+    public void register(Object o);
 
-   public void unregister(Object o);
+    public void unregister(Object o);
 
-   public void add(_EventProcessor postProcessor);
+    public void add(_EventProcessor postProcessor);
 
 }

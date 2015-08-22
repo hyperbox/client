@@ -38,66 +38,66 @@ import net.miginfocom.swing.MigLayout;
 
 public class NATRulesView {
 
-   private NATRuleTableModel model;
-   private JTable table;
-   private JScrollPane tablePane;
-   private JButton addButton;
-   private JButton remButton;
-   private JPanel panel;
+    private NATRuleTableModel model;
+    private JTable table;
+    private JScrollPane tablePane;
+    private JButton addButton;
+    private JButton remButton;
+    private JPanel panel;
 
-   public static NATRulesView get() {
-      return new NATRulesView();
-   }
+    public static NATRulesView get() {
+        return new NATRulesView();
+    }
 
-   public NATRulesView() {
-      JComboBox protocolEditor = new JComboBox();
-      protocolEditor.addItem("TCP");
-      protocolEditor.addItem("UDP");
+    public NATRulesView() {
+        JComboBox protocolEditor = new JComboBox();
+        protocolEditor.addItem("TCP");
+        protocolEditor.addItem("UDP");
 
-      model = new NATRuleTableModel();
-      table = new JTable(model);
-      table.setFillsViewportHeight(true);
-      table.setAutoCreateRowSorter(true);
-      table.getColumnModel().getColumn(model.getColumnIndex(NATRuleTableModel.PROTOCOL)).setCellEditor(new DefaultCellEditor(protocolEditor));
-      tablePane = new JScrollPane(table);
-      tablePane.setPreferredSize(table.getPreferredSize());
-      addButton = new JButton(IconBuilder.AddIcon);
-      addButton.addActionListener(new ActionListener() {
+        model = new NATRuleTableModel();
+        table = new JTable(model);
+        table.setFillsViewportHeight(true);
+        table.setAutoCreateRowSorter(true);
+        table.getColumnModel().getColumn(model.getColumnIndex(NATRuleTableModel.PROTOCOL)).setCellEditor(new DefaultCellEditor(protocolEditor));
+        tablePane = new JScrollPane(table);
+        tablePane.setPreferredSize(table.getPreferredSize());
+        addButton = new JButton(IconBuilder.AddIcon);
+        addButton.addActionListener(new ActionListener() {
 
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            model.add(new NATRuleIO("New Rule", null, null, null, null, null));
-         }
-
-      });
-      remButton = new JButton(IconBuilder.DelIcon);
-      remButton.addActionListener(new ActionListener() {
-
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            for (int row : table.getSelectedRows()) {
-               model.remove(model.getObjectAtRow(table.convertColumnIndexToModel(row)));
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.add(new NATRuleIO("New Rule", null, null, null, null, null));
             }
-         }
 
-      });
-      panel = new JPanel(new MigLayout("ins 0"));
-      panel.add(tablePane, "grow, push");
-      JPanel buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(addButton, "wrap");
-      buttonPanel.add(remButton);
-      panel.add(buttonPanel, "top");
-   }
+        });
+        remButton = new JButton(IconBuilder.DelIcon);
+        remButton.addActionListener(new ActionListener() {
 
-   public void setRules(List<_NATRule> rules) {
-      model.put(rules);
-   }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int row : table.getSelectedRows()) {
+                    model.remove(model.getObjectAtRow(table.convertColumnIndexToModel(row)));
+                }
+            }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+        });
+        panel = new JPanel(new MigLayout("ins 0"));
+        panel.add(tablePane, "grow, push");
+        JPanel buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(addButton, "wrap");
+        buttonPanel.add(remButton);
+        panel.add(buttonPanel, "top");
+    }
 
-   public List<_NATRule> getRules() {
-      return new ArrayList<_NATRule>(model.list());
-   }
+    public void setRules(List<_NATRule> rules) {
+        model.put(rules);
+    }
+
+    public JComponent getComponent() {
+        return panel;
+    }
+
+    public List<_NATRule> getRules() {
+        return new ArrayList<_NATRule>(model.list());
+    }
 }

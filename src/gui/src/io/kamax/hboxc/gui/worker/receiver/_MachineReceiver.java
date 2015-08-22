@@ -25,6 +25,6 @@ import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 
 public interface _MachineReceiver extends _WorkerDataReceiver {
 
-   public void put(MachineOut mOut);
+    public void put(MachineOut mOut);
 
 }

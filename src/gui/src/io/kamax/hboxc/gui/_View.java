@@ -24,6 +24,6 @@ import javax.swing.JPanel;
 
 public interface _View {
 
-   public JPanel getPanel();
+    public JPanel getPanel();
 
 }

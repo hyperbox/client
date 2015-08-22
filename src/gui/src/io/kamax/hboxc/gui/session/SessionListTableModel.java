@@ -23,38 +23,39 @@ package io.kamax.hboxc.gui.session;
 import io.kamax.hbox.comm.out.SessionOut;
 import io.kamax.hboxc.gui.utils.AbstractOutputListTableModel;
 
-@SuppressWarnings("serial")
+
 public final class SessionListTableModel extends AbstractOutputListTableModel<SessionOut> {
 
-   private final String ID = "ID";
-   private final String USER = "User";
-   private final String STATE = "State";
-   private final String C_TIME = "Create Time";
+    private static final long serialVersionUID = -7048437106115357750L;
+    private final String ID = "ID";
+    private final String USER = "User";
+    private final String STATE = "State";
+    private final String C_TIME = "Create Time";
 
-   @Override
-   protected void addColumns() {
-      addColumn(ID);
-      addColumn(USER);
-      addColumn(STATE);
-      addColumn(C_TIME);
-   }
+    @Override
+    protected void addColumns() {
+        addColumn(ID);
+        addColumn(USER);
+        addColumn(STATE);
+        addColumn(C_TIME);
+    }
 
-   @Override
-   protected Object getValueAt(SessionOut sesOut, String columnName) {
-      if (columnName == ID) {
-         return sesOut.getId();
-      }
-      if (columnName == USER) {
-         return sesOut.getUser().getDomainLogonName();
-      }
-      if (columnName == STATE) {
-         return sesOut.getState();
-      }
-      if (columnName == C_TIME) {
-         return sesOut.getCreateTime().toString();
-      }
+    @Override
+    protected Object getValueAt(SessionOut sesOut, String columnName) {
+        if (columnName == ID) {
+            return sesOut.getId();
+        }
+        if (columnName == USER) {
+            return sesOut.getUser().getDomainLogonName();
+        }
+        if (columnName == STATE) {
+            return sesOut.getState();
+        }
+        if (columnName == C_TIME) {
+            return sesOut.getCreateTime().toString();
+        }
 
-      return null;
-   }
+        return null;
+    }
 
 }

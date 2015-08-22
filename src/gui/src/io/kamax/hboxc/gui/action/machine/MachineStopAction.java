@@ -31,22 +31,22 @@ import io.kamax.hboxc.gui.vm._MachineSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class MachineStopAction extends AbstractAction {
 
-   private _MachineSelector selector;
+    private static final long serialVersionUID = 5843455226950853139L;
+    private _MachineSelector selector;
 
-   public MachineStopAction(_MachineSelector selector) {
-      super("Stop", IconBuilder.getTask(HypervisorTasks.MachinePowerOff));
-      setEnabled(true);
-      this.selector = selector;
-   }
+    public MachineStopAction(_MachineSelector selector) {
+        super("Stop", IconBuilder.getTask(HypervisorTasks.MachinePowerOff));
+        setEnabled(true);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ev) {
-      for (MachineOut mOut : selector.getMachines()) {
-         Gui.post(new Request(Command.VBOX, HypervisorTasks.MachinePowerOff, new MachineIn(mOut)));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        for (MachineOut mOut : selector.getMachines()) {
+            Gui.post(new Request(Command.VBOX, HypervisorTasks.MachinePowerOff, new MachineIn(mOut)));
+        }
+    }
 
 }

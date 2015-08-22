@@ -25,18 +25,18 @@ import io.kamax.hboxc.back._Backend;
 
 public abstract class BackendEvent extends Event {
 
-   public BackendEvent(Enum<?> s, _Backend backend) {
-      super(s);
-      set(_Backend.class, backend);
-   }
+    public BackendEvent(Enum<?> s, _Backend backend) {
+        super(s);
+        set(_Backend.class, backend);
+    }
 
-   public _Backend getBackend() {
-      return get(_Backend.class);
-   }
+    public _Backend getBackend() {
+        return get(_Backend.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Event ID " + getEventId() + " for Backed Type " + getBackend().getId() + " occured @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Event ID " + getEventId() + " for Backed Type " + getBackend().getId() + " occured @ " + getTime();
+    }
 
 }

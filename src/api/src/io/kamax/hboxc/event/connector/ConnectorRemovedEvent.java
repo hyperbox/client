@@ -26,8 +26,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class ConnectorRemovedEvent extends ConnectorEvent {
 
-   public ConnectorRemovedEvent(ConnectorOutput conOut) {
-      super(ClientEvents.ConnectorModified, conOut);
-   }
+    public ConnectorRemovedEvent(ConnectorOutput conOut) {
+        super(ClientEvents.ConnectorModified, conOut);
+    }
 
 }

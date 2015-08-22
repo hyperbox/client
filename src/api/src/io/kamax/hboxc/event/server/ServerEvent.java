@@ -26,18 +26,18 @@ import io.kamax.hbox.event.Event;
 
 public class ServerEvent extends Event {
 
-   public ServerEvent(Enum<?> eventId, ServerOut srv) {
-      super(eventId);
-      set(ServerOut.class, srv);
-   }
+    public ServerEvent(Enum<?> eventId, ServerOut srv) {
+        super(eventId);
+        set(ServerOut.class, srv);
+    }
 
-   public ServerOut getServer() {
-      return get(ServerOut.class);
-   }
+    public ServerOut getServer() {
+        return get(ServerOut.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Event ID " + getEventId() + " for Server " + getServer().getName() + " occured @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Event ID " + getEventId() + " for Server " + getServer().getName() + " occured @ " + getTime();
+    }
 
 }

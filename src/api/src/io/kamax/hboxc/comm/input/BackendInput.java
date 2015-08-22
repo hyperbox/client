@@ -26,8 +26,8 @@ import io.kamax.hbox.constant.EntityType;
 
 public class BackendInput extends ObjectIn<EntityType> {
 
-   public BackendInput() {
-      super(EntityType.Backend);
-   }
+    public BackendInput() {
+        super(EntityType.Backend);
+    }
 
 }

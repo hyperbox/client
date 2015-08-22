@@ -25,13 +25,13 @@ import java.util.List;
 
 public interface _UserSelector {
 
-   public String getServerId();
+    public String getServerId();
 
-   /**
-    * Get the User IDs corresponding to the user selection
-    * 
-    * @return List of User IDs as String
-    */
-   public List<String> getSelection();
+    /**
+     * Get the User IDs corresponding to the user selection
+     * 
+     * @return List of User IDs as String
+     */
+    public List<String> getSelection();
 
 }

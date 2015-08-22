@@ -22,33 +22,33 @@ package io.kamax.hboxc.event;
 
 public final class EventManager {
 
-   private static _EventManager evMgr;
+    private static _EventManager evMgr;
 
-   private EventManager() {
-      // static only
-   }
+    private EventManager() {
+        // static only
+    }
 
-   static {
-      evMgr = new DefaultEventManager("Core-EvMgr");
-   }
+    static {
+        evMgr = new DefaultEventManager("Core-EvMgr");
+    }
 
-   public static _EventManager get() {
-      return evMgr;
-   }
+    public static _EventManager get() {
+        return evMgr;
+    }
 
-   public static void register(Object o) {
+    public static void register(Object o) {
 
-      evMgr.register(o);
-   }
+        evMgr.register(o);
+    }
 
-   public static void unregister(Object o) {
+    public static void unregister(Object o) {
 
-      evMgr.unregister(o);
-   }
+        evMgr.unregister(o);
+    }
 
-   public static void post(Object o) {
+    public static void post(Object o) {
 
-      evMgr.post(o);
-   }
+        evMgr.post(o);
+    }
 
 }

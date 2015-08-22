@@ -26,8 +26,8 @@ import java.util.List;
 
 public interface _SnapshotSelector {
 
-   public List<SnapshotOut> getSelection();
+    public List<SnapshotOut> getSelection();
 
-   public MachineOut getMachine();
+    public MachineOut getMachine();
 
 }

@@ -23,10 +23,10 @@ package io.kamax.hboxc.constant;
 
 public enum ConsoleViewerAttributes {
 
-   Id,
-   HypervisorTypeId,
-   ModuleId,
-   ViewerPath,
-   Args,
+    Id,
+    HypervisorTypeId,
+    ModuleId,
+    ViewerPath,
+    Args,
 
 }

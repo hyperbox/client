@@ -22,6 +22,6 @@ package io.kamax.hboxc.gui.storage;
 
 public final class RemovableDriveViewer extends StorageDeviceViewer {
 
-   // TODO complete
+    // TODO complete
 
 }

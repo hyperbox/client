@@ -26,95 +26,95 @@ import io.kamax.hboxc.core._ConsoleViewerWriter;
 
 public class ConsoleViewerInput implements _ConsoleViewerReader, _ConsoleViewerWriter {
 
-   private String id;
-   private String hypervisorId;
-   private String moduleId;
-   private String viewerPath;
-   private String args;
+    private String id;
+    private String hypervisorId;
+    private String moduleId;
+    private String viewerPath;
+    private String args;
 
-   public ConsoleViewerInput() {
-   }
+    public ConsoleViewerInput() {
+    }
 
-   public ConsoleViewerInput(String id) {
-      this.id = id;
-   }
+    public ConsoleViewerInput(String id) {
+        this.id = id;
+    }
 
-   public ConsoleViewerInput(String id, String hypervisorId) {
-      this(id);
-      setHypervisorId(hypervisorId);
-   }
+    public ConsoleViewerInput(String id, String hypervisorId) {
+        this(id);
+        setHypervisorId(hypervisorId);
+    }
 
-   public ConsoleViewerInput(String id, String hypervisorId, String moduleId) {
-      this(id, hypervisorId);
-      setModuleId(moduleId);
-   }
+    public ConsoleViewerInput(String id, String hypervisorId, String moduleId) {
+        this(id, hypervisorId);
+        setModuleId(moduleId);
+    }
 
-   public ConsoleViewerInput(String id, String hypervisorId, String moduleId, String viewerPath) {
-      this(id, hypervisorId, moduleId);
-      setViewer(viewerPath);
-   }
+    public ConsoleViewerInput(String id, String hypervisorId, String moduleId, String viewerPath) {
+        this(id, hypervisorId, moduleId);
+        setViewer(viewerPath);
+    }
 
-   @Override
-   public String getId() {
-      return id;
-   }
+    @Override
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * @return the hypervisorId
-    */
-   @Override
-   public String getHypervisorId() {
-      return hypervisorId;
-   }
+    /**
+     * @return the hypervisorId
+     */
+    @Override
+    public String getHypervisorId() {
+        return hypervisorId;
+    }
 
-   /**
-    * @param hypervisorId the hypervisorId to set
-    */
-   @Override
-   public void setHypervisorId(String hypervisorId) {
-      this.hypervisorId = hypervisorId;
-   }
+    /**
+     * @param hypervisorId the hypervisorId to set
+     */
+    @Override
+    public void setHypervisorId(String hypervisorId) {
+        this.hypervisorId = hypervisorId;
+    }
 
-   /**
-    * @return the moduleId
-    */
-   @Override
-   public String getModuleId() {
-      return moduleId;
-   }
+    /**
+     * @return the moduleId
+     */
+    @Override
+    public String getModuleId() {
+        return moduleId;
+    }
 
-   /**
-    * @param moduleId the moduleId to set
-    */
-   @Override
-   public void setModuleId(String moduleId) {
-      this.moduleId = moduleId;
-   }
+    /**
+     * @param moduleId the moduleId to set
+     */
+    @Override
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
+    }
 
-   /**
-    * @return the viewerPath
-    */
-   @Override
-   public String getViewerPath() {
-      return viewerPath;
-   }
+    /**
+     * @return the viewerPath
+     */
+    @Override
+    public String getViewerPath() {
+        return viewerPath;
+    }
 
-   /**
-    * @param viewerPath the viewerPath to set
-    */
-   @Override
-   public void setViewer(String viewerPath) {
-      this.viewerPath = viewerPath;
-   }
+    /**
+     * @param viewerPath the viewerPath to set
+     */
+    @Override
+    public void setViewer(String viewerPath) {
+        this.viewerPath = viewerPath;
+    }
 
-   @Override
-   public void setArgs(String args) {
-      this.args = args;
-   }
+    @Override
+    public void setArgs(String args) {
+        this.args = args;
+    }
 
-   @Override
-   public String getArgs() {
-      return args;
-   }
+    @Override
+    public String getArgs() {
+        return args;
+    }
 
 }

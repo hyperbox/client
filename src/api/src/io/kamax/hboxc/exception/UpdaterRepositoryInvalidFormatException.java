@@ -20,23 +20,25 @@
 
 package io.kamax.hboxc.exception;
 
-@SuppressWarnings("serial")
+
 public class UpdaterRepositoryInvalidFormatException extends UpdaterException {
 
-   public UpdaterRepositoryInvalidFormatException() {
-      super("Repository is using an invalid format");
-   }
+    private static final long serialVersionUID = -6798327433774981577L;
 
-   public UpdaterRepositoryInvalidFormatException(String s) {
-      super(s);
-   }
+    public UpdaterRepositoryInvalidFormatException() {
+        super("Repository is using an invalid format");
+    }
 
-   public UpdaterRepositoryInvalidFormatException(Throwable t) {
-      super(t);
-   }
+    public UpdaterRepositoryInvalidFormatException(String s) {
+        super(s);
+    }
 
-   public UpdaterRepositoryInvalidFormatException(String s, Throwable t) {
-      super(s, t);
-   }
+    public UpdaterRepositoryInvalidFormatException(Throwable t) {
+        super(t);
+    }
+
+    public UpdaterRepositoryInvalidFormatException(String s, Throwable t) {
+        super(s, t);
+    }
 
 }

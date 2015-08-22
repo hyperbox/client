@@ -25,13 +25,15 @@ import io.kamax.hbox.comm.out.StoreItemOut;
 import io.kamax.hbox.constant.StoreItemAttribute;
 import io.kamax.hboxc.gui.utils.ObjectOutputTableModel;
 
-@SuppressWarnings("serial")
+
 public class StoreItemBrowserTableModel extends ObjectOutputTableModel<StoreItemOut> {
 
-   @Override
-   protected void addColumns() {
-      addColumn("Name", StoreItemAttribute.Name);
-      addColumn("Size", StoreItemAttribute.Size);
-   }
+    private static final long serialVersionUID = 6842450280493799463L;
+
+    @Override
+    protected void addColumns() {
+        addColumn("Name", StoreItemAttribute.Name);
+        addColumn("Size", StoreItemAttribute.Size);
+    }
 
 }

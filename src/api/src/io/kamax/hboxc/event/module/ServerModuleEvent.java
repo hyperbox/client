@@ -26,18 +26,18 @@ import io.kamax.hboxc.event.server.ServerEvent;
 
 public class ServerModuleEvent extends ServerEvent {
 
-   public ServerModuleEvent(Enum<?> eventId, ServerOut srvOut, ModuleOut objOut) {
-      super(eventId, srvOut);
-      set(ModuleOut.class, objOut);
-   }
+    public ServerModuleEvent(Enum<?> eventId, ServerOut srvOut, ModuleOut objOut) {
+        super(eventId, srvOut);
+        set(ModuleOut.class, objOut);
+    }
 
-   public ModuleOut getModule() {
-      return get(ModuleOut.class);
-   }
+    public ModuleOut getModule() {
+        return get(ModuleOut.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Event ID " + getEventId() + " for Module " + getModule().getId() + " on Server " + getServer().getId() + " occured @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Event ID " + getEventId() + " for Module " + getModule().getId() + " on Server " + getServer().getId() + " occured @ " + getTime();
+    }
 
 }

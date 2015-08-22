@@ -33,16 +33,16 @@ import io.kamax.hboxc.front._Front;
 
 public class ConsoleViewerUseAction extends AbstractClientControllerSingleAction {
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.ConsoleViewerUse;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.ConsoleViewerUse;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
-      ServerIn srvIn = req.get(ServerIn.class);
-      MachineIn mIn = req.get(MachineIn.class);
-      core.launchConsoleViewer(srvIn.getId(), mIn.getUuid());
-   }
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
+        ServerIn srvIn = req.get(ServerIn.class);
+        MachineIn mIn = req.get(MachineIn.class);
+        core.launchConsoleViewer(srvIn.getId(), mIn.getUuid());
+    }
 
 }

@@ -26,80 +26,80 @@ import io.kamax.tool.AxStrings;
 
 public class MachineGui extends EntityGui {
 
-   private boolean isAvailable = false;
-   private String name;
-   private String state;
+    private boolean isAvailable = false;
+    private String name;
+    private String state;
 
-   private SnapshotGui currSnap;
+    private SnapshotGui currSnap;
 
-   public MachineGui(MachineOut mOut) {
-      super(mOut.getEntityTypeId(), mOut.getId());
-      isAvailable = mOut.isAvailable();
+    public MachineGui(MachineOut mOut) {
+        super(mOut.getEntityTypeId(), mOut.getId());
+        isAvailable = mOut.isAvailable();
 
-      if (isAvailable) {
-         name = mOut.getName();
-         state = mOut.getState();
-      } else {
-         name = "<Unavailable>";
-         state = MachineStates.Inaccessible.getId();
-      }
-   }
+        if (isAvailable) {
+            name = mOut.getName();
+            state = mOut.getState();
+        } else {
+            name = "<Unavailable>";
+            state = MachineStates.Inaccessible.getId();
+        }
+    }
 
-   public MachineGui(MachineOut mOut, SnapshotGui snapGui) {
-      this(mOut);
-      setCurrentSnapshot(snapGui);
-   }
+    public MachineGui(MachineOut mOut, SnapshotGui snapGui) {
+        this(mOut);
+        setCurrentSnapshot(snapGui);
+    }
 
-   @Override
-   public String toString() {
-      StringBuilder label = new StringBuilder();
-      label.append(AxStrings.isEmpty(getName()) ? getId() : getName());
-      if (isAvailable && (currSnap != null)) {
-         label.append(" (" + currSnap + ")");
-      }
-      return label.toString();
-   }
+    @Override
+    public String toString() {
+        StringBuilder label = new StringBuilder();
+        label.append(AxStrings.isEmpty(getName()) ? getId() : getName());
+        if (isAvailable && (currSnap != null)) {
+            label.append(" (" + currSnap + ")");
+        }
+        return label.toString();
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName() {
-      return name;
-   }
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @param name the name to set
-    */
-   public void setName(String name) {
-      this.name = name;
-   }
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @return the state
-    */
-   public String getState() {
-      return state;
-   }
+    /**
+     * @return the state
+     */
+    public String getState() {
+        return state;
+    }
 
-   /**
-    * @param state the state to set
-    */
-   public void setState(String state) {
-      this.state = state;
-   }
+    /**
+     * @param state the state to set
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
 
-   /**
-    * @return the currSnap
-    */
-   public SnapshotGui getCurrentSnapshot() {
-      return currSnap;
-   }
+    /**
+     * @return the currSnap
+     */
+    public SnapshotGui getCurrentSnapshot() {
+        return currSnap;
+    }
 
-   /**
-    * @param currSnap the currSnap to set
-    */
-   public void setCurrentSnapshot(SnapshotGui currSnap) {
-      this.currSnap = currSnap;
-   }
+    /**
+     * @param currSnap the currSnap to set
+     */
+    public void setCurrentSnapshot(SnapshotGui currSnap) {
+        this.currSnap = currSnap;
+    }
 
 }

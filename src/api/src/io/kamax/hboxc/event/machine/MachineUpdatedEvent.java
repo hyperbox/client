@@ -24,13 +24,13 @@ import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 
 public abstract class MachineUpdatedEvent extends MachineEvent {
 
-   public MachineUpdatedEvent(Enum<?> id, String srvId, MachineOut mOut) {
-      super(id, srvId, mOut);
-   }
+    public MachineUpdatedEvent(Enum<?> id, String srvId, MachineOut mOut) {
+        super(id, srvId, mOut);
+    }
 
-   @Override
-   public String toString() {
-      return "Machine " + getUuid() + " | Server " + getServerId() + " | Changed @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Machine " + getUuid() + " | Server " + getServerId() + " | Changed @ " + getTime();
+    }
 
 }

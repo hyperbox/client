@@ -28,10 +28,10 @@ import org.junit.BeforeClass;
 
 public class KryonetClientBackTest extends BackendTest {
 
-   @BeforeClass
-   public static void beforeClass() throws HyperboxException {
-      ServerIn srvIn = new ServerIn();
-      BackendTest.init(new KryonetClientBack(), srvIn);
-   }
+    @BeforeClass
+    public static void beforeClass() throws HyperboxException {
+        ServerIn srvIn = new ServerIn();
+        BackendTest.init(new KryonetClientBack(), srvIn);
+    }
 
 }

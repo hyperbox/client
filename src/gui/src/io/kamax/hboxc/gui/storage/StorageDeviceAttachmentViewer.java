@@ -38,155 +38,155 @@ import net.miginfocom.swing.MigLayout;
 
 public class StorageDeviceAttachmentViewer {
 
-   private String srvId;
-   private StorageDeviceAttachmentIn sdaIn;
-   private String scTypeId;
+    private String srvId;
+    private StorageDeviceAttachmentIn sdaIn;
+    private String scTypeId;
 
-   private JPanel mainPanel;
+    private JPanel mainPanel;
 
-   private JPanel attachPanel;
-   private JLabel portCountLabel;
-   private JComboBox portCountBox;
-   private JLabel attachTypeLabel;
-   private JLabel attachTypeValue;
+    private JPanel attachPanel;
+    private JLabel portCountLabel;
+    private JComboBox portCountBox;
+    private JLabel attachTypeLabel;
+    private JLabel attachTypeValue;
 
-   private JPanel mediumPanel;
-   private JLabel mediumTypeLabel;
-   private JLabel mediumTypeValue;
-   private JLabel formatLabel;
-   private JLabel formatValue;
-   private JLabel sizeLabel;
-   private JLabel sizeValue;
-   private JLabel diskSizeLabel;
-   private JLabel diskSizeValue;
-   private JLabel locationLabel;
-   private JLabel locationValue;
-   private JLabel baseLocationLabel;
-   private JLabel baseLocationValue;
+    private JPanel mediumPanel;
+    private JLabel mediumTypeLabel;
+    private JLabel mediumTypeValue;
+    private JLabel formatLabel;
+    private JLabel formatValue;
+    private JLabel sizeLabel;
+    private JLabel sizeValue;
+    private JLabel diskSizeLabel;
+    private JLabel diskSizeValue;
+    private JLabel locationLabel;
+    private JLabel locationValue;
+    private JLabel baseLocationLabel;
+    private JLabel baseLocationValue;
 
-   public StorageDeviceAttachmentViewer() {
-      portCountLabel = new JLabel("Port");
-      portCountBox = new JComboBox();
-      attachTypeLabel = new JLabel("Type");
-      attachTypeValue = new JLabel();
+    public StorageDeviceAttachmentViewer() {
+        portCountLabel = new JLabel("Port");
+        portCountBox = new JComboBox();
+        attachTypeLabel = new JLabel("Type");
+        attachTypeValue = new JLabel();
 
-      attachPanel = new JPanel(new MigLayout());
-      attachPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Attachment"));
-      attachPanel.add(portCountLabel);
-      attachPanel.add(portCountBox, "growx, pushx, wrap");
-      attachPanel.add(attachTypeLabel);
-      attachPanel.add(attachTypeValue, "growx, pushx, wrap");
+        attachPanel = new JPanel(new MigLayout());
+        attachPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Attachment"));
+        attachPanel.add(portCountLabel);
+        attachPanel.add(portCountBox, "growx, pushx, wrap");
+        attachPanel.add(attachTypeLabel);
+        attachPanel.add(attachTypeValue, "growx, pushx, wrap");
 
-      mediumTypeLabel = new JLabel("Type");
-      mediumTypeValue = new JLabel();
-      formatLabel = new JLabel("Format");
-      formatValue = new JLabel();
-      sizeLabel = new JLabel("Size");
-      sizeValue = new JLabel();
-      diskSizeLabel = new JLabel("Size on Disk");
-      diskSizeValue = new JLabel();
-      locationLabel = new JLabel("Location");
-      locationValue = new JLabel();
-      baseLocationLabel = new JLabel("Base Location");
-      baseLocationLabel.setVisible(false);
-      baseLocationValue = new JLabel();
-      baseLocationValue.setVisible(false);
+        mediumTypeLabel = new JLabel("Type");
+        mediumTypeValue = new JLabel();
+        formatLabel = new JLabel("Format");
+        formatValue = new JLabel();
+        sizeLabel = new JLabel("Size");
+        sizeValue = new JLabel();
+        diskSizeLabel = new JLabel("Size on Disk");
+        diskSizeValue = new JLabel();
+        locationLabel = new JLabel("Location");
+        locationValue = new JLabel();
+        baseLocationLabel = new JLabel("Base Location");
+        baseLocationLabel.setVisible(false);
+        baseLocationValue = new JLabel();
+        baseLocationValue.setVisible(false);
 
-      mediumPanel = new JPanel(new MigLayout());
-      mediumPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Medium"));
+        mediumPanel = new JPanel(new MigLayout());
+        mediumPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Medium"));
 
-      mediumPanel.add(mediumTypeLabel);
-      mediumPanel.add(mediumTypeValue, "growx, pushx, wrap");
-      mediumPanel.add(formatLabel);
-      mediumPanel.add(formatValue, "growx, pushx, wrap");
-      mediumPanel.add(sizeLabel);
-      mediumPanel.add(sizeValue, "growx, pushx, wrap");
-      mediumPanel.add(diskSizeLabel);
-      mediumPanel.add(diskSizeValue, "growx, pushx, wrap");
-      mediumPanel.add(baseLocationLabel, "hidemode 3");
-      mediumPanel.add(baseLocationValue, "growx, wrap, hidemode 3");
-      mediumPanel.add(locationLabel);
-      mediumPanel.add(locationValue, "growx, pushx, wrap");
+        mediumPanel.add(mediumTypeLabel);
+        mediumPanel.add(mediumTypeValue, "growx, pushx, wrap");
+        mediumPanel.add(formatLabel);
+        mediumPanel.add(formatValue, "growx, pushx, wrap");
+        mediumPanel.add(sizeLabel);
+        mediumPanel.add(sizeValue, "growx, pushx, wrap");
+        mediumPanel.add(diskSizeLabel);
+        mediumPanel.add(diskSizeValue, "growx, pushx, wrap");
+        mediumPanel.add(baseLocationLabel, "hidemode 3");
+        mediumPanel.add(baseLocationValue, "growx, wrap, hidemode 3");
+        mediumPanel.add(locationLabel);
+        mediumPanel.add(locationValue, "growx, pushx, wrap");
 
-      mainPanel = new JPanel(new MigLayout("ins 0"));
-      mainPanel.add(attachPanel, "wrap, growx, pushx");
-      mainPanel.add(mediumPanel, "wrap, growx, pushx");
-   }
+        mainPanel = new JPanel(new MigLayout("ins 0"));
+        mainPanel.add(attachPanel, "wrap, growx, pushx");
+        mainPanel.add(mediumPanel, "wrap, growx, pushx");
+    }
 
-   public JPanel show(String srvId, String scTypeId, StorageDeviceAttachmentIn sdaIn) {
+    public JPanel show(String srvId, String scTypeId, StorageDeviceAttachmentIn sdaIn) {
 
-      this.srvId = srvId;
-      this.sdaIn = sdaIn;
-      this.scTypeId = scTypeId;
+        this.srvId = srvId;
+        this.sdaIn = sdaIn;
+        this.scTypeId = scTypeId;
 
-      refresh();
+        refresh();
 
-      return getPanel();
-   }
+        return getPanel();
+    }
 
-   public void refresh() {
-      Logger.debug(sdaIn);
-      attachTypeValue.setText(sdaIn.getDeviceType());
-      portCountBox.removeAllItems();
-      StorageControllerTypeOut sctOut = Gui.getServer(srvId).getStorageControllerType(new StorageControllerTypeIn(scTypeId));
-      for (long i = sctOut.getMinPort() - 1; i < sctOut.getMaxPort(); i++) {
-         if (sctOut.getMaxPort() >= sctOut.getMinPort()) {
-            String attachLocation = Long.toString(i);
-            for (long j = 0; j < sctOut.getMaxDevicePerPort(); j++) {
-               portCountBox.addItem(attachLocation + ":" + Long.toString(j));
+    public void refresh() {
+        Logger.debug(sdaIn);
+        attachTypeValue.setText(sdaIn.getDeviceType());
+        portCountBox.removeAllItems();
+        StorageControllerTypeOut sctOut = Gui.getServer(srvId).getStorageControllerType(new StorageControllerTypeIn(scTypeId));
+        for (long i = sctOut.getMinPort() - 1; i < sctOut.getMaxPort(); i++) {
+            if (sctOut.getMaxPort() >= sctOut.getMinPort()) {
+                String attachLocation = Long.toString(i);
+                for (long j = 0; j < sctOut.getMaxDevicePerPort(); j++) {
+                    portCountBox.addItem(attachLocation + ":" + Long.toString(j));
+                }
             }
-         }
-      }
+        }
 
-      portCountBox.setSelectedItem(sdaIn.getPortId() + ":" + sdaIn.getDeviceId());
+        portCountBox.setSelectedItem(sdaIn.getPortId() + ":" + sdaIn.getDeviceId());
 
-      mediumPanel.setVisible(sdaIn.hasMedium());
-      if (sdaIn.hasMedium()) {
-         show(sdaIn.getMedium());
-      }
-   }
+        mediumPanel.setVisible(sdaIn.hasMedium());
+        if (sdaIn.hasMedium()) {
+            show(sdaIn.getMedium());
+        }
+    }
 
-   public JPanel show(MediumIn medIn) {
+    public JPanel show(MediumIn medIn) {
 
-      if (medIn.hasSetting(MediumAttribute.Type)) {
-         mediumTypeValue.setText(medIn.getSetting(MediumAttribute.Type).getString());
-      }
-      if (medIn.hasSetting(MediumAttribute.Format)) {
-         formatValue.setText(medIn.getSetting(MediumAttribute.Format).getString());
-      }
-      if (medIn.hasSetting(MediumAttribute.LogicalSize)) {
-         try {
-            FileSizeNumber size = new FileSizeNumber(medIn.getSetting(MediumAttribute.LogicalSize).getString());
-            sizeValue.setText(size.getHumanSize() + " " + size.getHumanUnit());
-         } catch (NumberFormatException e) {
-            sizeValue.setText("NaN - " + medIn.getSetting(MediumAttribute.LogicalSize).getString());
-         }
-      }
-      if (medIn.hasSetting(MediumAttribute.Size)) {
-         try {
-            FileSizeNumber size = new FileSizeNumber(medIn.getSetting(MediumAttribute.Size).getString());
-            diskSizeValue.setText(size.getHumanSize() + " " + size.getHumanUnit());
-         } catch (NumberFormatException e) {
-            diskSizeValue.setText("NaN - " + medIn.getSetting(MediumAttribute.Size).getString());
-         }
-      }
-      if (medIn.hasSetting(MediumAttribute.Location)) {
-         locationValue.setText(medIn.getSetting(MediumAttribute.Location).getString());
-         baseLocationLabel.setVisible(medIn.hasParent());
-         baseLocationValue.setVisible(medIn.hasParent());
-         if (medIn.hasParent()) {
-            MediumOut medOut = Gui.getServer(srvId).getMedium(medIn);
-            Logger.debug("Requesting medium with UUID " + medOut.getBaseUuid());
-            MediumOut baseMedOut = Gui.getServer(srvId).getMedium(new MediumIn(medOut.getBaseUuid()));
-            baseLocationValue.setText(baseMedOut.getLocation());
-         }
+        if (medIn.hasSetting(MediumAttribute.Type)) {
+            mediumTypeValue.setText(medIn.getSetting(MediumAttribute.Type).getString());
+        }
+        if (medIn.hasSetting(MediumAttribute.Format)) {
+            formatValue.setText(medIn.getSetting(MediumAttribute.Format).getString());
+        }
+        if (medIn.hasSetting(MediumAttribute.LogicalSize)) {
+            try {
+                FileSizeNumber size = new FileSizeNumber(medIn.getSetting(MediumAttribute.LogicalSize).getString());
+                sizeValue.setText(size.getHumanSize() + " " + size.getHumanUnit());
+            } catch (NumberFormatException e) {
+                sizeValue.setText("NaN - " + medIn.getSetting(MediumAttribute.LogicalSize).getString());
+            }
+        }
+        if (medIn.hasSetting(MediumAttribute.Size)) {
+            try {
+                FileSizeNumber size = new FileSizeNumber(medIn.getSetting(MediumAttribute.Size).getString());
+                diskSizeValue.setText(size.getHumanSize() + " " + size.getHumanUnit());
+            } catch (NumberFormatException e) {
+                diskSizeValue.setText("NaN - " + medIn.getSetting(MediumAttribute.Size).getString());
+            }
+        }
+        if (medIn.hasSetting(MediumAttribute.Location)) {
+            locationValue.setText(medIn.getSetting(MediumAttribute.Location).getString());
+            baseLocationLabel.setVisible(medIn.hasParent());
+            baseLocationValue.setVisible(medIn.hasParent());
+            if (medIn.hasParent()) {
+                MediumOut medOut = Gui.getServer(srvId).getMedium(medIn);
+                Logger.debug("Requesting medium with UUID " + medOut.getBaseUuid());
+                MediumOut baseMedOut = Gui.getServer(srvId).getMedium(new MediumIn(medOut.getBaseUuid()));
+                baseLocationValue.setText(baseMedOut.getLocation());
+            }
 
-      }
-      return getPanel();
-   }
+        }
+        return getPanel();
+    }
 
-   public JPanel getPanel() {
-      return mainPanel;
-   }
+    public JPanel getPanel() {
+        return mainPanel;
+    }
 
 }

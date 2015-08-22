@@ -22,6 +22,6 @@ package io.kamax.hboxc.server.task;
 
 public interface _Task {
 
-   public void cancel();
+    public void cancel();
 
 }

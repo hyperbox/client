@@ -28,21 +28,22 @@ import io.kamax.hboxc.gui.vm.edit.VmEditDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class MachineEditAction extends AbstractAction {
 
-   private _MachineSelector selector;
+    private static final long serialVersionUID = 7534287890532663585L;
+    private _MachineSelector selector;
 
-   public MachineEditAction(_MachineSelector selector) {
-      super("Edit Settings", IconBuilder.getTask(HypervisorTasks.MachineModify));
-      setEnabled(true);
-      this.selector = selector;
-   }
+    public MachineEditAction(_MachineSelector selector) {
+        super("Edit Settings", IconBuilder.getTask(HypervisorTasks.MachineModify));
+        setEnabled(true);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      MachineOut mOut = selector.getMachines().get(0);
-      VmEditDialog.edit(mOut);
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        MachineOut mOut = selector.getMachines().get(0);
+        VmEditDialog.edit(mOut);
+    }
 
 }

@@ -24,6 +24,6 @@ import io.kamax.hbox.exception.HyperboxException;
 
 public interface _Initiable {
 
-   public void init() throws HyperboxException;
+    public void init() throws HyperboxException;
 
 }

@@ -22,8 +22,8 @@ package io.kamax.hboxc.constant;
 
 public enum ClientEntity {
 
-   Backend,
-   Connector,
-   ConsoleViewer
+    Backend,
+    Connector,
+    ConsoleViewer
 
 }

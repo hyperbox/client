@@ -24,19 +24,19 @@ import io.kamax.hbox.comm.AnswerType;
 
 public abstract class AbstractClientControllerMultiAction extends AbstractClientControllerAction {
 
-   @Override
-   public AnswerType getStartReturn() {
-      return AnswerType.STARTED;
-   }
+    @Override
+    public AnswerType getStartReturn() {
+        return AnswerType.STARTED;
+    }
 
-   @Override
-   public AnswerType getFinishReturn() {
-      return AnswerType.COMPLETED;
-   }
+    @Override
+    public AnswerType getFinishReturn() {
+        return AnswerType.COMPLETED;
+    }
 
-   @Override
-   public AnswerType getFailReturn() {
-      return AnswerType.FAILED;
-   }
+    @Override
+    public AnswerType getFailReturn() {
+        return AnswerType.FAILED;
+    }
 
 }

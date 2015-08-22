@@ -32,21 +32,21 @@ import io.kamax.hboxc.server._Server;
 
 public class GuestReader implements _GuestReader {
 
-   private _Server srv;
-   private String machineUuid;
+    private _Server srv;
+    private String machineUuid;
 
-   public GuestReader(_Server srv, String machineUuid) {
-      this.srv = srv;
-      this.machineUuid = machineUuid;
-   }
+    public GuestReader(_Server srv, String machineUuid) {
+        this.srv = srv;
+        this.machineUuid = machineUuid;
+    }
 
-   @Override
-   public GuestNetworkInterfaceOut findNetworkInterface(String macAddress) {
-      Request req = new Request(Command.VBOX, HypervisorTasks.GuestNetworkInterfaceFind);
-      req.set(new MachineIn(machineUuid));
-      req.set(new GuestNetworkInterfaceIn().setMacAddress(macAddress));
-      Transaction t = srv.sendRequest(req);
-      return t.extractItem(GuestNetworkInterfaceOut.class);
-   }
+    @Override
+    public GuestNetworkInterfaceOut findNetworkInterface(String macAddress) {
+        Request req = new Request(Command.VBOX, HypervisorTasks.GuestNetworkInterfaceFind);
+        req.set(new MachineIn(machineUuid));
+        req.set(new GuestNetworkInterfaceIn().setMacAddress(macAddress));
+        Transaction t = srv.sendRequest(req);
+        return t.extractItem(GuestNetworkInterfaceOut.class);
+    }
 
 }

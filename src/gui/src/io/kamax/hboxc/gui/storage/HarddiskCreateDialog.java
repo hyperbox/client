@@ -45,138 +45,138 @@ import net.miginfocom.swing.MigLayout;
 
 public class HarddiskCreateDialog implements _Saveable, _Cancelable {
 
-   private static final String MB = "MB";
-   private static final String GB = "GB";
+    private static final String MB = "MB";
+    private static final String GB = "GB";
 
-   private ServerOut srvOut;
+    private ServerOut srvOut;
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   private JLabel locationLabel;
-   private JTextField locationField;
-   private JButton locationButton;
+    private JLabel locationLabel;
+    private JTextField locationField;
+    private JButton locationButton;
 
-   private JLabel sizeLabel;
-   private JTextField sizeField;
-   private JComboBox sizeUnit;
+    private JLabel sizeLabel;
+    private JTextField sizeField;
+    private JComboBox sizeUnit;
 
-   private JLabel formatLabel;
-   private JComboBox formatBox;
+    private JLabel formatLabel;
+    private JComboBox formatBox;
 
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private MediumIn medIn;
+    private MediumIn medIn;
 
-   private class BrowseAction implements ActionListener {
+    private class BrowseAction implements ActionListener {
 
-      @Override
-      public void actionPerformed(ActionEvent ae) {
-         StoreItemIn stiIn = StoreItemChooser.getFilename(srvOut.getId());
-         if (stiIn != null) {
-            locationField.setText(stiIn.getPath());
-            sizeField.requestFocus();
-         }
-      }
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            StoreItemIn stiIn = StoreItemChooser.getFilename(srvOut.getId());
+            if (stiIn != null) {
+                locationField.setText(stiIn.getPath());
+                sizeField.requestFocus();
+            }
+        }
 
-   }
+    }
 
-   private HarddiskCreateDialog(ServerOut srvOut) {
-      this.srvOut = srvOut;
-      locationLabel = new JLabel("Location");
-      locationField = new JTextField(50);
-      locationButton = new JButton("Browse...");
-      locationButton.addActionListener(new BrowseAction());
+    private HarddiskCreateDialog(ServerOut srvOut) {
+        this.srvOut = srvOut;
+        locationLabel = new JLabel("Location");
+        locationField = new JTextField(50);
+        locationButton = new JButton("Browse...");
+        locationButton.addActionListener(new BrowseAction());
 
-      sizeLabel = new JLabel("Size");
-      sizeField = new JTextField();
-      sizeUnit = new JComboBox();
-      sizeUnit.addItem(GB);
-      sizeUnit.addItem(MB);
+        sizeLabel = new JLabel("Size");
+        sizeField = new JTextField();
+        sizeUnit = new JComboBox();
+        sizeUnit.addItem(GB);
+        sizeUnit.addItem(MB);
 
-      formatLabel = new JLabel("Format");
-      formatBox = new JComboBox();
-      for (HardDiskFormat format : HardDiskFormat.values()) {
-         formatBox.addItem(format);
-      }
+        formatLabel = new JLabel("Format");
+        formatBox = new JComboBox();
+        for (HardDiskFormat format : HardDiskFormat.values()) {
+            formatBox.addItem(format);
+        }
 
-      // TODO add provisionning type
+        // TODO add provisionning type
 
-      saveButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
+        saveButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
 
-      dialog = new JDialog(MainView.getMainFrame());
-      dialog.setTitle("Create Harddisk");
-      dialog.setModalityType(ModalityType.DOCUMENT_MODAL);
+        dialog = new JDialog(MainView.getMainFrame());
+        dialog.setTitle("Create Harddisk");
+        dialog.setModalityType(ModalityType.DOCUMENT_MODAL);
 
-      JPanel content = new JPanel(new MigLayout());
-      content.add(locationLabel);
-      content.add(locationField, "growx,pushx");
-      content.add(locationButton, "wrap");
+        JPanel content = new JPanel(new MigLayout());
+        content.add(locationLabel);
+        content.add(locationField, "growx,pushx");
+        content.add(locationButton, "wrap");
 
-      content.add(sizeLabel);
-      content.add(sizeField, "growx,pushx");
-      content.add(sizeUnit, "wrap");
+        content.add(sizeLabel);
+        content.add(sizeField, "growx,pushx");
+        content.add(sizeUnit, "wrap");
 
-      content.add(formatLabel);
-      content.add(formatBox, "growx,pushx,span 2,wrap");
+        content.add(formatLabel);
+        content.add(formatBox, "growx,pushx,span 2,wrap");
 
-      content.add(saveButton);
-      content.add(cancelButton);
+        content.add(saveButton);
+        content.add(cancelButton);
 
-      dialog.add(content);
-   }
+        dialog.add(content);
+    }
 
-   /**
-    * Get a new Medium info from the user
-    * 
-    * @param srvOut the server
-    * @return MediumInput object if user has entered valid data, or <code>null</code> if the user cancelled.
-    */
-   public static MediumIn show(ServerOut srvOut) {
+    /**
+     * Get a new Medium info from the user
+     * 
+     * @param srvOut the server
+     * @return MediumInput object if user has entered valid data, or <code>null</code> if the user cancelled.
+     */
+    public static MediumIn show(ServerOut srvOut) {
 
-      HarddiskCreateDialog diskCreateDialog = new HarddiskCreateDialog(srvOut);
-      MediumIn medIn = diskCreateDialog.getUserInput();
-      return medIn;
-   }
+        HarddiskCreateDialog diskCreateDialog = new HarddiskCreateDialog(srvOut);
+        MediumIn medIn = diskCreateDialog.getUserInput();
+        return medIn;
+    }
 
-   private MediumIn getUserInput() {
+    private MediumIn getUserInput() {
 
-      dialog.pack();
-      dialog.setLocationRelativeTo(MainView.getMainFrame());
-      dialog.setVisible(true);
-      Logger.debug("User input : " + medIn);
-      return medIn;
-   }
+        dialog.pack();
+        dialog.setLocationRelativeTo(MainView.getMainFrame());
+        dialog.setVisible(true);
+        Logger.debug("User input : " + medIn);
+        return medIn;
+    }
 
-   @Override
-   public void cancel() {
+    @Override
+    public void cancel() {
 
-      medIn = null;
-      dialog.setVisible(false);
-      dialog.dispose();
-   }
+        medIn = null;
+        dialog.setVisible(false);
+        dialog.dispose();
+    }
 
-   @Override
-   public void save() {
+    @Override
+    public void save() {
 
-      String path = locationField.getText();
-      Long size = Long.parseLong(sizeField.getText());
-      if (sizeUnit.getSelectedItem().toString().equalsIgnoreCase(MB)) {
-         size = size * 1048576;
-      }
-      if (sizeUnit.getSelectedItem().toString().equalsIgnoreCase(GB)) {
-         size = size * 1073741824;
-      }
-      String format = formatBox.getSelectedItem().toString();
+        String path = locationField.getText();
+        Long size = Long.parseLong(sizeField.getText());
+        if (sizeUnit.getSelectedItem().toString().equalsIgnoreCase(MB)) {
+            size = size * 1048576;
+        }
+        if (sizeUnit.getSelectedItem().toString().equalsIgnoreCase(GB)) {
+            size = size * 1073741824;
+        }
+        String format = formatBox.getSelectedItem().toString();
 
-      medIn = new MediumIn();
-      medIn.setDeviceType(EntityType.HardDisk.getId());
-      medIn.setLocation(path);
-      medIn.setFormat(format);
-      medIn.setLogicalSize(size);
+        medIn = new MediumIn();
+        medIn.setDeviceType(EntityType.HardDisk.getId());
+        medIn.setLocation(path);
+        medIn.setFormat(format);
+        medIn.setLogicalSize(size);
 
-      dialog.setVisible(false);
-   }
+        dialog.setVisible(false);
+    }
 
 }

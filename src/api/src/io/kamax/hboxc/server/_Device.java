@@ -24,11 +24,11 @@ import io.kamax.hboxc.core._Entity;
 
 public interface _Device extends _Entity {
 
-   public _Machine getMachine();
+    public _Machine getMachine();
 
-   @Override
-   public String getId();
+    @Override
+    public String getId();
 
-   public String getType();
+    public String getType();
 
 }

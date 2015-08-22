@@ -32,28 +32,28 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class NetAdaptorAddAction extends AbstractAction {
 
-   private String srvId;
-   private String modeId;
+    private static final long serialVersionUID = -1475838049060205072L;
+    private String srvId;
+    private String modeId;
 
-   public NetAdaptorAddAction(String srvId, String modeId) {
-      super("Add", IconBuilder.getTask(HypervisorTasks.NetAdaptorAdd));
-      this.srvId = srvId;
-      this.modeId = modeId;
-   }
+    public NetAdaptorAddAction(String srvId, String modeId) {
+        super("Add", IconBuilder.getTask(HypervisorTasks.NetAdaptorAdd));
+        this.srvId = srvId;
+        this.modeId = modeId;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      NetAdaptorIn adaptIn = NetAdaptorDialog.getInput(srvId, modeId, null);
-      if (adaptIn != null) {
-         Request req = new Request(Command.VBOX, HypervisorTasks.NetAdaptorAdd, adaptIn);
-         req.set(ServerIn.class, new ServerIn(srvId));
-         Gui.post(req);
-      } else {
-         Logger.debug("Net Adaptor creation: null input returned");
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        NetAdaptorIn adaptIn = NetAdaptorDialog.getInput(srvId, modeId, null);
+        if (adaptIn != null) {
+            Request req = new Request(Command.VBOX, HypervisorTasks.NetAdaptorAdd, adaptIn);
+            req.set(ServerIn.class, new ServerIn(srvId));
+            Gui.post(req);
+        } else {
+            Logger.debug("Net Adaptor creation: null input returned");
+        }
+    }
 
 }

@@ -25,8 +25,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class MachineSnapshotDataChangedEvent extends MachineEvent {
 
-   public MachineSnapshotDataChangedEvent(String srvId, MachineOut mOut) {
-      super(ClientEvents.MachineSnapshotDataChanged, srvId, mOut);
-   }
+    public MachineSnapshotDataChangedEvent(String srvId, MachineOut mOut) {
+        super(ClientEvents.MachineSnapshotDataChanged, srvId, mOut);
+    }
 
 }

@@ -44,106 +44,106 @@ import net.miginfocom.swing.MigLayout;
 
 public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
 
-   private String srvId;
+    private String srvId;
 
-   private JLabel status;
-   private JPanel dataPanel;
-   private JPanel panel;
+    private JLabel status;
+    private JPanel dataPanel;
+    private JPanel panel;
 
-   private Map<String, HypervisorNetModeViewer> compModes = new HashMap<String, HypervisorNetModeViewer>();
+    private Map<String, HypervisorNetModeViewer> compModes = new HashMap<String, HypervisorNetModeViewer>();
 
-   public HypervisorNetViewer(String srvId) {
-      this.srvId = srvId;
+    public HypervisorNetViewer(String srvId) {
+        this.srvId = srvId;
 
-      status = new JLabel();
-      dataPanel = new JPanel(new MigLayout("ins 0"));
-      dataPanel.setVisible(false);
-      panel = new JPanel(new MigLayout());
-      panel.add(status, "growx, pushx, wrap, hidemode 3");
-      panel.add(dataPanel, "grow, push, wrap, hidemode 3");
+        status = new JLabel();
+        dataPanel = new JPanel(new MigLayout("ins 0"));
+        dataPanel.setVisible(false);
+        panel = new JPanel(new MigLayout());
+        panel.add(status, "growx, pushx, wrap, hidemode 3");
+        panel.add(dataPanel, "grow, push, wrap, hidemode 3");
 
-      RefreshUtil.set(panel, this);
-      ViewEventManager.register(this);
-      refresh();
-   }
+        RefreshUtil.set(panel, this);
+        ViewEventManager.register(this);
+        refresh();
+    }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+    public JComponent getComponent() {
+        return panel;
+    }
 
-   public void refresh(String srvId) {
-      this.srvId = srvId;
-      refresh();
-   }
+    public void refresh(String srvId) {
+        this.srvId = srvId;
+        refresh();
+    }
 
-   @Override
-   public void refresh() {
-      NetModeListWorker.execute(this, srvId);
-   }
+    @Override
+    public void refresh() {
+        NetModeListWorker.execute(this, srvId);
+    }
 
-   @Handler
-   private void putHypervisorConnectionEvent(HypervisorConnectionStateEventOut ev) {
-      if (AxStrings.equals(srvId, ev.getServerId())) {
-         refresh();
-      }
-   }
+    @Handler
+    private void putHypervisorConnectionEvent(HypervisorConnectionStateEventOut ev) {
+        if (AxStrings.equals(srvId, ev.getServerId())) {
+            refresh();
+        }
+    }
 
-   @Handler
-   private void putConnectorConnectionStateEvent(ConnectorStateChangedEvent ev) {
-      if (AxStrings.equals(srvId, ev.getConnector().getServerId())) {
-         refresh();
-      }
-   }
+    @Handler
+    private void putConnectorConnectionStateEvent(ConnectorStateChangedEvent ev) {
+        if (AxStrings.equals(srvId, ev.getConnector().getServerId())) {
+            refresh();
+        }
+    }
 
-   @Handler
-   private void putNetAdaptorEvent(NetAdaptorEventOut ev) {
-      if (compModes.containsKey(ev.getNetMode())) {
-         Logger.debug("Refreshing panel for mode " + ev.getNetMode());
-         compModes.get(ev.getNetMode()).refresh();
-      } else {
-         Logger.debug("No panel for mode " + ev.getNetMode() + ", skipping refresh");
-      }
-   }
+    @Handler
+    private void putNetAdaptorEvent(NetAdaptorEventOut ev) {
+        if (compModes.containsKey(ev.getNetMode())) {
+            Logger.debug("Refreshing panel for mode " + ev.getNetMode());
+            compModes.get(ev.getNetMode()).refresh();
+        } else {
+            Logger.debug("No panel for mode " + ev.getNetMode() + ", skipping refresh");
+        }
+    }
 
-   private void clear() {
-      for (Component c : dataPanel.getComponents()) {
-         dataPanel.remove(c);
-      }
-   }
+    private void clear() {
+        for (Component c : dataPanel.getComponents()) {
+            dataPanel.remove(c);
+        }
+    }
 
-   private void setDataVisible(boolean isVisible) {
-      status.setVisible(!isVisible);
-      dataPanel.setVisible(isVisible);
-      dataPanel.setEnabled(isVisible);
-      if (!isVisible) {
-         clear();
-      }
-   }
+    private void setDataVisible(boolean isVisible) {
+        status.setVisible(!isVisible);
+        dataPanel.setVisible(isVisible);
+        dataPanel.setEnabled(isVisible);
+        if (!isVisible) {
+            clear();
+        }
+    }
 
-   @Override
-   public void loadingStarted() {
-      setDataVisible(false);
-      status.setText("Loading...");
-   }
+    @Override
+    public void loadingStarted() {
+        setDataVisible(false);
+        status.setText("Loading...");
+    }
 
-   @Override
-   public void loadingFinished(boolean isSuccessful, String message) {
-      status.setText(message);
-      setDataVisible(isSuccessful);
-   }
+    @Override
+    public void loadingFinished(boolean isSuccessful, String message) {
+        status.setText(message);
+        setDataVisible(isSuccessful);
+    }
 
-   @Override
-   public void add(List<NetModeOut> modesOut) {
-      for (NetModeOut modeOut : modesOut) {
-         if (modeOut.canLinkAdaptor()) {
-            HypervisorNetModeViewer viewer = new HypervisorNetModeViewer(srvId, modeOut);
-            compModes.put(modeOut.getId(), viewer);
-            viewer.getComponent().setBorder(BorderFactory.createTitledBorder(modeOut.getLabel()));
-            dataPanel.add(viewer.getComponent(), "growx, pushx, wrap");
-         } else {
-            Logger.debug("Skipped Net mode " + modeOut.getLabel() + ": does not support linking to adaptors");
-         }
-      }
-   }
+    @Override
+    public void add(List<NetModeOut> modesOut) {
+        for (NetModeOut modeOut : modesOut) {
+            if (modeOut.canLinkAdaptor()) {
+                HypervisorNetModeViewer viewer = new HypervisorNetModeViewer(srvId, modeOut);
+                compModes.put(modeOut.getId(), viewer);
+                viewer.getComponent().setBorder(BorderFactory.createTitledBorder(modeOut.getLabel()));
+                dataPanel.add(viewer.getComponent(), "growx, pushx, wrap");
+            } else {
+                Logger.debug("Skipped Net mode " + modeOut.getLabel() + ": does not support linking to adaptors");
+            }
+        }
+    }
 
 }

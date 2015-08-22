@@ -22,19 +22,21 @@ package io.kamax.hboxc.exception;
 
 import io.kamax.hbox.exception.HyperboxException;
 
-@SuppressWarnings("serial")
+
 public class InputValidationException extends HyperboxException {
 
-   public InputValidationException(String s) {
-      super(s);
-   }
+    private static final long serialVersionUID = 8584229425729854700L;
 
-   public InputValidationException(Throwable t) {
-      super(t);
-   }
+    public InputValidationException(String s) {
+        super(s);
+    }
 
-   public InputValidationException(String s, Throwable t) {
-      super(s, t);
-   }
+    public InputValidationException(Throwable t) {
+        super(t);
+    }
+
+    public InputValidationException(String s, Throwable t) {
+        super(s, t);
+    }
 
 }

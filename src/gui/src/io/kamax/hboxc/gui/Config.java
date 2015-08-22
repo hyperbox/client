@@ -22,16 +22,16 @@ package io.kamax.hboxc.gui;
 
 public class Config {
 
-   public static final String MainFramePosY = "gui.main.pos.y";
-   public static final String MainFramePosX = "gui.main.pos.x";
-   public static final String MainFrameWidth = "gui.main.width";
-   public static final String MainFrameHeight = "gui.main.height";
-   public static final String MainFrameState = "gui.main.state";
+    public static final String MainFramePosY = "gui.main.pos.y";
+    public static final String MainFramePosX = "gui.main.pos.x";
+    public static final String MainFrameWidth = "gui.main.width";
+    public static final String MainFrameHeight = "gui.main.height";
+    public static final String MainFrameState = "gui.main.state";
 
-   public static final String MAIN_VIEW_VSPLIT_POS = "gui.main.vsplit.pos";
+    public static final String MAIN_VIEW_VSPLIT_POS = "gui.main.vsplit.pos";
 
-   private Config() {
-      // no instance
-   }
+    private Config() {
+        // no instance
+    }
 
 }

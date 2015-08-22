@@ -25,8 +25,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class MediumRemovedEvent extends MediumEvent {
 
-   public MediumRemovedEvent(MediumOut medOut) {
-      super(ClientEvents.MediumRemoved, medOut);
-   }
+    public MediumRemovedEvent(MediumOut medOut) {
+        super(ClientEvents.MediumRemoved, medOut);
+    }
 
 }

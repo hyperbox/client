@@ -24,8 +24,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class UpdaterCheckStopped extends UpdaterEvent {
 
-   public UpdaterCheckStopped() {
-      super(ClientEvents.UpdaterCheckStopped);
-   }
+    public UpdaterCheckStopped() {
+        super(ClientEvents.UpdaterCheckStopped);
+    }
 
 }

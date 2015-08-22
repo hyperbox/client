@@ -22,6 +22,6 @@ package io.kamax.hboxc.gui;
 
 public interface _Cancelable {
 
-   public void cancel();
+    public void cancel();
 
 }

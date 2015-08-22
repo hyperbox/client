@@ -26,16 +26,18 @@ import io.kamax.hboxc.gui.builder.IconBuilder;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class ClientExitAction extends AbstractAction {
 
-   public ClientExitAction() {
-      super("Exit", IconBuilder.getTask(ClientTasks.Exit));
-   }
+    private static final long serialVersionUID = -4649663046506583577L;
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Gui.exit();
-   }
+    public ClientExitAction() {
+        super("Exit", IconBuilder.getTask(ClientTasks.Exit));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Gui.exit();
+    }
 
 }

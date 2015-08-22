@@ -23,6 +23,6 @@ package io.kamax.hboxc.gui;
 
 public interface _Refreshable {
 
-   public void refresh();
+    public void refresh();
 
 }

@@ -26,80 +26,81 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.utils.AbstractOutputListTableModel;
 import io.kamax.tool.TimeFormater;
 
-@SuppressWarnings("serial")
+
 public final class TaskListTableModel extends AbstractOutputListTableModel<TaskOut> {
 
-   private final String SERVER = "Server";
-   private final String ID = "ID";
-   private final String TASK = "Task";
-   private final String USER = "User";
-   private final String STATUS = "Status";
-   private final String Q_TIME = "Queue Time";
-   private final String S_TIME = "Start Time";
-   private final String F_TIME = "Finish Time";
+    private static final long serialVersionUID = -64758465896821329L;
+    private final String SERVER = "Server";
+    private final String ID = "ID";
+    private final String TASK = "Task";
+    private final String USER = "User";
+    private final String STATUS = "Status";
+    private final String Q_TIME = "Queue Time";
+    private final String S_TIME = "Start Time";
+    private final String F_TIME = "Finish Time";
 
-   @Override
-   protected void addColumns() {
-      addColumn(SERVER);
-      addColumn(ID);
-      addColumn(TASK);
-      addColumn(USER);
-      // addColumn("Progress");
-      addColumn(STATUS);
-      addColumn(Q_TIME);
-      addColumn(S_TIME);
-      addColumn(F_TIME);
-   }
+    @Override
+    protected void addColumns() {
+        addColumn(SERVER);
+        addColumn(ID);
+        addColumn(TASK);
+        addColumn(USER);
+        // addColumn("Progress");
+        addColumn(STATUS);
+        addColumn(Q_TIME);
+        addColumn(S_TIME);
+        addColumn(F_TIME);
+    }
 
-   @Override
-   protected Object getValueAt(TaskOut tOut, String columnLabel) {
-      if (columnLabel == SERVER) {
-         try {
-            return Gui.getServerInfo(tOut.getServerId()).getName();
-         } catch (HyperboxException e) {
-            // TODO catch proper exception
-            // server disconnected meanwhile, we'll return the ID instead
-            return tOut.getServerId();
-         }
-      }
+    @Override
+    protected Object getValueAt(TaskOut tOut, String columnLabel) {
+        if (columnLabel == SERVER) {
+            try {
+                return Gui.getServerInfo(tOut.getServerId()).getName();
+            } catch (HyperboxException e) {
+                // TODO catch proper exception
+                // server disconnected meanwhile, we'll return the ID instead
+                return tOut.getServerId();
+            }
+        }
 
-      if (columnLabel == ID) {
-         return tOut.getId();
-      }
+        if (columnLabel == ID) {
+            return tOut.getId();
+        }
 
-      if (columnLabel == TASK) {
-         return tOut.getActionId();
-      }
+        if (columnLabel == TASK) {
+            return tOut.getActionId();
+        }
 
-      if (columnLabel == USER) {
-         return tOut.getUser().getDomainLogonName();
-      }
+        if (columnLabel == USER) {
+            return tOut.getUser().getDomainLogonName();
+        }
 
-      if (columnLabel == STATUS) {
-         return tOut.getState().getId();
-      }
+        if (columnLabel == STATUS) {
+            return tOut.getState().getId();
+        }
 
-      if (columnLabel == Q_TIME) {
-         return tOut.getQueueTime() != null ? TimeFormater.get(tOut.getQueueTime()) : "N/A";
-      }
+        if (columnLabel == Q_TIME) {
+            return tOut.getQueueTime() != null ? TimeFormater.get(tOut.getQueueTime()) : "N/A";
+        }
 
-      if (columnLabel == S_TIME) {
-         return tOut.getStartTime() != null ? TimeFormater.get(tOut.getStartTime()) : "N/A";
-      }
+        if (columnLabel == S_TIME) {
+            return tOut.getStartTime() != null ? TimeFormater.get(tOut.getStartTime()) : "N/A";
+        }
 
-      if (columnLabel == F_TIME) {
-         return tOut.getStopTime() != null ? TimeFormater.get(tOut.getStopTime()) : "N/A";
-      }
+        if (columnLabel == F_TIME) {
+            return tOut.getStopTime() != null ? TimeFormater.get(tOut.getStopTime()) : "N/A";
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   public void removeServer(String serverId) {
-      for (TaskOut tskOut : list()) {
-         if (tskOut.getServerId().equals(serverId)) {
-            remove(tskOut);
-         }
-      }
-   }
+    public void removeServer(String serverId) {
+        for (TaskOut tskOut : list()) {
+            if (tskOut.getServerId().equals(serverId)) {
+                remove(tskOut);
+            }
+        }
+    }
 
 }

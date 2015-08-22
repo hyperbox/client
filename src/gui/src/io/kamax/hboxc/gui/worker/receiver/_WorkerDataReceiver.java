@@ -23,8 +23,8 @@ package io.kamax.hboxc.gui.worker.receiver;
 
 public interface _WorkerDataReceiver {
 
-   public void loadingStarted();
+    public void loadingStarted();
 
-   public void loadingFinished(boolean isSuccessful, String message);
+    public void loadingFinished(boolean isSuccessful, String message);
 
 }

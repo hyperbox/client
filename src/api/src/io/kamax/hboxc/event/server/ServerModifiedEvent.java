@@ -26,8 +26,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class ServerModifiedEvent extends ServerEvent {
 
-   public ServerModifiedEvent(ServerOut srv) {
-      super(ClientEvents.ServerModified, srv);
-   }
+    public ServerModifiedEvent(ServerOut srv) {
+        super(ClientEvents.ServerModified, srv);
+    }
 
 }

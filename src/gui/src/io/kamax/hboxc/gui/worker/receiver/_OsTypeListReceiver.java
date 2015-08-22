@@ -26,6 +26,6 @@ import java.util.List;
 
 public interface _OsTypeListReceiver extends _WorkerDataReceiver {
 
-   public void add(List<OsTypeOut> objOutList);
+    public void add(List<OsTypeOut> objOutList);
 
 }

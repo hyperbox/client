@@ -36,46 +36,46 @@ import java.util.Map;
 
 public class Machine extends Entity implements _Machine {
 
-   private _Server srv;
-   //private String id;
-   //private MachineOut mOut;
-   private Map<String, _Device> devices = new HashMap<String, _Device>();
+    private _Server srv;
+    //private String id;
+    //private MachineOut mOut;
+    private Map<String, _Device> devices = new HashMap<String, _Device>();
 
-   public Machine(_Server srv, String id) {
-      super(id);
-      this.srv = srv;
-      refresh();
-   }
+    public Machine(_Server srv, String id) {
+        super(id);
+        this.srv = srv;
+        refresh();
+    }
 
-   public void refresh() {
-      /*
-      Request req = new Request(Command.VBOX, HypervisorTasks.MachineGet);
-      req.set(new MachineIn(id));
-      Transaction t = srv.sendRequest(req);
-      mOut = t.extractItem(MachineOut.class);
-       */
-   }
+    public void refresh() {
+        /*
+        Request req = new Request(Command.VBOX, HypervisorTasks.MachineGet);
+        req.set(new MachineIn(id));
+        Transaction t = srv.sendRequest(req);
+        mOut = t.extractItem(MachineOut.class);
+         */
+    }
 
-   @Override
-   public _Console getConsole() {
-      if (!devices.containsKey(EntityType.Console.getId())) {
-         devices.put(EntityType.Console.getId(), new Console(this));
-      }
+    @Override
+    public _Console getConsole() {
+        if (!devices.containsKey(EntityType.Console.getId())) {
+            devices.put(EntityType.Console.getId(), new Console(this));
+        }
 
-      return (_Console) devices.get(EntityType.Console.getId());
-   }
+        return (_Console) devices.get(EntityType.Console.getId());
+    }
 
-   @Override
-   public _Server getServer() {
-      return srv;
-   }
+    @Override
+    public _Server getServer() {
+        return srv;
+    }
 
-   @Override
-   public void takeSnapshot(SnapshotIn snapshotIn) {
-      Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotTake);
-      req.set(MachineIn.class, new MachineIn(getId()));
-      req.set(SnapshotIn.class, snapshotIn);
-      srv.sendRequest(req);
-   }
+    @Override
+    public void takeSnapshot(SnapshotIn snapshotIn) {
+        Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotTake);
+        req.set(MachineIn.class, new MachineIn(getId()));
+        req.set(SnapshotIn.class, snapshotIn);
+        srv.sendRequest(req);
+    }
 
 }

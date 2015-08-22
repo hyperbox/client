@@ -29,26 +29,26 @@ import java.util.concurrent.ExecutionException;
 
 public class TaskGetWorker extends AxSwingWorker<_TaskReceiver, TaskOut, Void> {
 
-   private TaskOut objOut;
+    private TaskOut objOut;
 
-   public TaskGetWorker(_TaskReceiver recv, TaskOut objOut) {
-      super(recv);
-      this.objOut = objOut;
-   }
+    public TaskGetWorker(_TaskReceiver recv, TaskOut objOut) {
+        super(recv);
+        this.objOut = objOut;
+    }
 
-   @Override
-   protected TaskOut doInBackground() throws Exception {
-      return Gui.getServer(objOut.getServerId()).getTask(new TaskIn(objOut));
-   }
+    @Override
+    protected TaskOut doInBackground() throws Exception {
+        return Gui.getServer(objOut.getServerId()).getTask(new TaskIn(objOut));
+    }
 
-   @Override
-   protected void innerDone() throws InterruptedException, ExecutionException {
-      TaskOut tOut = get();
-      getReceiver().put(tOut);
-   }
+    @Override
+    protected void innerDone() throws InterruptedException, ExecutionException {
+        TaskOut tOut = get();
+        getReceiver().put(tOut);
+    }
 
-   public static void execute(_TaskReceiver recv, TaskOut objOut) {
-      (new TaskGetWorker(recv, objOut)).execute();
-   }
+    public static void execute(_TaskReceiver recv, TaskOut objOut) {
+        (new TaskGetWorker(recv, objOut)).execute();
+    }
 
 }

@@ -24,6 +24,6 @@ import io.kamax.hbox.exception.HyperboxException;
 
 public interface _Saveable {
 
-   public void save() throws HyperboxException;
+    public void save() throws HyperboxException;
 
 }

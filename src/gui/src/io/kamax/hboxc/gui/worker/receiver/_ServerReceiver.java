@@ -24,6 +24,6 @@ import io.kamax.hbox.comm.out.ServerOut;
 
 public interface _ServerReceiver extends _WorkerDataReceiver {
 
-   public void put(ServerOut srvOut);
+    public void put(ServerOut srvOut);
 
 }

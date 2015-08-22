@@ -45,182 +45,182 @@ import com.esotericsoftware.kryonet.Listener;
 
 public final class KryonetClientBack implements _Backend {
 
-   private Map<String, _AnswerReceiver> ansReceivers;
-   private Client client;
-   private volatile BackendStates state = BackendStates.Stopped;
-   private volatile BackendConnectionState connState = BackendConnectionState.Disconnected;
+    private Map<String, _AnswerReceiver> ansReceivers;
+    private Client client;
+    private volatile BackendStates state = BackendStates.Stopped;
+    private volatile BackendConnectionState connState = BackendConnectionState.Disconnected;
 
-   @Override
-   public String getId() {
-      return "Kryonet";
-   }
+    @Override
+    public String getId() {
+        return "Kryonet";
+    }
 
-   private void setState(BackendStates state) {
-      if ((state != null) && !this.state.equals(state)) {
-         this.state = state;
-         Logger.info("Kryonet Connector state: " + state);
-         EventManager.post(new BackendStateEvent(this, state));
-      } else {
-         Logger.debug("Got a null state or state matches current one");
-      }
-   }
+    private void setState(BackendStates state) {
+        if ((state != null) && !this.state.equals(state)) {
+            this.state = state;
+            Logger.info("Kryonet Connector state: " + state);
+            EventManager.post(new BackendStateEvent(this, state));
+        } else {
+            Logger.debug("Got a null state or state matches current one");
+        }
+    }
 
-   private void setState(BackendConnectionState connState) {
-      if ((connState != null) && !this.connState.equals(connState)) {
-         this.connState = connState;
-         EventManager.post(new BackendConnectionStateEvent(this, connState));
-      } else {
-         Logger.debug("Got a null state or state matches current one");
-      }
-   }
+    private void setState(BackendConnectionState connState) {
+        if ((connState != null) && !this.connState.equals(connState)) {
+            this.connState = connState;
+            EventManager.post(new BackendConnectionStateEvent(this, connState));
+        } else {
+            Logger.debug("Got a null state or state matches current one");
+        }
+    }
 
-   @Override
-   public void start() throws HyperboxException {
-      setState(BackendStates.Starting);
-      try {
-         Logger.info("Backend Init Sequence started");
-         ansReceivers = new HashMap<String, _AnswerReceiver>();
-         int netBufferWriteSize = Integer.parseInt(Configuration.getSetting(KryonetDefaultSettings.CFGKEY_KRYO_NET_WRITE_BUFFER_SIZE,
-               KryonetDefaultSettings.CFGVAL_KRYO_NET_WRITE_BUFFER_SIZE));
-         int netBufferObjectSize = Integer.parseInt(Configuration.getSetting(KryonetDefaultSettings.CFGVAL_KRYO_NET_OBJECT_BUFFER_SIZE,
-               KryonetDefaultSettings.CFGVAL_KRYO_NET_OBJECT_BUFFER_SIZE));
-         client = new Client(netBufferWriteSize, netBufferObjectSize);
-         client.start();
-         client.addListener(new MainListener());
-         KryoRegister.register(client.getKryo());
-         Logger.info("Backend Init Sequence completed");
-         setState(BackendStates.Started);
-      } catch (NumberFormatException e) {
-         Logger.error("Invalid configuration value");
-         stop(e);
-      } catch (Throwable e) {
-         stop(e);
-      }
+    @Override
+    public void start() throws HyperboxException {
+        setState(BackendStates.Starting);
+        try {
+            Logger.info("Backend Init Sequence started");
+            ansReceivers = new HashMap<String, _AnswerReceiver>();
+            int netBufferWriteSize = Integer.parseInt(Configuration.getSetting(KryonetDefaultSettings.CFGKEY_KRYO_NET_WRITE_BUFFER_SIZE,
+                    KryonetDefaultSettings.CFGVAL_KRYO_NET_WRITE_BUFFER_SIZE));
+            int netBufferObjectSize = Integer.parseInt(Configuration.getSetting(KryonetDefaultSettings.CFGVAL_KRYO_NET_OBJECT_BUFFER_SIZE,
+                    KryonetDefaultSettings.CFGVAL_KRYO_NET_OBJECT_BUFFER_SIZE));
+            client = new Client(netBufferWriteSize, netBufferObjectSize);
+            client.start();
+            client.addListener(new MainListener());
+            KryoRegister.register(client.getKryo());
+            Logger.info("Backend Init Sequence completed");
+            setState(BackendStates.Started);
+        } catch (NumberFormatException e) {
+            Logger.error("Invalid configuration value");
+            stop(e);
+        } catch (Throwable e) {
+            stop(e);
+        }
 
-   }
+    }
 
-   private void stop(Throwable e) throws HyperboxException {
-      Logger.error("Backend Init Sequence failed");
-      stop();
-      throw new HyperboxException("Unable to connect to init Kryonet backend : " + e.getMessage());
-   }
+    private void stop(Throwable e) throws HyperboxException {
+        Logger.error("Backend Init Sequence failed");
+        stop();
+        throw new HyperboxException("Unable to connect to init Kryonet backend : " + e.getMessage());
+    }
 
-   @Override
-   public void stop() {
-      setState(BackendStates.Stopping);
-      disconnect();
-      if (client != null) {
-         client.stop();
-      }
-      setState(BackendStates.Stopped);
-   }
+    @Override
+    public void stop() {
+        setState(BackendStates.Stopping);
+        disconnect();
+        if (client != null) {
+            client.stop();
+        }
+        setState(BackendStates.Stopped);
+    }
 
-   @Override
-   public void setAnswerReceiver(String requestId, _AnswerReceiver ar) {
-      ansReceivers.put(requestId, ar);
-   }
+    @Override
+    public void setAnswerReceiver(String requestId, _AnswerReceiver ar) {
+        ansReceivers.put(requestId, ar);
+    }
 
-   @Override
-   public void connect(String address) throws HyperboxException {
-      if (!state.equals(BackendStates.Started)) {
-         throw new HyperboxException("Backend is not initialized");
-      }
+    @Override
+    public void connect(String address) throws HyperboxException {
+        if (!state.equals(BackendStates.Started)) {
+            throw new HyperboxException("Backend is not initialized");
+        }
 
-      setState(BackendConnectionState.Connecting);
+        setState(BackendConnectionState.Connecting);
 
-      String[] options = address.split(":", 2);
-      String host = options[0];
-      Integer port = options.length == 2 ? Integer.parseInt(options[1]) : Integer.parseInt(KryonetDefaultSettings.CFGVAL_KRYO_NET_TCP_PORT);
-      if (options.length == 2) {
-         try {
-            port = Integer.parseInt(options[1]);
-         } catch (NumberFormatException e) {
-            throw new HyperboxException("Invalid port number: " + options[1]);
-         }
-      }
+        String[] options = address.split(":", 2);
+        String host = options[0];
+        Integer port = options.length == 2 ? Integer.parseInt(options[1]) : Integer.parseInt(KryonetDefaultSettings.CFGVAL_KRYO_NET_TCP_PORT);
+        if (options.length == 2) {
+            try {
+                port = Integer.parseInt(options[1]);
+            } catch (NumberFormatException e) {
+                throw new HyperboxException("Invalid port number: " + options[1]);
+            }
+        }
 
-      try {
-         client.connect(5000, host, port);
-         setState(BackendConnectionState.Connected);
-      } catch (Throwable e) {
-         disconnect();
+        try {
+            client.connect(5000, host, port);
+            setState(BackendConnectionState.Connected);
+        } catch (Throwable e) {
+            disconnect();
 
-         if (e instanceof KryoNetException) {
-            throw new HyperboxException("Server is using an incompatible network protocol version", e);
-         } else {
-            throw new HyperboxException(e);
-         }
-      }
-   }
-
-   @Override
-   public void disconnect() {
-      if ((client != null) && client.isConnected()) {
-         setState(BackendConnectionState.Disconnecting);
-         client.close();
-      }
-      setState(BackendConnectionState.Disconnected);
-   }
-
-   @Override
-   public boolean isConnected() {
-      return (client != null) && client.isConnected();
-   }
-
-   @Override
-   public void putRequest(Request req) {
-      if (!isConnected()) {
-         Logger.debug("Tried to send a message but client is not connected");
-         throw new HyperboxException("Client is not connected to a server");
-      }
-
-      try {
-         Logger.debug("Sending request");
-         client.sendTCP(req);
-         Logger.debug("Send request");
-      } catch (Throwable t) {
-         Logger.exception(t);
-      }
-   }
-
-   private class MainListener extends Listener {
-
-      @Override
-      public void connected(Connection connection) {
-         Logger.info(connection.getRemoteAddressTCP().getAddress() + " connected.");
-         setState(BackendConnectionState.Connected);
-      }
-
-      @Override
-      public void received(Connection connection, Object object) {
-         if (object.getClass().equals(Answer.class)) {
-            Answer ans = (Answer) object;
-            Logger.debug("Received answer from server : " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
-            if (ansReceivers.containsKey(ans.getExchangeId())) {
-               ansReceivers.get(ans.getExchangeId()).putAnswer(ans);
-               if (ans.isExchangedFinished() && !ans.getType().equals(AnswerType.QUEUED)) {
-                  ansReceivers.remove(ans.getExchangeId());
-               }
+            if (e instanceof KryoNetException) {
+                throw new HyperboxException("Server is using an incompatible network protocol version", e);
             } else {
-               Logger.warning("Oprhan answer: " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
+                throw new HyperboxException(e);
             }
-         }
-         if (object instanceof EventOut) {
-            EventManager.get().post(object);
-         }
-      }
+        }
+    }
 
-      @Override
-      public void disconnected(Connection connection) {
-         if (connection.getLastProtocolError() != null) {
-            for (_AnswerReceiver ar : ansReceivers.values()) {
-               ar.putAnswer(Answer.INVALID_PROTOCOL);
+    @Override
+    public void disconnect() {
+        if ((client != null) && client.isConnected()) {
+            setState(BackendConnectionState.Disconnecting);
+            client.close();
+        }
+        setState(BackendConnectionState.Disconnected);
+    }
+
+    @Override
+    public boolean isConnected() {
+        return (client != null) && client.isConnected();
+    }
+
+    @Override
+    public void putRequest(Request req) {
+        if (!isConnected()) {
+            Logger.debug("Tried to send a message but client is not connected");
+            throw new HyperboxException("Client is not connected to a server");
+        }
+
+        try {
+            Logger.debug("Sending request");
+            client.sendTCP(req);
+            Logger.debug("Send request");
+        } catch (Throwable t) {
+            Logger.exception(t);
+        }
+    }
+
+    private class MainListener extends Listener {
+
+        @Override
+        public void connected(Connection connection) {
+            Logger.info(connection.getRemoteAddressTCP().getAddress() + " connected.");
+            setState(BackendConnectionState.Connected);
+        }
+
+        @Override
+        public void received(Connection connection, Object object) {
+            if (object.getClass().equals(Answer.class)) {
+                Answer ans = (Answer) object;
+                Logger.debug("Received answer from server : " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
+                if (ansReceivers.containsKey(ans.getExchangeId())) {
+                    ansReceivers.get(ans.getExchangeId()).putAnswer(ans);
+                    if (ans.isExchangedFinished() && !ans.getType().equals(AnswerType.QUEUED)) {
+                        ansReceivers.remove(ans.getExchangeId());
+                    }
+                } else {
+                    Logger.warning("Oprhan answer: " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
+                }
             }
-         }
+            if (object instanceof EventOut) {
+                EventManager.get().post(object);
+            }
+        }
 
-         Logger.info("Disconnected from Hyperbox server");
-         disconnect();
-      }
-   }
+        @Override
+        public void disconnected(Connection connection) {
+            if (connection.getLastProtocolError() != null) {
+                for (_AnswerReceiver ar : ansReceivers.values()) {
+                    ar.putAnswer(Answer.INVALID_PROTOCOL);
+                }
+            }
+
+            Logger.info("Disconnected from Hyperbox server");
+            disconnect();
+        }
+    }
 
 }

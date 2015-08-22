@@ -26,8 +26,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class ConsoleViewerAddedEvent extends ConsoleViewerEvent {
 
-   public ConsoleViewerAddedEvent(ConsoleViewerOutput data) {
-      super(ClientEvents.ConsoleViewerAdd, data);
-   }
+    public ConsoleViewerAddedEvent(ConsoleViewerOutput data) {
+        super(ClientEvents.ConsoleViewerAdd, data);
+    }
 
 }

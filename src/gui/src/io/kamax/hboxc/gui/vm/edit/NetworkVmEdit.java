@@ -41,122 +41,122 @@ import net.miginfocom.swing.MigLayout;
 
 public final class NetworkVmEdit {
 
-   private _WorkerTracker tracker;
+    private _WorkerTracker tracker;
 
-   private String srvId;
-   private MachineIn mIn;
-   private JTabbedPane nicTabs;
-   private List<NetworkInterfaceViewer> viewers;
-   private JPanel panel;
+    private String srvId;
+    private MachineIn mIn;
+    private JTabbedPane nicTabs;
+    private List<NetworkInterfaceViewer> viewers;
+    private JPanel panel;
 
-   public NetworkVmEdit(_WorkerTracker tracker) {
-      this.tracker = tracker;
+    public NetworkVmEdit(_WorkerTracker tracker) {
+        this.tracker = tracker;
 
-      viewers = new ArrayList<NetworkInterfaceViewer>();
-      nicTabs = new JTabbedPane();
-      panel = new JPanel(new MigLayout());
-      panel.add(nicTabs, "grow,push");
-   }
+        viewers = new ArrayList<NetworkInterfaceViewer>();
+        nicTabs = new JTabbedPane();
+        panel = new JPanel(new MigLayout());
+        panel.add(nicTabs, "grow,push");
+    }
 
-   public Component getComp() {
-      return panel;
-   }
+    public Component getComp() {
+        return panel;
+    }
 
-   public void update(MachineOut mOut, MachineIn mIn) {
-      this.srvId = mOut.getServerId();
-      this.mIn = mIn;
+    public void update(MachineOut mOut, MachineIn mIn) {
+        this.srvId = mOut.getServerId();
+        this.mIn = mIn;
 
-      nicTabs.removeAll();
-      viewers.clear();
+        nicTabs.removeAll();
+        viewers.clear();
 
-      for (NetworkInterfaceOut nicOut : mOut.listNetworkInterface()) {
-         NetworkInterfaceViewer viewer = NetworkInterfaceViewer.show(tracker, srvId, nicOut, new NetworkInterfaceIn(mOut.getUuid(), nicOut.getNicId()));
-         viewers.add(viewer);
-         nicTabs.addTab("NIC " + (nicOut.getNicId() + 1), viewer.getPanel());
-      }
+        for (NetworkInterfaceOut nicOut : mOut.listNetworkInterface()) {
+            NetworkInterfaceViewer viewer = NetworkInterfaceViewer.show(tracker, srvId, nicOut, new NetworkInterfaceIn(mOut.getUuid(), nicOut.getNicId()));
+            viewers.add(viewer);
+            nicTabs.addTab("NIC " + (nicOut.getNicId() + 1), viewer.getPanel());
+        }
 
-      NetworkAttachModeListWorker.execute(tracker, new NetworkModeReceiver(), srvId);
-      NetworkInterfaceTypeListWorker.execute(tracker, new NetworkInterfaceTypeReceiver(), srvId);
-   }
+        NetworkAttachModeListWorker.execute(tracker, new NetworkModeReceiver(), srvId);
+        NetworkInterfaceTypeListWorker.execute(tracker, new NetworkInterfaceTypeReceiver(), srvId);
+    }
 
-   public void save() {
-      if (mIn != null) {
-         for (NetworkInterfaceViewer viewer : viewers) {
-            NetworkInterfaceIn nicIn = viewer.save();
-            if (nicIn != null) {
-               mIn.addNetworkInterface(nicIn);
+    public void save() {
+        if (mIn != null) {
+            for (NetworkInterfaceViewer viewer : viewers) {
+                NetworkInterfaceIn nicIn = viewer.save();
+                if (nicIn != null) {
+                    mIn.addNetworkInterface(nicIn);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   private class NetworkModeReceiver implements _NetworkAttachModeReceiver {
+    private class NetworkModeReceiver implements _NetworkAttachModeReceiver {
 
-      @Override
-      public void loadingStarted() {
-         for (NetworkInterfaceViewer viewer : viewers) {
-            viewer.getAttachModeList().setEnabled(false);
-            viewer.getAttachModeList().removeAllItems();
-         }
-      }
-
-      @Override
-      public void loadingFinished(boolean isSuccessful, String message) {
-         for (NetworkInterfaceViewer viewer : viewers) {
-            if (isSuccessful) {
-               viewer.getAttachModeList().setSelectedItem(viewer.nicOut.getAttachMode());
-            } else {
-               viewer.getAttachModeList().removeAllItems();
-               viewer.getAttachModeList().addItem("Error loading attach modes: " + message);
+        @Override
+        public void loadingStarted() {
+            for (NetworkInterfaceViewer viewer : viewers) {
+                viewer.getAttachModeList().setEnabled(false);
+                viewer.getAttachModeList().removeAllItems();
             }
-            viewer.getAttachModeList().setEnabled(true);
-         }
-      }
+        }
 
-      @Override
-      public void add(List<NetworkAttachModeOut> attachModes) {
-         for (NetworkInterfaceViewer viewer : viewers) {
-            for (NetworkAttachModeOut attachMode : attachModes) {
-               viewer.getAttachModeList().addItem(attachMode.getId());
+        @Override
+        public void loadingFinished(boolean isSuccessful, String message) {
+            for (NetworkInterfaceViewer viewer : viewers) {
+                if (isSuccessful) {
+                    viewer.getAttachModeList().setSelectedItem(viewer.nicOut.getAttachMode());
+                } else {
+                    viewer.getAttachModeList().removeAllItems();
+                    viewer.getAttachModeList().addItem("Error loading attach modes: " + message);
+                }
+                viewer.getAttachModeList().setEnabled(true);
             }
-         }
+        }
 
-      }
-
-   }
-
-   private class NetworkInterfaceTypeReceiver implements _NetworkInterfaceTypeReceiver {
-
-      @Override
-      public void loadingStarted() {
-         for (NetworkInterfaceViewer viewer : viewers) {
-            viewer.getAadapterTypeList().setEnabled(false);
-            viewer.getAadapterTypeList().removeAllItems();
-         }
-      }
-
-      @Override
-      public void loadingFinished(boolean isSuccessful, String message) {
-         for (NetworkInterfaceViewer viewer : viewers) {
-            if (isSuccessful) {
-               viewer.getAadapterTypeList().setSelectedItem(viewer.nicOut.getAdapterType());
-            } else {
-               viewer.getAadapterTypeList().removeAllItems();
-               viewer.getAadapterTypeList().addItem("Error loading network interface types: " + message);
+        @Override
+        public void add(List<NetworkAttachModeOut> attachModes) {
+            for (NetworkInterfaceViewer viewer : viewers) {
+                for (NetworkAttachModeOut attachMode : attachModes) {
+                    viewer.getAttachModeList().addItem(attachMode.getId());
+                }
             }
-            viewer.getAadapterTypeList().setEnabled(true);
-         }
-      }
 
-      @Override
-      public void add(List<NetworkInterfaceTypeOut> objOutList) {
-         for (NetworkInterfaceViewer viewer : viewers) {
-            for (NetworkInterfaceTypeOut adapterType : objOutList) {
-               viewer.getAadapterTypeList().addItem(adapterType.getId());
+        }
+
+    }
+
+    private class NetworkInterfaceTypeReceiver implements _NetworkInterfaceTypeReceiver {
+
+        @Override
+        public void loadingStarted() {
+            for (NetworkInterfaceViewer viewer : viewers) {
+                viewer.getAadapterTypeList().setEnabled(false);
+                viewer.getAadapterTypeList().removeAllItems();
             }
-         }
-      }
+        }
 
-   }
+        @Override
+        public void loadingFinished(boolean isSuccessful, String message) {
+            for (NetworkInterfaceViewer viewer : viewers) {
+                if (isSuccessful) {
+                    viewer.getAadapterTypeList().setSelectedItem(viewer.nicOut.getAdapterType());
+                } else {
+                    viewer.getAadapterTypeList().removeAllItems();
+                    viewer.getAadapterTypeList().addItem("Error loading network interface types: " + message);
+                }
+                viewer.getAadapterTypeList().setEnabled(true);
+            }
+        }
+
+        @Override
+        public void add(List<NetworkInterfaceTypeOut> objOutList) {
+            for (NetworkInterfaceViewer viewer : viewers) {
+                for (NetworkInterfaceTypeOut adapterType : objOutList) {
+                    viewer.getAadapterTypeList().addItem(adapterType.getId());
+                }
+            }
+        }
+
+    }
 
 }

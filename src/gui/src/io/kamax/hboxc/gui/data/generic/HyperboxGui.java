@@ -25,18 +25,18 @@ import io.kamax.hboxc.gui.data.EntityGui;
 
 public class HyperboxGui extends EntityGui {
 
-   public HyperboxGui() {
-      super(EntityType.Hyperbox.getId(), EntityType.Hyperbox.getId(), true);
-   }
+    public HyperboxGui() {
+        super(EntityType.Hyperbox.getId(), EntityType.Hyperbox.getId(), true);
+    }
 
-   @Override
-   public String toString() {
-      return EntityType.Hyperbox.getId();
-   }
+    @Override
+    public String toString() {
+        return EntityType.Hyperbox.getId();
+    }
 
-   @Override
-   public boolean isLeaf() {
-      return false;
-   }
+    @Override
+    public boolean isLeaf() {
+        return false;
+    }
 
 }

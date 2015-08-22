@@ -25,14 +25,16 @@ import io.kamax.hboxc.comm.output.ConsoleViewerOutput;
 import io.kamax.hboxc.constant.ConsoleViewerAttributes;
 import io.kamax.hboxc.gui.utils.ObjectOutputTableModel;
 
-@SuppressWarnings("serial")
+
 public class ConsoleViewerTableModel extends ObjectOutputTableModel<ConsoleViewerOutput> {
 
-   @Override
-   protected void addColumns() {
-      addColumn("Hypervisor", ConsoleViewerAttributes.HypervisorTypeId);
-      addColumn("Module", ConsoleViewerAttributes.ModuleId);
-      addColumn("Viewer", ConsoleViewerAttributes.ViewerPath);
-   }
+    private static final long serialVersionUID = -4776712872703853672L;
+
+    @Override
+    protected void addColumns() {
+        addColumn("Hypervisor", ConsoleViewerAttributes.HypervisorTypeId);
+        addColumn("Module", ConsoleViewerAttributes.ModuleId);
+        addColumn("Viewer", ConsoleViewerAttributes.ViewerPath);
+    }
 
 }

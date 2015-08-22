@@ -22,6 +22,6 @@ package io.kamax.hboxc.controller;
 
 public interface _ClientMessageReceiver {
 
-   public void post(MessageInput mIn);
+    public void post(MessageInput mIn);
 
 }

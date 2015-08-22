@@ -35,7 +35,7 @@ import java.util.Set;
  * </p>
  * <p>
  * A typical descriptor file will look like this:
- * 
+ *
  * <pre>
  * &lt;module&gt;
  *    &lt;id&gt;vbox-4.3-xpcom&lt;/id&gt;
@@ -52,9 +52,9 @@ import java.util.Set;
  *       &lt;/provider&gt;
  *    &lt;/providers&gt;
  * &lt;/module&gt;
- * 
+ *
  * </pre>
- * 
+ *
  * See the template in the sources for a more detail description of each possible element.<br/>
  * </p>
  * <p>
@@ -66,52 +66,52 @@ import java.util.Set;
  * <li>Enabled & Unloaded -> Disabled & Unloaded</li>
  * </ul>
  * </p>
- * 
+ *
  * @author max
- * 
+ *
  */
 public interface _Module {
 
-   /**
-    * Return this module's ID.
-    * 
-    * @return a String uniquely identifying the module.
-    */
-   public String getId();
+    /**
+     * Return this module's ID.
+     * 
+     * @return a String uniquely identifying the module.
+     */
+    public String getId();
 
-   /**
-    * Return this module location, either base path or single file.
-    * 
-    * @return The absolute path to this module file(s)..
-    */
-   public String getLocation();
+    /**
+     * Return this module location, either base path or single file.
+     * 
+     * @return The absolute path to this module file(s)..
+     */
+    public String getLocation();
 
-   /**
-    * Return the resources that compose this module.
-    * 
-    * @return {@link Set} of {@link URL} pointing to the Java code for this module.
-    */
-   public Set<URL> getRessources();
+    /**
+     * Return the resources that compose this module.
+     * 
+     * @return {@link Set} of {@link URL} pointing to the Java code for this module.
+     */
+    public Set<URL> getRessources();
 
-   /**
-    * Load this module, generating the provider type's classes and the provider's classes.
-    * 
-    * @throws ClientModuleException If an error occurred during the load process.
-    */
-   public void load() throws ClientModuleException;
+    /**
+     * Load this module, generating the provider type's classes and the provider's classes.
+     * 
+     * @throws ClientModuleException If an error occurred during the load process.
+     */
+    public void load() throws ClientModuleException;
 
-   /**
-    * Indicates if the module is loaded.
-    * 
-    * @return true if the module is loaded, else false.
-    */
-   public boolean isLoaded();
+    /**
+     * Indicates if the module is loaded.
+     * 
+     * @return true if the module is loaded, else false.
+     */
+    public boolean isLoaded();
 
-   /**
-    * Indicates if the module is loaded and ready for usage.
-    * 
-    * @return true if the module is ready, else false.
-    */
-   public boolean isReady();
+    /**
+     * Indicates if the module is loaded and ready for usage.
+     * 
+     * @return true if the module is ready, else false.
+     */
+    public boolean isReady();
 
 }

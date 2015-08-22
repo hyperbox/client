@@ -25,8 +25,8 @@ import java.util.List;
 
 public interface _StoreSelector {
 
-   public ServerOut getServer();
+    public ServerOut getServer();
 
-   public List<String> getSelection();
+    public List<String> getSelection();
 
 }

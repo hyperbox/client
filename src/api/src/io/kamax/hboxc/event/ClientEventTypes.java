@@ -22,8 +22,8 @@ package io.kamax.hboxc.event;
 
 public enum ClientEventTypes {
 
-   BackendState,
-   BackendConnState,
-   CoreState,
+    BackendState,
+    BackendConnState,
+    CoreState,
 
 }

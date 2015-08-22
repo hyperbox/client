@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _NetModeListReceiver extends _WorkerDataReceiver {
 
-   public void add(List<NetModeOut> netModes);
+    public void add(List<NetModeOut> netModes);
 
 }

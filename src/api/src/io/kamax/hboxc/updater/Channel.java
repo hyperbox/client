@@ -22,14 +22,14 @@ package io.kamax.hboxc.updater;
 
 public enum Channel {
 
-   /**
-    * Stable build following roadmap
-    */
-   Stable,
+    /**
+     * Stable build following roadmap
+     */
+    Stable,
 
-   /**
-    * Builds from repository, not stable
-    */
-   Fresh
+    /**
+     * Builds from repository, not stable
+     */
+    Fresh
 
 }

@@ -23,16 +23,16 @@ package io.kamax.hboxc.constant;
 
 public enum ConnectorAttributes {
 
-   Id,
-   Label,
-   Address,
-   Port,
-   BackendId,
-   isConnected,
-   ConnectionState,
-   Credentials,
-   ServerId,
-   Server,
-   Username,
+    Id,
+    Label,
+    Address,
+    Port,
+    BackendId,
+    isConnected,
+    ConnectionState,
+    Credentials,
+    ServerId,
+    Server,
+    Username,
 
 }

@@ -37,17 +37,17 @@ import io.kamax.hboxc.front._Front;
 
 public class BackendGetAction extends AbstractClientControllerSingleAction {
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.BackendGet;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.BackendGet;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
-      BackendInput bckIn = req.get(BackendInput.class);
-      _Backend bck = core.getBackend(bckIn.getId());
-      BackendOutput bckOut = BackendIoFactory.get(bck);
-      recv.putAnswer(new Answer(req, AnswerType.DATA, bckOut));
-   }
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
+        BackendInput bckIn = req.get(BackendInput.class);
+        _Backend bck = core.getBackend(bckIn.getId());
+        BackendOutput bckOut = BackendIoFactory.get(bck);
+        recv.putAnswer(new Answer(req, AnswerType.DATA, bckOut));
+    }
 
 }

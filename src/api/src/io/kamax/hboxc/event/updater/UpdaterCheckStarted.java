@@ -24,8 +24,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class UpdaterCheckStarted extends UpdaterEvent {
 
-   public UpdaterCheckStarted() {
-      super(ClientEvents.UpdaterCheckStarted);
-   }
+    public UpdaterCheckStarted() {
+        super(ClientEvents.UpdaterCheckStarted);
+    }
 
 }

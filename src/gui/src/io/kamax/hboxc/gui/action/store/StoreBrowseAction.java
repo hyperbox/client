@@ -28,26 +28,26 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public final class StoreBrowseAction extends AbstractAction {
 
-   private _StoreSelector selector;
+    private static final long serialVersionUID = 7743810756155591064L;
+    private _StoreSelector selector;
 
-   public StoreBrowseAction(_StoreSelector selector) {
-      this(selector, "Browse");
-   }
+    public StoreBrowseAction(_StoreSelector selector) {
+        this(selector, "Browse");
+    }
 
-   public StoreBrowseAction(_StoreSelector selector, String label) {
-      super(label, IconBuilder.getTask(HyperboxTasks.StoreGet));
-      this.selector = selector;
-   }
+    public StoreBrowseAction(_StoreSelector selector, String label) {
+        super(label, IconBuilder.getTask(HyperboxTasks.StoreGet));
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ev) {
-      List<String> selection = selector.getSelection();
-      if (!selection.isEmpty()) {
-         StoreItemChooser.browse(selector.getServer().getId());
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        List<String> selection = selector.getSelection();
+        if (!selection.isEmpty()) {
+            StoreItemChooser.browse(selector.getServer().getId());
+        }
+    }
 
 }

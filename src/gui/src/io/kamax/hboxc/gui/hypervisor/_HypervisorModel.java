@@ -24,10 +24,10 @@ import java.util.List;
 
 public interface _HypervisorModel {
 
-   public List<String> getSupported();
+    public List<String> getSupported();
 
-   public _GlobalConfigureView getConfigureView();
+    public _GlobalConfigureView getConfigureView();
 
-   public _NetAdaptorConfigureView getNetAdaptorConfig(String srvId, String modeId, String adaptId);
+    public _NetAdaptorConfigureView getNetAdaptorConfig(String srvId, String modeId, String adaptId);
 
 }

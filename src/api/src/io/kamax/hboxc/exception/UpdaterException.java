@@ -22,19 +22,21 @@ package io.kamax.hboxc.exception;
 
 import io.kamax.hbox.exception.HyperboxException;
 
-@SuppressWarnings("serial")
+
 public abstract class UpdaterException extends HyperboxException {
 
-   public UpdaterException(String s) {
-      super(s);
-   }
+    private static final long serialVersionUID = 5148477826715455800L;
 
-   public UpdaterException(Throwable t) {
-      super(t.getMessage(), t);
-   }
+    public UpdaterException(String s) {
+        super(s);
+    }
 
-   public UpdaterException(String s, Throwable t) {
-      super(s, t);
-   }
+    public UpdaterException(Throwable t) {
+        super(t.getMessage(), t);
+    }
+
+    public UpdaterException(String s, Throwable t) {
+        super(s, t);
+    }
 
 }

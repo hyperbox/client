@@ -33,30 +33,31 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class HypervisorDisconnectAction extends AbstractAction {
 
-   private _SingleServerSelector selector;
+    private static final long serialVersionUID = 6849363439923397210L;
+    private _SingleServerSelector selector;
 
-   public HypervisorDisconnectAction(_SingleServerSelector selector) {
-      this(selector, "Disconnect");
-   }
+    public HypervisorDisconnectAction(_SingleServerSelector selector) {
+        this(selector, "Disconnect");
+    }
 
-   public HypervisorDisconnectAction(_SingleServerSelector selector, String label) {
-      super(label);
-      this.selector = selector;
-   }
+    public HypervisorDisconnectAction(_SingleServerSelector selector, String label) {
+        super(label);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      ServerOut srvOut = selector.getServer();
-      if (srvOut != null) {
-         Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorDisconnect, new ServerIn(srvOut.getId()));
-         Gui.post(new MessageInput(req));
-      } else {
-         Logger.debug("No server was selected");
-      }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        ServerOut srvOut = selector.getServer();
+        if (srvOut != null) {
+            Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorDisconnect, new ServerIn(srvOut.getId()));
+            Gui.post(new MessageInput(req));
+        } else {
+            Logger.debug("No server was selected");
+        }
 
-   }
+    }
 
 }

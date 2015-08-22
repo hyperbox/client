@@ -26,18 +26,18 @@ import io.kamax.hboxc.event.server.ServerEvent;
 
 public class TaskEvent extends ServerEvent {
 
-   public TaskEvent(Enum<?> eventId, ServerOut srvOut, TaskOut taskOut) {
-      super(eventId, srvOut);
-      set(TaskOut.class, taskOut);
-   }
+    public TaskEvent(Enum<?> eventId, ServerOut srvOut, TaskOut taskOut) {
+        super(eventId, srvOut);
+        set(TaskOut.class, taskOut);
+    }
 
-   public TaskOut getTask() {
-      return get(TaskOut.class);
-   }
+    public TaskOut getTask() {
+        return get(TaskOut.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Event ID " + getEventId() + " for Task " + getTask().getId() + " on Server " + getServer().getId() + " occured @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Event ID " + getEventId() + " for Task " + getTask().getId() + " on Server " + getServer().getId() + " occured @ " + getTime();
+    }
 
 }

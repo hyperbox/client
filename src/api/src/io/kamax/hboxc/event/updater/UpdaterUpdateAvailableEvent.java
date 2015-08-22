@@ -24,8 +24,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class UpdaterUpdateAvailableEvent extends UpdaterEvent {
 
-   public UpdaterUpdateAvailableEvent() {
-      super(ClientEvents.UpdaterUpdateAvailable);
-   }
+    public UpdaterUpdateAvailableEvent() {
+        super(ClientEvents.UpdaterUpdateAvailable);
+    }
 
 }

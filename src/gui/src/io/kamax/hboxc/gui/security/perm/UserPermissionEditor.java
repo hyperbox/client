@@ -52,160 +52,160 @@ import net.miginfocom.swing.MigLayout;
 
 public class UserPermissionEditor implements _Refreshable {
 
-   private String serverId;
-   private ServerOut srvOut;
-   private UserOut usrOut;
-   private Set<PermissionIn> permInList = new HashSet<PermissionIn>();
-   private Set<PermissionIn> addPermInList = new HashSet<PermissionIn>();
-   private Set<PermissionIn> delPermInList = new HashSet<PermissionIn>();
+    private String serverId;
+    private ServerOut srvOut;
+    private UserOut usrOut;
+    private Set<PermissionIn> permInList = new HashSet<PermissionIn>();
+    private Set<PermissionIn> addPermInList = new HashSet<PermissionIn>();
+    private Set<PermissionIn> delPermInList = new HashSet<PermissionIn>();
 
-   private JPanel panel;
-   private JProgressBar refreshProgress;
+    private JPanel panel;
+    private JProgressBar refreshProgress;
 
-   private PermissionTableModel tableModel;
-   private JTable table;
-   private JScrollPane scrollPane;
+    private PermissionTableModel tableModel;
+    private JTable table;
+    private JScrollPane scrollPane;
 
-   private JButton addButton;
-   private JButton delButton;
-   private JPanel buttonPanel;
+    private JButton addButton;
+    private JButton delButton;
+    private JPanel buttonPanel;
 
-   public UserPermissionEditor() {
-      refreshProgress = new JProgressBar();
-      refreshProgress.setVisible(false);
+    public UserPermissionEditor() {
+        refreshProgress = new JProgressBar();
+        refreshProgress.setVisible(false);
 
-      addButton = new JButton("+");
-      addButton.addActionListener(new ActionListener() {
-
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            PermissionIn permIn = PermissionAddDialog.get(serverId);
-            if (permIn != null) {
-               if (!permInList.contains(permIn)) {
-                  if (!delPermInList.contains(permIn)) {
-                     addPermInList.add(permIn);
-                  } else {
-                     delPermInList.remove(permIn);
-                  }
-                  tableModel.add(permIn);
-               }
-            }
-         }
-      });
-
-      delButton = new JButton("-");
-      delButton.addActionListener(new ActionListener() {
-
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            PermissionIn permIn = tableModel.getObjectAtRow(table.convertRowIndexToModel(table.getSelectedRow()));
-            if (addPermInList.contains(permIn)) {
-               addPermInList.remove(permIn);
-            }
-            if (permInList.contains(permIn)) {
-               delPermInList.add(permIn);
-            }
-            tableModel.remove(permIn);
-         }
-      });
-
-      buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(addButton);
-      buttonPanel.add(delButton, "wrap");
-
-      tableModel = new PermissionTableModel();
-      table = new JTable(tableModel);
-      table.setFillsViewportHeight(true);
-      table.setAutoCreateRowSorter(true);
-      table.getRowSorter().setSortKeys(Arrays.asList(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
-      scrollPane = new JScrollPane(table);
-
-      panel = new JPanel(new MigLayout("ins 0"));
-      panel.add(refreshProgress, "hidemode 3, growx, pushx, wrap");
-      panel.add(scrollPane, "grow, push, wrap");
-      panel.add(buttonPanel, "growx, pushx, wrap");
-
-      ViewEventManager.register(this);
-   }
-
-   public void show(String serverId, UserOut usrOut) {
-      this.serverId = serverId;
-      this.usrOut = usrOut;
-
-      refresh();
-   }
-
-   private void clear() {
-
-      if (!SwingUtilities.isEventDispatchThread()) {
-         SwingUtilities.invokeLater(new Runnable() {
+        addButton = new JButton("+");
+        addButton.addActionListener(new ActionListener() {
 
             @Override
-            public void run() {
-               clear();
+            public void actionPerformed(ActionEvent e) {
+                PermissionIn permIn = PermissionAddDialog.get(serverId);
+                if (permIn != null) {
+                    if (!permInList.contains(permIn)) {
+                        if (!delPermInList.contains(permIn)) {
+                            addPermInList.add(permIn);
+                        } else {
+                            delPermInList.remove(permIn);
+                        }
+                        tableModel.add(permIn);
+                    }
+                }
             }
-         });
-      } else {
-         tableModel.clear();
-      }
-   }
+        });
 
-   @Override
-   public void refresh() {
-
-      if (!SwingUtilities.isEventDispatchThread()) {
-         SwingUtilities.invokeLater(new Runnable() {
+        delButton = new JButton("-");
+        delButton.addActionListener(new ActionListener() {
 
             @Override
-            public void run() {
-               refresh();
+            public void actionPerformed(ActionEvent e) {
+                PermissionIn permIn = tableModel.getObjectAtRow(table.convertRowIndexToModel(table.getSelectedRow()));
+                if (addPermInList.contains(permIn)) {
+                    addPermInList.remove(permIn);
+                }
+                if (permInList.contains(permIn)) {
+                    delPermInList.add(permIn);
+                }
+                tableModel.remove(permIn);
             }
-         });
-      } else {
-         clear();
-         refreshProgress.setIndeterminate(true);
-         refreshProgress.setVisible(true);
+        });
 
-         // TODO decouple in another class
-         new SwingWorker<Void, Void>() {
+        buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(addButton);
+        buttonPanel.add(delButton, "wrap");
 
-            @Override
-            protected Void doInBackground() throws Exception {
-               srvOut = Gui.getServerInfo(serverId);
-               permInList.clear();
-               for (PermissionOut permOut : Gui.getServer(serverId).listPermissions(new UserIn(usrOut))) {
-                  permInList.add(new PermissionIn(permOut));
-               }
+        tableModel = new PermissionTableModel();
+        table = new JTable(tableModel);
+        table.setFillsViewportHeight(true);
+        table.setAutoCreateRowSorter(true);
+        table.getRowSorter().setSortKeys(Arrays.asList(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
+        scrollPane = new JScrollPane(table);
 
-               return null;
-            }
+        panel = new JPanel(new MigLayout("ins 0"));
+        panel.add(refreshProgress, "hidemode 3, growx, pushx, wrap");
+        panel.add(scrollPane, "grow, push, wrap");
+        panel.add(buttonPanel, "growx, pushx, wrap");
 
-            @Override
-            protected void done() {
-               tableModel.put(permInList);
-               refreshProgress.setVisible(false);
-               refreshProgress.setIndeterminate(false);
-            }
+        ViewEventManager.register(this);
+    }
 
-         }.execute();
-      }
-   }
+    public void show(String serverId, UserOut usrOut) {
+        this.serverId = serverId;
+        this.usrOut = usrOut;
 
-   public JComponent getComponent() {
-      return panel;
-   }
+        refresh();
+    }
 
-   public void save() {
-      Logger.debug("Permissions to add: " + addPermInList.size());
-      ServerIn srvIn = new ServerIn(srvOut);
-      UserIn usrIn = new UserIn(usrOut);
-      for (PermissionIn permIn : addPermInList) {
-         Gui.post(new Request(Command.HBOX, HyperboxTasks.PermissionSet, srvIn, usrIn, permIn));
-      }
-      Logger.debug("Permissions to remove: " + delPermInList.size());
-      for (PermissionIn permIn : delPermInList) {
-         Gui.post(new Request(Command.HBOX, HyperboxTasks.PermissionDelete, srvIn, usrIn, permIn));
-      }
-   }
+    private void clear() {
+
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    clear();
+                }
+            });
+        } else {
+            tableModel.clear();
+        }
+    }
+
+    @Override
+    public void refresh() {
+
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    refresh();
+                }
+            });
+        } else {
+            clear();
+            refreshProgress.setIndeterminate(true);
+            refreshProgress.setVisible(true);
+
+            // TODO decouple in another class
+            new SwingWorker<Void, Void>() {
+
+                @Override
+                protected Void doInBackground() throws Exception {
+                    srvOut = Gui.getServerInfo(serverId);
+                    permInList.clear();
+                    for (PermissionOut permOut : Gui.getServer(serverId).listPermissions(new UserIn(usrOut))) {
+                        permInList.add(new PermissionIn(permOut));
+                    }
+
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    tableModel.put(permInList);
+                    refreshProgress.setVisible(false);
+                    refreshProgress.setIndeterminate(false);
+                }
+
+            }.execute();
+        }
+    }
+
+    public JComponent getComponent() {
+        return panel;
+    }
+
+    public void save() {
+        Logger.debug("Permissions to add: " + addPermInList.size());
+        ServerIn srvIn = new ServerIn(srvOut);
+        UserIn usrIn = new UserIn(usrOut);
+        for (PermissionIn permIn : addPermInList) {
+            Gui.post(new Request(Command.HBOX, HyperboxTasks.PermissionSet, srvIn, usrIn, permIn));
+        }
+        Logger.debug("Permissions to remove: " + delPermInList.size());
+        for (PermissionIn permIn : delPermInList) {
+            Gui.post(new Request(Command.HBOX, HyperboxTasks.PermissionDelete, srvIn, usrIn, permIn));
+        }
+    }
 
 }

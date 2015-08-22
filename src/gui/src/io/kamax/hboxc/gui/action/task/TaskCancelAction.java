@@ -28,24 +28,24 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public final class TaskCancelAction extends AbstractAction {
 
-   private _TaskSelector selector;
+    private static final long serialVersionUID = -3637856813203244386L;
+    private _TaskSelector selector;
 
-   public TaskCancelAction(_TaskSelector selector) {
-      super("Cancel");
-      setEnabled(true);
-      this.selector = selector;
-   }
+    public TaskCancelAction(_TaskSelector selector) {
+        super("Cancel");
+        setEnabled(true);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      for (TaskOut tOut : selector.getSelection()) {
-         TaskIn tIn = new TaskIn(tOut.getId());
-         Logger.debug("Canceling Task #" + tIn.getId());
-         Gui.getServer(tOut.getServerId()).getTask(tOut.getId()).cancel();
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        for (TaskOut tOut : selector.getSelection()) {
+            TaskIn tIn = new TaskIn(tOut.getId());
+            Logger.debug("Canceling Task #" + tIn.getId());
+            Gui.getServer(tOut.getServerId()).getTask(tOut.getId()).cancel();
+        }
+    }
 
 }

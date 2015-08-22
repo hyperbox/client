@@ -22,8 +22,8 @@ package io.kamax.hboxc.gui.action.hypervisor;
 
 public interface _SingleHypervisorSelector {
 
-   public String getConnectorId();
+    public String getConnectorId();
 
-   public String getServerId();
+    public String getServerId();
 
 }

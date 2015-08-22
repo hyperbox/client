@@ -37,19 +37,19 @@ import io.kamax.hboxc.front._Front;
 
 public class ConsoleViewerAddAction extends AbstractClientControllerSingleAction {
 
-   @Override
-   public Enum<?> getRegistration() {
-      return ClientTasks.ConsoleViewerAdd;
-   }
+    @Override
+    public Enum<?> getRegistration() {
+        return ClientTasks.ConsoleViewerAdd;
+    }
 
-   @Override
-   public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
-      ConsoleViewerInput coreViewInput = req.get(ConsoleViewerInput.class);
-      _ConsoleViewer viewer = core.addConsoleViewer(coreViewInput.getHypervisorId(), coreViewInput.getModuleId(), coreViewInput.getViewerPath(),
-            coreViewInput.getArgs());
+    @Override
+    public void run(_Core core, _Front view, Request req, _AnswerReceiver recv) throws HyperboxException {
+        ConsoleViewerInput coreViewInput = req.get(ConsoleViewerInput.class);
+        _ConsoleViewer viewer = core.addConsoleViewer(coreViewInput.getHypervisorId(), coreViewInput.getModuleId(), coreViewInput.getViewerPath(),
+                coreViewInput.getArgs());
 
-      ConsoleViewerOutput viewerOut = ConsoleViewerIoFactory.getOut(viewer);
-      recv.putAnswer(new Answer(req, AnswerType.DATA, viewerOut));
-   }
+        ConsoleViewerOutput viewerOut = ConsoleViewerIoFactory.getOut(viewer);
+        recv.putAnswer(new Answer(req, AnswerType.DATA, viewerOut));
+    }
 
 }

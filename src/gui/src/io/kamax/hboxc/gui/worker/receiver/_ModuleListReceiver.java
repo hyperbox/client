@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _ModuleListReceiver extends _WorkerDataReceiver {
 
-   public void add(List<ModuleOut> objOutList);
+    public void add(List<ModuleOut> objOutList);
 
 }

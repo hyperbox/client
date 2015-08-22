@@ -25,15 +25,15 @@ import io.kamax.hboxc.gui.data.EntityGui;
 
 public class ServersGui extends EntityGui {
 
-   public final static String id = "Servers";
+    public final static String id = "Servers";
 
-   public ServersGui() {
-      super(EntityType.Server.getId(), id, true);
-   }
+    public ServersGui() {
+        super(EntityType.Server.getId(), id, true);
+    }
 
-   @Override
-   public String toString() {
-      return id;
-   }
+    @Override
+    public String toString() {
+        return id;
+    }
 
 }

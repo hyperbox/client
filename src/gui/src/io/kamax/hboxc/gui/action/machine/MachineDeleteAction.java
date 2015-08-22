@@ -33,30 +33,31 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-@SuppressWarnings("serial")
+
 public final class MachineDeleteAction extends AbstractAction {
 
-   private _MachineSelector selector;
+    private static final long serialVersionUID = -4048291464472769712L;
+    private _MachineSelector selector;
 
-   public MachineDeleteAction(_MachineSelector selector) {
-      super("Delete", IconBuilder.getTask(HypervisorTasks.MachineDelete));
-      setEnabled(true);
-      this.selector = selector;
-   }
+    public MachineDeleteAction(_MachineSelector selector) {
+        super("Delete", IconBuilder.getTask(HypervisorTasks.MachineDelete));
+        setEnabled(true);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ev) {
-      int info = JOptionPane.showConfirmDialog(
-            MainView.getMainFrame(),
-            "This will delete the selected VM and all its disks.\nThis cannot be canceled or rolled back!\nAre you sure?",
-            "Delete confirmation",
-            JOptionPane.WARNING_MESSAGE,
-            JOptionPane.OK_CANCEL_OPTION);
-      if (info == JOptionPane.YES_OPTION) {
-         for (MachineOut mOut : selector.getMachines()) {
-            Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineDelete, new MachineIn(mOut)));
-         }
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        int info = JOptionPane.showConfirmDialog(
+                MainView.getMainFrame(),
+                "This will delete the selected VM and all its disks.\nThis cannot be canceled or rolled back!\nAre you sure?",
+                "Delete confirmation",
+                JOptionPane.WARNING_MESSAGE,
+                JOptionPane.OK_CANCEL_OPTION);
+        if (info == JOptionPane.YES_OPTION) {
+            for (MachineOut mOut : selector.getMachines()) {
+                Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineDelete, new MachineIn(mOut)));
+            }
+        }
+    }
 
 }

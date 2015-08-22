@@ -36,67 +36,67 @@ import net.miginfocom.swing.MigLayout;
 
 public class AboutDialog {
 
-   private JDialogImp dialog;
+    private JDialogImp dialog;
 
-   private JLabel logo;
-   private JTextArea text;
+    private JLabel logo;
+    private JTextArea text;
 
-   private AboutDialog() {
-      dialog = new JDialogImp();
-      dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-      dialog.setModalityType(ModalityType.APPLICATION_MODAL);
-      dialog.setCloseOnEscapeKey(true);
-      dialog.setTitle("About Hyperbox");
-      dialog.setIconImage(IconBuilder.getHyperbox().getImage());
+    private AboutDialog() {
+        dialog = new JDialogImp();
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+        dialog.setCloseOnEscapeKey(true);
+        dialog.setTitle("About Hyperbox");
+        dialog.setIconImage(IconBuilder.getHyperbox().getImage());
 
-      logo = new JLabel();
-      logo.setIcon(IconBuilder.getLogo());
+        logo = new JLabel();
+        logo.setIcon(IconBuilder.getLogo());
 
-      text = new JTextArea();
-      text.setBorder(BorderFactory.createEmptyBorder());
-      text.setBackground(dialog.getContentPane().getBackground());
-      text.setOpaque(false);
-      text.setEditable(false);
-      text.setFont(UIManager.getFont("Label.font"));
+        text = new JTextArea();
+        text.setBorder(BorderFactory.createEmptyBorder());
+        text.setBackground(dialog.getContentPane().getBackground());
+        text.setOpaque(false);
+        text.setEditable(false);
+        text.setFont(UIManager.getFont("Label.font"));
 
-      text.append("Hyperbox\n");
-      text.append("Copyright 2013-2015 Kamax.io - All rights reserved.\n");
-      text.append("This product is released under the GPL v3.\n");
-      text.append("\n\n");
-      text.append("API Version " + HyperboxAPI.getVersion() + "\n");
-      text.append("Client Version " + Hyperbox.getVersion() + "\n");
-      text.append("Network Protocol Version " + HyperboxAPI.getProtocolVersion() + "\n");
-      text.append("\n\n");
-      text.append("Hyperbox is an Enterprise Virtualization Manager.\n");
-      text.append("For more information, please visit http://kamax.io/hbox/\n");
-      text.append("\n\n");
-      text.append("This software is made possible thanks to several open-source projects.\n");
-      text.append("Refer to the User Manual for detailed names and licensing information.");
-      text.append("\n\n");
-      text.append("Special thanks for their undying support and contributions to this project:\n");
-      text.append("Perryg, klaus-vb");
+        text.append("Hyperbox\n");
+        text.append("Copyright 2013-2015 Kamax.io - All rights reserved.\n");
+        text.append("This product is released under the GPL v3.\n");
+        text.append("\n\n");
+        text.append("API Version " + HyperboxAPI.getVersion() + "\n");
+        text.append("Client Version " + Hyperbox.getVersion() + "\n");
+        text.append("Network Protocol Version " + HyperboxAPI.getProtocolVersion() + "\n");
+        text.append("\n\n");
+        text.append("Hyperbox is an Enterprise Virtualization Manager.\n");
+        text.append("For more information, please visit http://kamax.io/hbox/\n");
+        text.append("\n\n");
+        text.append("This software is made possible thanks to several open-source projects.\n");
+        text.append("Refer to the User Manual for detailed names and licensing information.");
+        text.append("\n\n");
+        text.append("Special thanks for their undying support and contributions to this project:\n");
+        text.append("Perryg, klaus-vb");
 
-      JPanel textPanel = new JPanel(new MigLayout("ins 50"));
-      textPanel.setBackground(dialog.getContentPane().getBackground());
-      textPanel.add(text);
+        JPanel textPanel = new JPanel(new MigLayout("ins 50"));
+        textPanel.setBackground(dialog.getContentPane().getBackground());
+        textPanel.add(text);
 
-      JPanel logoPanel = new JPanel(new MigLayout("ins 10 50 0 50"));
-      logoPanel.setBackground(dialog.getContentPane().getBackground());
-      logoPanel.add(logo);
+        JPanel logoPanel = new JPanel(new MigLayout("ins 10 50 0 50"));
+        logoPanel.setBackground(dialog.getContentPane().getBackground());
+        logoPanel.add(logo);
 
-      dialog.getContentPane().setLayout(new MigLayout("ins 0"));
-      dialog.getContentPane().add(logoPanel, "growx, pushx, wrap");
-      dialog.getContentPane().add(textPanel, "growx, pushx");
-   }
+        dialog.getContentPane().setLayout(new MigLayout("ins 0"));
+        dialog.getContentPane().add(logoPanel, "growx, pushx, wrap");
+        dialog.getContentPane().add(textPanel, "growx, pushx");
+    }
 
-   private void display() {
-      dialog.pack();
-      dialog.setLocationRelativeTo(MainView.getMainFrame());
-      dialog.setVisible(true);
-   }
+    private void display() {
+        dialog.pack();
+        dialog.setLocationRelativeTo(MainView.getMainFrame());
+        dialog.setVisible(true);
+    }
 
-   public static void show() {
-      new AboutDialog().display();
-   }
+    public static void show() {
+        new AboutDialog().display();
+    }
 
 }

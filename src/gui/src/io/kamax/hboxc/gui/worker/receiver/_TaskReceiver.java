@@ -24,6 +24,6 @@ import io.kamax.hbox.comm.out.TaskOut;
 
 public interface _TaskReceiver extends _WorkerDataReceiver {
 
-   public void put(TaskOut tskOut);
+    public void put(TaskOut tskOut);
 
 }

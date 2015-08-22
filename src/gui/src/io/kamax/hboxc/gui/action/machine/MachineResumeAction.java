@@ -31,22 +31,23 @@ import io.kamax.hboxc.gui.vm._MachineSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class MachineResumeAction extends AbstractAction {
 
-   private _MachineSelector selector;
+    private static final long serialVersionUID = -1136119325375320038L;
+    private _MachineSelector selector;
 
-   public MachineResumeAction(_MachineSelector selector) {
-      super("Resume", IconBuilder.getTask(HypervisorTasks.MachineResume));
-      setEnabled(true);
-      this.selector = selector;
-   }
+    public MachineResumeAction(_MachineSelector selector) {
+        super("Resume", IconBuilder.getTask(HypervisorTasks.MachineResume));
+        setEnabled(true);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ev) {
-      for (MachineOut mOut : selector.getMachines()) {
-         Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineResume, new MachineIn(mOut)));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        for (MachineOut mOut : selector.getMachines()) {
+            Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineResume, new MachineIn(mOut)));
+        }
+    }
 
 }

@@ -25,10 +25,10 @@ import java.util.Set;
 
 public interface _Entity extends _Settable {
 
-   public String getId();
+    public String getId();
 
-   public void unsetSetting(String id);
+    public void unsetSetting(String id);
 
-   public void unsetSettings(Set<String> ids);
+    public void unsetSettings(Set<String> ids);
 
 }

@@ -34,23 +34,23 @@ import io.kamax.hboxc.server._Machine;
 
 public class Console extends Device implements _Console {
 
-   public Console(_Machine machine) {
-      super(machine, EntityType.Console.getId());
-      refresh();
-   }
+    public Console(_Machine machine) {
+        super(machine, EntityType.Console.getId());
+        refresh();
+    }
 
-   @Override
-   public String getType() {
-      return EntityType.Console.getId();
-   }
+    @Override
+    public String getType() {
+        return EntityType.Console.getId();
+    }
 
-   @Override
-   public void refresh() {
-      Request req = new Request(Command.VBOX, HypervisorTasks.DevicePropertyList);
-      req.set(MachineIn.class, new MachineIn(getMachine().getId()));
-      req.set(DeviceIn.class, new DeviceIn(getId()));
-      Transaction t = getMachine().getServer().sendRequest(req);
-      setSetting(SettingIoFactory.getListIo(t.extractItems(SettingIO.class)));
-   }
+    @Override
+    public void refresh() {
+        Request req = new Request(Command.VBOX, HypervisorTasks.DevicePropertyList);
+        req.set(MachineIn.class, new MachineIn(getMachine().getId()));
+        req.set(DeviceIn.class, new DeviceIn(getId()));
+        Transaction t = getMachine().getServer().sendRequest(req);
+        setSetting(SettingIoFactory.getListIo(t.extractItems(SettingIO.class)));
+    }
 
 }

@@ -24,10 +24,10 @@ import io.kamax.hbox.comm.out.event.EventOut;
 
 public interface _EventWorker {
 
-   public String getId();
+    public String getId();
 
-   public String getEventId();
+    public String getEventId();
 
-   public void work(EventOut evOut);
+    public void work(EventOut evOut);
 
 }

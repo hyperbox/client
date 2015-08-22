@@ -33,55 +33,55 @@ import net.miginfocom.swing.MigLayout;
 
 public class NetworkInterfaceSummary extends JPanel implements _GuestNetworkInterfaceReceiver {
 
-   private static final long serialVersionUID = -9083225380488179517L;
+    private static final long serialVersionUID = -9083225380488179517L;
 
-   private String srvId;
-   private String vmId;
-   private NetworkInterfaceOut nicOut;
-   private JTextField nicValue;
-   private JTextField ipv4Value;
+    private String srvId;
+    private String vmId;
+    private NetworkInterfaceOut nicOut;
+    private JTextField nicValue;
+    private JTextField ipv4Value;
 
-   public NetworkInterfaceSummary(String srvId, String vmId, NetworkInterfaceOut nicOut) {
-      super(new MigLayout("ins 0"));
-      this.srvId = srvId;
-      this.vmId = vmId;
-      this.nicOut = nicOut;
+    public NetworkInterfaceSummary(String srvId, String vmId, NetworkInterfaceOut nicOut) {
+        super(new MigLayout("ins 0"));
+        this.srvId = srvId;
+        this.vmId = vmId;
+        this.nicOut = nicOut;
 
-      nicValue = JTextFieldUtils.createAsLabel(nicOut.getAdapterType() + " using " + nicOut.getAttachMode()
-            + (AxStrings.isEmpty(nicOut.getAttachName()) ? "" : " on " + nicOut.getAttachName()));
-      ipv4Value = JTextFieldUtils.createAsLabel(nicOut.getMacAddress());
-      add(new JLabel("Adapter " + (nicOut.getNicId() + 1)));
-      add(new JLabel(""), "growx,pushx,wrap");
-      add(new JLabel(""));
-      add(nicValue, "right, growx, pushx, wrap");
-      add(new JLabel(""));
-      add(ipv4Value, "right, growx, pushx, wrap");
-      refresh();
-   }
+        nicValue = JTextFieldUtils.createAsLabel(nicOut.getAdapterType() + " using " + nicOut.getAttachMode()
+                + (AxStrings.isEmpty(nicOut.getAttachName()) ? "" : " on " + nicOut.getAttachName()));
+        ipv4Value = JTextFieldUtils.createAsLabel(nicOut.getMacAddress());
+        add(new JLabel("Adapter " + (nicOut.getNicId() + 1)));
+        add(new JLabel(""), "growx,pushx,wrap");
+        add(new JLabel(""));
+        add(nicValue, "right, growx, pushx, wrap");
+        add(new JLabel(""));
+        add(ipv4Value, "right, growx, pushx, wrap");
+        refresh();
+    }
 
-   private void refresh() {
-      GuestNetworkInterfaceWorker.execute(this, srvId, vmId, nicOut);
-   }
+    private void refresh() {
+        GuestNetworkInterfaceWorker.execute(this, srvId, vmId, nicOut);
+    }
 
-   @Override
-   public void put(GuestNetworkInterfaceOut gNicOut) {
-      if (gNicOut != null) {
-         ipv4Value.setText(nicOut.getMacAddress() + " | " + gNicOut.getIp4Address() + "/" + gNicOut.getIp4Subnet());
-      } else {
-         ipv4Value.setText(nicOut.getMacAddress() + " | IP information is not available");
-      }
-   }
+    @Override
+    public void put(GuestNetworkInterfaceOut gNicOut) {
+        if (gNicOut != null) {
+            ipv4Value.setText(nicOut.getMacAddress() + " | " + gNicOut.getIp4Address() + "/" + gNicOut.getIp4Subnet());
+        } else {
+            ipv4Value.setText(nicOut.getMacAddress() + " | IP information is not available");
+        }
+    }
 
-   @Override
-   public void loadingStarted() {
-      ipv4Value.setText(nicOut.getMacAddress() + " | Loading...");
-   }
+    @Override
+    public void loadingStarted() {
+        ipv4Value.setText(nicOut.getMacAddress() + " | Loading...");
+    }
 
-   @Override
-   public void loadingFinished(boolean isSuccessful, String message) {
-      if (!isSuccessful) {
-         ipv4Value.setText(nicOut.getMacAddress() + " | Error: " + message);
-      }
-   }
+    @Override
+    public void loadingFinished(boolean isSuccessful, String message) {
+        if (!isSuccessful) {
+            ipv4Value.setText(nicOut.getMacAddress() + " | Error: " + message);
+        }
+    }
 
 }

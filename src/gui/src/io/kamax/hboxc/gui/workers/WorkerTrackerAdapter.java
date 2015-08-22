@@ -24,9 +24,9 @@ import io.kamax.hboxc.gui.utils.AxSwingWorker;
 
 public class WorkerTrackerAdapter implements _WorkerTracker {
 
-   @Override
-   public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker) {
-      return worker;
-   }
+    @Override
+    public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker) {
+        return worker;
+    }
 
 }

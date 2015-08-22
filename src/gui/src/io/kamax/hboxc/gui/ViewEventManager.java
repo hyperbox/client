@@ -25,33 +25,33 @@ import io.kamax.tool.logging.Logger;
 
 public final class ViewEventManager {
 
-   private static _EventManager evMgr;
+    private static _EventManager evMgr;
 
-   private ViewEventManager() {
-      // not to be used
-   }
+    private ViewEventManager() {
+        // not to be used
+    }
 
-   static {
-      evMgr = new GuiEventManager("GUI-EvMgr");
-   }
+    static {
+        evMgr = new GuiEventManager("GUI-EvMgr");
+    }
 
-   public static _EventManager get() {
-      return evMgr;
-   }
+    public static _EventManager get() {
+        return evMgr;
+    }
 
-   public static void register(Object o) {
-      Logger.debug(o.getClass().getSimpleName() + " has registered");
-      evMgr.register(o);
-   }
+    public static void register(Object o) {
+        Logger.debug(o.getClass().getSimpleName() + " has registered");
+        evMgr.register(o);
+    }
 
-   public static void unregister(Object o) {
-      Logger.debug(o.getClass().getSimpleName() + " has unregistered");
-      evMgr.unregister(o);
-   }
+    public static void unregister(Object o) {
+        Logger.debug(o.getClass().getSimpleName() + " has unregistered");
+        evMgr.unregister(o);
+    }
 
-   public static void post(Object o) {
+    public static void post(Object o) {
 
-      evMgr.post(o);
-   }
+        evMgr.post(o);
+    }
 
 }

@@ -64,258 +64,263 @@ import net.miginfocom.swing.MigLayout;
 
 public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
 
-   private final String GENERAL = "General";
-   private final String SYSTEM = "System";
-   private final String OUTPUT = "Output";
-   private final String STORAGE = "Storage";
-   private final String AUDIO = "Audio";
-   private final String NETWORK = "Network";
+    private final String GENERAL = "General";
+    private final String SYSTEM = "System";
+    private final String OUTPUT = "Output";
+    private final String STORAGE = "Storage";
+    private final String AUDIO = "Audio";
+    private final String NETWORK = "Network";
 
-   private JDialog mainDialog;
-   private JProgressBar refreshProgress;
-   private boolean loadingFailed = false;
-   private List<SwingWorker<?, ?>> remainingWorkers = new ArrayList<SwingWorker<?, ?>>();
-   private List<SwingWorker<?, ?>> finishedWorkers = new ArrayList<SwingWorker<?, ?>>();
+    private JDialog mainDialog;
+    private JProgressBar refreshProgress;
+    private boolean loadingFailed = false;
+    private List<SwingWorker<?, ?>> remainingWorkers = new ArrayList<SwingWorker<?, ?>>();
+    private List<SwingWorker<?, ?>> finishedWorkers = new ArrayList<SwingWorker<?, ?>>();
 
-   private JSplitPane split;
+    private JSplitPane split;
 
-   private JPanel buttonsPanel;
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JPanel buttonsPanel;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private JScrollPane leftPane;
-   private JScrollPane rightPane;
+    private JScrollPane leftPane;
+    private JScrollPane rightPane;
 
-   private DefaultListModel listModel;
-   private JList itemList;
+    private DefaultListModel listModel;
+    private JList itemList;
 
-   private JPanel sectionPanels;
-   private CardLayout layout;
+    private JPanel sectionPanels;
+    private CardLayout layout;
 
-   private GeneralVmEdit generalEdit;
-   private SystemVmEdit systemEdit;
-   private OutputVmEdit outputEdit;
-   private StorageVmEdit storageEdit;
-   private AudioVmEdit audioEdit;
-   private NetworkVmEdit networkEdit;
+    private GeneralVmEdit generalEdit;
+    private SystemVmEdit systemEdit;
+    private OutputVmEdit outputEdit;
+    private StorageVmEdit storageEdit;
+    private AudioVmEdit audioEdit;
+    private NetworkVmEdit networkEdit;
 
-   private MachineIn mIn;
+    private MachineIn mIn;
 
-   public VmEditDialog() {
-      generalEdit = new GeneralVmEdit(this);
-      systemEdit = new SystemVmEdit(this);
-      outputEdit = new OutputVmEdit(this);
-      storageEdit = new StorageVmEdit(this);
-      audioEdit = new AudioVmEdit(this);
-      networkEdit = new NetworkVmEdit(this);
+    public VmEditDialog() {
+        generalEdit = new GeneralVmEdit(this);
+        systemEdit = new SystemVmEdit(this);
+        outputEdit = new OutputVmEdit(this);
+        storageEdit = new StorageVmEdit(this);
+        audioEdit = new AudioVmEdit(this);
+        networkEdit = new NetworkVmEdit(this);
 
-      layout = new CardLayout();
-      sectionPanels = new JPanel(layout);
+        layout = new CardLayout();
+        sectionPanels = new JPanel(layout);
 
-      sectionPanels.add(generalEdit.getComp(), GENERAL);
-      sectionPanels.add(systemEdit.getComp(), SYSTEM);
-      sectionPanels.add(outputEdit.getComp(), OUTPUT);
-      sectionPanels.add(storageEdit.getComp(), STORAGE);
-      sectionPanels.add(audioEdit.getComp(), AUDIO);
-      sectionPanels.add(networkEdit.getComp(), NETWORK);
+        sectionPanels.add(generalEdit.getComp(), GENERAL);
+        sectionPanels.add(systemEdit.getComp(), SYSTEM);
+        sectionPanels.add(outputEdit.getComp(), OUTPUT);
+        sectionPanels.add(storageEdit.getComp(), STORAGE);
+        sectionPanels.add(audioEdit.getComp(), AUDIO);
+        sectionPanels.add(networkEdit.getComp(), NETWORK);
 
-      listModel = new DefaultListModel();
-      listModel.addElement(GENERAL);
-      listModel.addElement(SYSTEM);
-      listModel.addElement(OUTPUT);
-      listModel.addElement(STORAGE);
-      listModel.addElement(AUDIO);
-      listModel.addElement(NETWORK);
+        listModel = new DefaultListModel();
+        listModel.addElement(GENERAL);
+        listModel.addElement(SYSTEM);
+        listModel.addElement(OUTPUT);
+        listModel.addElement(STORAGE);
+        listModel.addElement(AUDIO);
+        listModel.addElement(NETWORK);
 
-      itemList = new JList(listModel);
-      itemList.setCellRenderer(new LabelCellRenderer());
-      itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      itemList.addListSelectionListener(new ListSelect());
-      if (!listModel.isEmpty()) {
-         itemList.setSelectedValue(listModel.getElementAt(0), true);
-      }
+        itemList = new JList(listModel);
+        itemList.setCellRenderer(new LabelCellRenderer());
+        itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        itemList.addListSelectionListener(new ListSelect());
+        if (!listModel.isEmpty()) {
+            itemList.setSelectedValue(listModel.getElementAt(0), true);
+        }
 
-      leftPane = new JScrollPane(itemList);
-      leftPane.setMinimumSize(new Dimension(100, 50));
-      rightPane = new JScrollPane(sectionPanels);
-      rightPane.setMinimumSize(new Dimension(300, 100));
+        leftPane = new JScrollPane(itemList);
+        leftPane.setMinimumSize(new Dimension(100, 50));
+        rightPane = new JScrollPane(sectionPanels);
+        rightPane.setMinimumSize(new Dimension(300, 100));
 
-      split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, rightPane);
-      split.setBorder(null);
+        split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, rightPane);
+        split.setBorder(null);
 
-      saveButton = new JButton(new SaveAction(this));
-      saveButton.setEnabled(false);
-      cancelButton = new JButton(new CancelAction(this));
-      refreshProgress = new JProgressBar();
-      refreshProgress.setVisible(false);
-      refreshProgress.setStringPainted(true);
+        saveButton = new JButton(new SaveAction(this));
+        saveButton.setEnabled(false);
+        cancelButton = new JButton(new CancelAction(this));
+        refreshProgress = new JProgressBar();
+        refreshProgress.setVisible(false);
+        refreshProgress.setStringPainted(true);
 
-      buttonsPanel = new JPanel(new MigLayout());
-      buttonsPanel.add(saveButton);
-      buttonsPanel.add(cancelButton);
-      buttonsPanel.add(refreshProgress, "growx,pushx");
+        buttonsPanel = new JPanel(new MigLayout());
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
+        buttonsPanel.add(refreshProgress, "growx,pushx");
 
-      mainDialog = JDialogBuilder.get(saveButton);
-      mainDialog.setIconImage(IconBuilder.getTask(HypervisorTasks.MachineModify).getImage());
-      mainDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
-      mainDialog.setSize(1000, 600);
-      mainDialog.getContentPane().setLayout(new MigLayout());
-      mainDialog.getContentPane().add(split, "grow,push,wrap");
-      mainDialog.getContentPane().add(buttonsPanel, "grow x");
+        mainDialog = JDialogBuilder.get(saveButton);
+        mainDialog.setIconImage(IconBuilder.getTask(HypervisorTasks.MachineModify).getImage());
+        mainDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
+        mainDialog.setSize(1000, 600);
+        mainDialog.getContentPane().setLayout(new MigLayout());
+        mainDialog.getContentPane().add(split, "grow,push,wrap");
+        mainDialog.getContentPane().add(buttonsPanel, "grow x");
 
-   }
+    }
 
-   private void show(MachineOut mOut) {
-      mIn = new MachineIn(mOut);
-      MachineGetWorker.execute(this, new MachineReceiver(), mOut);
-      mainDialog.setTitle(mOut.getName() + " - Settings");
-      mainDialog.setLocationRelativeTo(mainDialog.getParent());
-      mainDialog.setVisible(true);
-   }
+    private void show(MachineOut mOut) {
+        mIn = new MachineIn(mOut);
+        MachineGetWorker.execute(this, new MachineReceiver(), mOut);
+        mainDialog.setTitle(mOut.getName() + " - Settings");
+        mainDialog.setLocationRelativeTo(mainDialog.getParent());
+        mainDialog.setVisible(true);
+    }
 
-   public static void edit(MachineOut mOut) {
-      new VmEditDialog().show(mOut);
-   }
+    public static void edit(MachineOut mOut) {
+        new VmEditDialog().show(mOut);
+    }
 
-   private void hide() {
-      itemList.clearSelection();
-      mainDialog.setVisible(false);
-      mainDialog.dispose();
-      mIn = null;
-   }
+    private void hide() {
+        itemList.clearSelection();
+        mainDialog.setVisible(false);
+        mainDialog.dispose();
+        mIn = null;
+    }
 
-   @Override
-   public void save() {
-      generalEdit.save();
-      systemEdit.save();
-      outputEdit.save();
-      storageEdit.save();
-      audioEdit.save();
-      networkEdit.save();
+    @Override
+    public void save() {
+        generalEdit.save();
+        systemEdit.save();
+        outputEdit.save();
+        storageEdit.save();
+        audioEdit.save();
+        networkEdit.save();
 
-      Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineModify, mIn));
+        Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineModify, mIn));
 
-      hide();
-   }
+        hide();
+    }
 
-   @Override
-   public void cancel() {
-      hide();
-   }
+    @Override
+    public void cancel() {
+        hide();
+    }
 
-   private class ListSelect implements ListSelectionListener {
+    private class ListSelect implements ListSelectionListener {
 
-      @Override
-      public void valueChanged(ListSelectionEvent lsEv) {
-         if (itemList.getSelectedValue() != null) {
-            layout.show(sectionPanels, itemList.getSelectedValue().toString());
-         }
-      }
+        @Override
+        public void valueChanged(ListSelectionEvent lsEv) {
+            if (itemList.getSelectedValue() != null) {
+                layout.show(sectionPanels, itemList.getSelectedValue().toString());
+            }
+        }
 
-   }
+    }
 
-   @SuppressWarnings("serial")
-   private class LabelCellRenderer extends DefaultListCellRenderer {
+    
+    private class LabelCellRenderer extends DefaultListCellRenderer {
 
-      @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        /**
+         *
+         */
+        private static final long serialVersionUID = 3884145295010503208L;
 
-         if (label.getText() == GENERAL) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.Machine));
-         } else if (label.getText() == SYSTEM) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.CPU));
-         } else if (label.getText() == OUTPUT) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.Display));
-         } else if (label.getText() == STORAGE) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.HardDisk));
-         } else if (label.getText() == AUDIO) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.Audio));
-         } else if (label.getText() == NETWORK) {
-            label.setIcon(IconBuilder.getEntityType(EntityType.Network));
-         } else {
-            label.setIcon(null);
-         }
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-         return label;
-      }
+            if (label.getText() == GENERAL) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.Machine));
+            } else if (label.getText() == SYSTEM) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.CPU));
+            } else if (label.getText() == OUTPUT) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.Display));
+            } else if (label.getText() == STORAGE) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.HardDisk));
+            } else if (label.getText() == AUDIO) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.Audio));
+            } else if (label.getText() == NETWORK) {
+                label.setIcon(IconBuilder.getEntityType(EntityType.Network));
+            } else {
+                label.setIcon(null);
+            }
 
-   }
+            return label;
+        }
 
-   private class MachineReceiver implements _MachineReceiver {
+    }
 
-      @Override
-      public void loadingStarted() {
-         saveButton.setEnabled(false);
-         refreshProgress.setIndeterminate(true);
-         refreshProgress.setVisible(true);
-      }
+    private class MachineReceiver implements _MachineReceiver {
 
-      @Override
-      public void loadingFinished(boolean isFinished, String message) {
-         refreshProgress.setMinimum(0);
-         refreshProgress.setMaximum(100);
-         refreshProgress.setValue(0);
-         refreshProgress.setIndeterminate(false);
-      }
-
-      @Override
-      public void put(final MachineOut mOut) {
-         generalEdit.update(mOut, mIn);
-         systemEdit.update(mOut, mIn);
-         outputEdit.update(mOut, mIn);
-         storageEdit.update(mOut, mIn);
-         audioEdit.update(mOut, mIn);
-         networkEdit.update(mOut, mIn);
-      }
-
-   }
-
-   private void refreshLoadingStatus() {
-      int remaining = remainingWorkers.size();
-      int finished = finishedWorkers.size();
-      int total = remaining + finished;
-
-      refreshProgress.setMinimum(0);
-      refreshProgress.setMaximum(total);
-      if (remainingWorkers.isEmpty()) {
-         finishedWorkers.clear();
-         refreshProgress.setValue(refreshProgress.getMaximum());
-      } else {
-         if (finishedWorkers.isEmpty()) {
+        @Override
+        public void loadingStarted() {
+            saveButton.setEnabled(false);
             refreshProgress.setIndeterminate(true);
-         } else {
-            refreshProgress.setValue(finished);
-         }
-      }
-      refreshProgress.setVisible(!remainingWorkers.isEmpty());
-      saveButton.setEnabled(remainingWorkers.isEmpty() && !loadingFailed);
-   }
+            refreshProgress.setVisible(true);
+        }
 
-   @Override
-   public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker) {
-      if (worker.isDone()) {
-         Logger.debug("Skipping registration of already finished worker: " + worker);
-      }
+        @Override
+        public void loadingFinished(boolean isFinished, String message) {
+            refreshProgress.setMinimum(0);
+            refreshProgress.setMaximum(100);
+            refreshProgress.setValue(0);
+            refreshProgress.setIndeterminate(false);
+        }
 
-      worker.addPropertyChangeListener(new PropertyChangeListener() {
+        @Override
+        public void put(final MachineOut mOut) {
+            generalEdit.update(mOut, mIn);
+            systemEdit.update(mOut, mIn);
+            outputEdit.update(mOut, mIn);
+            storageEdit.update(mOut, mIn);
+            audioEdit.update(mOut, mIn);
+            networkEdit.update(mOut, mIn);
+        }
 
-         @Override
-         public void propertyChange(PropertyChangeEvent ev) {
-            AxSwingWorker<?, ?, ?> worker = AxSwingWorker.class.cast(ev.getSource());
+    }
 
-            if (worker.hasFailed()) {
-               loadingFailed = true;
+    private void refreshLoadingStatus() {
+        int remaining = remainingWorkers.size();
+        int finished = finishedWorkers.size();
+        int total = remaining + finished;
+
+        refreshProgress.setMinimum(0);
+        refreshProgress.setMaximum(total);
+        if (remainingWorkers.isEmpty()) {
+            finishedWorkers.clear();
+            refreshProgress.setValue(refreshProgress.getMaximum());
+        } else {
+            if (finishedWorkers.isEmpty()) {
+                refreshProgress.setIndeterminate(true);
+            } else {
+                refreshProgress.setValue(finished);
             }
-            if ("state".equals(ev.getPropertyName()) && (SwingWorker.StateValue.DONE == ev.getNewValue())) {
-               remainingWorkers.remove(ev.getSource());
-               finishedWorkers.add((SwingWorker<?, ?>) ev.getSource());
-               refreshLoadingStatus();
-            }
-         }
-      });
+        }
+        refreshProgress.setVisible(!remainingWorkers.isEmpty());
+        saveButton.setEnabled(remainingWorkers.isEmpty() && !loadingFailed);
+    }
 
-      remainingWorkers.add(worker);
-      return worker;
-   }
+    @Override
+    public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker) {
+        if (worker.isDone()) {
+            Logger.debug("Skipping registration of already finished worker: " + worker);
+        }
+
+        worker.addPropertyChangeListener(new PropertyChangeListener() {
+
+            @Override
+            public void propertyChange(PropertyChangeEvent ev) {
+                AxSwingWorker<?, ?, ?> worker = AxSwingWorker.class.cast(ev.getSource());
+
+                if (worker.hasFailed()) {
+                    loadingFailed = true;
+                }
+                if ("state".equals(ev.getPropertyName()) && (SwingWorker.StateValue.DONE == ev.getNewValue())) {
+                    remainingWorkers.remove(ev.getSource());
+                    finishedWorkers.add((SwingWorker<?, ?>) ev.getSource());
+                    refreshLoadingStatus();
+                }
+            }
+        });
+
+        remainingWorkers.add(worker);
+        return worker;
+    }
 }

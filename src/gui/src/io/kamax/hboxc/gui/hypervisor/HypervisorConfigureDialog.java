@@ -38,57 +38,57 @@ import net.miginfocom.swing.MigLayout;
 
 public class HypervisorConfigureDialog implements _Saveable, _Cancelable {
 
-   private _GlobalConfigureView configView;
-   private JButton saveButton;
-   private JButton cancelButton;
-   private JPanel buttonPanel;
-   private JDialog dialog;
+    private _GlobalConfigureView configView;
+    private JButton saveButton;
+    private JButton cancelButton;
+    private JPanel buttonPanel;
+    private JDialog dialog;
 
-   private String srvId;
-   private HypervisorIn hypIn;
+    private String srvId;
+    private HypervisorIn hypIn;
 
-   private HypervisorConfigureDialog(String srvId) {
-      this.srvId = srvId;
+    private HypervisorConfigureDialog(String srvId) {
+        this.srvId = srvId;
 
-      saveButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
-      buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(saveButton);
-      buttonPanel.add(cancelButton);
+        saveButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
+        buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
 
-      dialog = JDialogBuilder.get("Hypervisor Configuration Editor", IconBuilder.getEntityType(EntityType.Server).getImage(), saveButton);
-   }
+        dialog = JDialogBuilder.get("Hypervisor Configuration Editor", IconBuilder.getEntityType(EntityType.Server).getImage(), saveButton);
+    }
 
-   private HypervisorIn getInternalInput() {
-      try {
-         // TODO Use Swing worker
-         configView = Gui.getHypervisorModel(Gui.getServer(srvId).getHypervisor().getInfo().getId()).getConfigureView();
-         configView.update(Gui.getServer(srvId).getHypervisor().getInfo());
-         dialog.add(configView.getComponent(), "grow,push,wrap");
-         dialog.add(buttonPanel, "growx,pushx,wrap");
-         dialog.pack();
-         dialog.setSize(650, dialog.getHeight());
-         dialog.setLocationRelativeTo(dialog.getParent());
-         dialog.setVisible(true);
-      } catch (HyperboxException t) {
-         HyperboxClient.getView().postError(t.getMessage());
-      }
-      return hypIn;
-   }
+    private HypervisorIn getInternalInput() {
+        try {
+            // TODO Use Swing worker
+            configView = Gui.getHypervisorModel(Gui.getServer(srvId).getHypervisor().getInfo().getId()).getConfigureView();
+            configView.update(Gui.getServer(srvId).getHypervisor().getInfo());
+            dialog.add(configView.getComponent(), "grow,push,wrap");
+            dialog.add(buttonPanel, "growx,pushx,wrap");
+            dialog.pack();
+            dialog.setSize(650, dialog.getHeight());
+            dialog.setLocationRelativeTo(dialog.getParent());
+            dialog.setVisible(true);
+        } catch (HyperboxException t) {
+            HyperboxClient.getView().postError(t.getMessage());
+        }
+        return hypIn;
+    }
 
-   @Override
-   public void cancel() {
-      dialog.setVisible(false);
-   }
+    @Override
+    public void cancel() {
+        dialog.setVisible(false);
+    }
 
-   @Override
-   public void save() {
-      hypIn = configView.getUserInput();
-      dialog.setVisible(false);
-   }
+    @Override
+    public void save() {
+        hypIn = configView.getUserInput();
+        dialog.setVisible(false);
+    }
 
-   public static HypervisorIn getInput(String srvId) {
-      return (new HypervisorConfigureDialog(srvId)).getInternalInput();
-   }
+    public static HypervisorIn getInput(String srvId) {
+        return (new HypervisorConfigureDialog(srvId)).getInternalInput();
+    }
 
 }

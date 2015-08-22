@@ -43,92 +43,92 @@ import net.miginfocom.swing.MigLayout;
 
 public class SnapshotModifyDialog implements _Saveable, _Cancelable {
 
-   private static SnapshotModifyDialog instance;
-   private JDialog mainDialog;
+    private static SnapshotModifyDialog instance;
+    private JDialog mainDialog;
 
-   private JPanel mainPanel;
-   private JLabel nameLabel;
-   private JTextField nameField;
-   private JLabel descLabel;
-   private JTextArea descArea;
+    private JPanel mainPanel;
+    private JLabel nameLabel;
+    private JTextField nameField;
+    private JLabel descLabel;
+    private JTextArea descArea;
 
-   private JPanel buttonsPanel;
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JPanel buttonsPanel;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private MachineOut mOut;
-   private SnapshotIn snapIn;
-   private SnapshotOut snapOut;
+    private MachineOut mOut;
+    private SnapshotIn snapIn;
+    private SnapshotOut snapOut;
 
-   private void init(MachineOut mOut, SnapshotOut snapOut) {
-      this.mOut = mOut;
-      this.snapOut = snapOut;
+    private void init(MachineOut mOut, SnapshotOut snapOut) {
+        this.mOut = mOut;
+        this.snapOut = snapOut;
 
-      nameLabel = new JLabel("Name");
-      nameField = new JTextField(40);
-      nameField.setText(snapOut.getName());
-      descLabel = new JLabel("Description");
-      descArea = new JTextArea();
-      descArea.setLineWrap(true);
-      descArea.setRows(10);
-      descArea.setText(snapOut.getDescription());
+        nameLabel = new JLabel("Name");
+        nameField = new JTextField(40);
+        nameField.setText(snapOut.getName());
+        descLabel = new JLabel("Description");
+        descArea = new JTextArea();
+        descArea.setLineWrap(true);
+        descArea.setRows(10);
+        descArea.setText(snapOut.getDescription());
 
-      mainPanel = new JPanel(new MigLayout());
-      mainPanel.add(nameLabel);
-      mainPanel.add(nameField, "growx,pushx,wrap");
-      mainPanel.add(descLabel);
-      mainPanel.add(descArea, "growx,pushx,wrap");
+        mainPanel = new JPanel(new MigLayout());
+        mainPanel.add(nameLabel);
+        mainPanel.add(nameField, "growx,pushx,wrap");
+        mainPanel.add(descLabel);
+        mainPanel.add(descArea, "growx,pushx,wrap");
 
-      saveButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
+        saveButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
 
-      buttonsPanel = new JPanel(new MigLayout());
-      buttonsPanel.add(saveButton);
-      buttonsPanel.add(cancelButton);
+        buttonsPanel = new JPanel(new MigLayout());
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
 
-      mainDialog = JDialogBuilder.get("Edit Snapshot", saveButton);
-      mainDialog.getContentPane().setLayout(new MigLayout());
-      mainDialog.getContentPane().add(mainPanel, "grow,push,wrap");
-      mainDialog.getContentPane().add(buttonsPanel, "center, growx");
-      mainDialog.getRootPane().setDefaultButton(saveButton);
-   }
+        mainDialog = JDialogBuilder.get("Edit Snapshot", saveButton);
+        mainDialog.getContentPane().setLayout(new MigLayout());
+        mainDialog.getContentPane().add(mainPanel, "grow,push,wrap");
+        mainDialog.getContentPane().add(buttonsPanel, "center, growx");
+        mainDialog.getRootPane().setDefaultButton(saveButton);
+    }
 
-   public static void show(MachineOut mOut, SnapshotOut snapOut) {
-      instance = new SnapshotModifyDialog();
-      // FIXME use SwingWorker
-      instance.init(mOut, Gui.getServer(mOut.getServerId()).getSnapshot(mOut.getUuid(), snapOut.getUuid()));
+    public static void show(MachineOut mOut, SnapshotOut snapOut) {
+        instance = new SnapshotModifyDialog();
+        // FIXME use SwingWorker
+        instance.init(mOut, Gui.getServer(mOut.getServerId()).getSnapshot(mOut.getUuid(), snapOut.getUuid()));
 
-      instance.mainDialog.pack();
-      instance.mainDialog.setLocationRelativeTo(instance.mainDialog.getParent());
-      instance.mainDialog.setVisible(true);
-   }
+        instance.mainDialog.pack();
+        instance.mainDialog.setLocationRelativeTo(instance.mainDialog.getParent());
+        instance.mainDialog.setVisible(true);
+    }
 
-   private void hide() {
-      mainDialog.setVisible(false);
-      mainDialog.dispose();
-      instance = null;
-   }
+    private void hide() {
+        mainDialog.setVisible(false);
+        mainDialog.dispose();
+        instance = null;
+    }
 
-   @Override
-   public void save() {
-      snapIn = new SnapshotIn(snapOut.getUuid());
-      if (!nameField.getText().contentEquals(snapOut.getName())) {
-         snapIn.setName(nameField.getText());
-      }
-      if (!descArea.getText().contentEquals(snapOut.getDescription())) {
-         snapIn.setDescription(descArea.getText());
-      }
+    @Override
+    public void save() {
+        snapIn = new SnapshotIn(snapOut.getUuid());
+        if (!nameField.getText().contentEquals(snapOut.getName())) {
+            snapIn.setName(nameField.getText());
+        }
+        if (!descArea.getText().contentEquals(snapOut.getDescription())) {
+            snapIn.setDescription(descArea.getText());
+        }
 
-      if (snapIn.hasNewData()) {
-         Gui.post(new Request(Command.VBOX, HypervisorTasks.SnapshotModify, new MachineIn(mOut), snapIn));
-      }
+        if (snapIn.hasNewData()) {
+            Gui.post(new Request(Command.VBOX, HypervisorTasks.SnapshotModify, new MachineIn(mOut), snapIn));
+        }
 
-      hide();
-   }
+        hide();
+    }
 
-   @Override
-   public void cancel() {
-      hide();
-   }
+    @Override
+    public void cancel() {
+        hide();
+    }
 
 }

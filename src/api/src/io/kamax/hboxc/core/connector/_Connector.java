@@ -27,39 +27,39 @@ import io.kamax.hboxc.state.ConnectionState;
 
 public interface _Connector {
 
-   public String getId();
+    public String getId();
 
-   public String getLabel();
+    public String getLabel();
 
-   public String getUsername();
+    public String getUsername();
 
-   public void setUsername(String username);
+    public void setUsername(String username);
 
-   public void setLabel(String label);
+    public void setLabel(String label);
 
-   public String getAddress();
+    public String getAddress();
 
-   public void setAddress(String address);
+    public void setAddress(String address);
 
-   public String getBackendId();
+    public String getBackendId();
 
-   public void setBackendId(String backendId);
+    public void setBackendId(String backendId);
 
-   public _Server connect(UserIn usrIn);
+    public _Server connect(UserIn usrIn);
 
-   public void disconnect();
+    public void disconnect();
 
-   public boolean isConnected();
+    public boolean isConnected();
 
-   public ConnectionState getState();
+    public ConnectionState getState();
 
-   public _Server getServer();
+    public _Server getServer();
 
-   /**
-    * Last known Server ID or null if never connected
-    * 
-    * @return Server ID as String
-    */
-   public String getServerId();
+    /**
+     * Last known Server ID or null if never connected
+     * 
+     * @return Server ID as String
+     */
+    public String getServerId();
 
 }

@@ -25,8 +25,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class MediumUpdatedEvent extends MediumEvent {
 
-   public MediumUpdatedEvent(MediumOut medOut) {
-      super(ClientEvents.MediumUpdate, medOut);
-   }
+    public MediumUpdatedEvent(MediumOut medOut) {
+        super(ClientEvents.MediumUpdate, medOut);
+    }
 
 }

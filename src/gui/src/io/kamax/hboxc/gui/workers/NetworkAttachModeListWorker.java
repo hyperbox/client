@@ -28,29 +28,29 @@ import java.util.List;
 
 public class NetworkAttachModeListWorker extends AxSwingWorker<_NetworkAttachModeReceiver, Void, NetworkAttachModeOut> {
 
-   private String srvId;
+    private String srvId;
 
-   public NetworkAttachModeListWorker(_NetworkAttachModeReceiver recv, String serverId) {
-      super(recv);
-      this.srvId = serverId;
-   }
+    public NetworkAttachModeListWorker(_NetworkAttachModeReceiver recv, String serverId) {
+        super(recv);
+        this.srvId = serverId;
+    }
 
-   @Override
-   protected Void doInBackground() throws Exception {
-      for (NetworkAttachModeOut ostOut : Gui.getServer(srvId).listNetworkAttachModes()) {
-         publish(ostOut);
-      }
+    @Override
+    protected Void doInBackground() throws Exception {
+        for (NetworkAttachModeOut ostOut : Gui.getServer(srvId).listNetworkAttachModes()) {
+            publish(ostOut);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   protected void process(List<NetworkAttachModeOut> ostOutList) {
-      getReceiver().add(ostOutList);
-   }
+    @Override
+    protected void process(List<NetworkAttachModeOut> ostOutList) {
+        getReceiver().add(ostOutList);
+    }
 
-   public static void execute(_WorkerTracker tracker, _NetworkAttachModeReceiver recv, String serverId) {
-      tracker.register(new NetworkAttachModeListWorker(recv, serverId)).execute();
-   }
+    public static void execute(_WorkerTracker tracker, _NetworkAttachModeReceiver recv, String serverId) {
+        tracker.register(new NetworkAttachModeListWorker(recv, serverId)).execute();
+    }
 
 }

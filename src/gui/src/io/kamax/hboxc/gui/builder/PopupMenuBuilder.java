@@ -69,93 +69,93 @@ import javax.swing.SwingConstants;
 
 public class PopupMenuBuilder {
 
-   public static JPopupMenu get(String serverId, StorageDeviceAttachmentOut sdaOut) {
-      JPopupMenu stoMenuActions = new JPopupMenu();
-      stoMenuActions.add(new JMenuItem(new HypervisorToolsMediumAttachAction(serverId, sdaOut)));
-      stoMenuActions.add(new JMenuItem(new MediumAttachAction(serverId, sdaOut)));
-      stoMenuActions.add(new JMenuItem(new MediumDettachAction(serverId, sdaOut, sdaOut.hasMediumInserted())));
-      return stoMenuActions;
-   }
+    public static JPopupMenu get(String serverId, StorageDeviceAttachmentOut sdaOut) {
+        JPopupMenu stoMenuActions = new JPopupMenu();
+        stoMenuActions.add(new JMenuItem(new HypervisorToolsMediumAttachAction(serverId, sdaOut)));
+        stoMenuActions.add(new JMenuItem(new MediumAttachAction(serverId, sdaOut)));
+        stoMenuActions.add(new JMenuItem(new MediumDettachAction(serverId, sdaOut, sdaOut.hasMediumInserted())));
+        return stoMenuActions;
+    }
 
-   public static JPopupMenu get(_MachineSelector select, MachineOut mOut) {
+    public static JPopupMenu get(_MachineSelector select, MachineOut mOut) {
 
-      JPopupMenu machineMenu = new JPopupMenu();
-      machineMenu.add(new JMenuItem(new MachineStartAction(select)));
-      machineMenu.add(new JMenuItem(new MachineStopAction(select)));
-      machineMenu.add(new JMenuItem(new MachineResetAction(select)));
-      machineMenu.add(new JMenuItem(new MachineAcpiPowerAction(select)));
-      machineMenu.add(new JSeparator());
-      machineMenu.add(new JMenuItem(new MachineSaveStateAction(select)));
-      machineMenu.add(new JMenuItem(new MachinePauseAction(select)));
-      machineMenu.add(new JMenuItem(new MachineResumeAction(select)));
-      machineMenu.add(new JSeparator());
-      machineMenu.add(new JMenuItem(new MachineEditAction(select)));
-      machineMenu.add(new JMenuItem(new MachineUnregisterAction(select)));
-      machineMenu.add(new JMenuItem(new MachineDeleteAction(select)));
+        JPopupMenu machineMenu = new JPopupMenu();
+        machineMenu.add(new JMenuItem(new MachineStartAction(select)));
+        machineMenu.add(new JMenuItem(new MachineStopAction(select)));
+        machineMenu.add(new JMenuItem(new MachineResetAction(select)));
+        machineMenu.add(new JMenuItem(new MachineAcpiPowerAction(select)));
+        machineMenu.add(new JSeparator());
+        machineMenu.add(new JMenuItem(new MachineSaveStateAction(select)));
+        machineMenu.add(new JMenuItem(new MachinePauseAction(select)));
+        machineMenu.add(new JMenuItem(new MachineResumeAction(select)));
+        machineMenu.add(new JSeparator());
+        machineMenu.add(new JMenuItem(new MachineEditAction(select)));
+        machineMenu.add(new JMenuItem(new MachineUnregisterAction(select)));
+        machineMenu.add(new JMenuItem(new MachineDeleteAction(select)));
 
-      return machineMenu;
-   }
+        return machineMenu;
+    }
 
-   public static JPopupMenu get(ServerOut srvOut) {
-      JPopupMenu menu = new JPopupMenu();
-      menu.add(new JMenuItem("Not implemented"));
-      return menu;
-   }
+    public static JPopupMenu get(ServerOut srvOut) {
+        JPopupMenu menu = new JPopupMenu();
+        menu.add(new JMenuItem("Not implemented"));
+        return menu;
+    }
 
-   public static JPopupMenu get(_ConnectorSelector conSelect, _ServerSelector srvSelect, ConnectorOutput conOut) {
-      JPopupMenu conPopupMenu = new JPopupMenu();
-      if (conOut.isConnected()) {
-         if (conOut.getServer().isHypervisorConnected()) {
-            JMenu vmActions = new JMenu("Machine");
-            vmActions.add(new JMenuItem(new MachineCreateAction(srvSelect)));
-            vmActions.add(new JMenuItem(new MachineRegisterAction(srvSelect)));
-            conPopupMenu.add(vmActions);
-         }
-         JMenu hypActions = new JMenu("Hypervisor");
-         if (conOut.getServer().isHypervisorConnected()) {
-            hypActions.add(new JMenuItem(new HypervisorConfigureAction(srvSelect)));
-            hypActions.add(new JMenuItem(new HypervisorDisconnectAction(srvSelect)));
-         } else {
-            hypActions.add(new JMenuItem(new HypervisorConnectAction(srvSelect)));
-         }
-         conPopupMenu.add(hypActions);
+    public static JPopupMenu get(_ConnectorSelector conSelect, _ServerSelector srvSelect, ConnectorOutput conOut) {
+        JPopupMenu conPopupMenu = new JPopupMenu();
+        if (conOut.isConnected()) {
+            if (conOut.getServer().isHypervisorConnected()) {
+                JMenu vmActions = new JMenu("Machine");
+                vmActions.add(new JMenuItem(new MachineCreateAction(srvSelect)));
+                vmActions.add(new JMenuItem(new MachineRegisterAction(srvSelect)));
+                conPopupMenu.add(vmActions);
+            }
+            JMenu hypActions = new JMenu("Hypervisor");
+            if (conOut.getServer().isHypervisorConnected()) {
+                hypActions.add(new JMenuItem(new HypervisorConfigureAction(srvSelect)));
+                hypActions.add(new JMenuItem(new HypervisorDisconnectAction(srvSelect)));
+            } else {
+                hypActions.add(new JMenuItem(new HypervisorConnectAction(srvSelect)));
+            }
+            conPopupMenu.add(hypActions);
 
-         JMenu srvMenu = new JMenu("Server");
-         srvMenu.add(new JMenuItem(new ServerConfigureAction(srvSelect)));
-         srvMenu.add(new JMenuItem(new ServerShutdownAction(srvSelect)));
-         conPopupMenu.add(srvMenu);
+            JMenu srvMenu = new JMenu("Server");
+            srvMenu.add(new JMenuItem(new ServerConfigureAction(srvSelect)));
+            srvMenu.add(new JMenuItem(new ServerShutdownAction(srvSelect)));
+            conPopupMenu.add(srvMenu);
 
-         conPopupMenu.add(new JSeparator());
-         conPopupMenu.add(new JMenuItem(new ConnectorDisconnectAction(conSelect)));
-      } else {
-         conPopupMenu.add(new JMenuItem(new ConnectorConnectAction(conSelect)));
-         conPopupMenu.add(new JMenuItem(new ConnectorModifyAction(conSelect, !conOut.isConnected())));
-         conPopupMenu.add(new JMenuItem(new ConnectorRemoveAction(conSelect)));
-      }
-      return conPopupMenu;
-   }
+            conPopupMenu.add(new JSeparator());
+            conPopupMenu.add(new JMenuItem(new ConnectorDisconnectAction(conSelect)));
+        } else {
+            conPopupMenu.add(new JMenuItem(new ConnectorConnectAction(conSelect)));
+            conPopupMenu.add(new JMenuItem(new ConnectorModifyAction(conSelect, !conOut.isConnected())));
+            conPopupMenu.add(new JMenuItem(new ConnectorRemoveAction(conSelect)));
+        }
+        return conPopupMenu;
+    }
 
-   public static JPopupMenu get(_StoreSelector stoSelect, StoreOut stoOut) {
-      Action browse = new StoreBrowseAction(stoSelect);
-      Action unregister = new StoreUnregisterAction(stoSelect);
-      Action delete = new StoreDeleteAction(stoSelect);
+    public static JPopupMenu get(_StoreSelector stoSelect, StoreOut stoOut) {
+        Action browse = new StoreBrowseAction(stoSelect);
+        Action unregister = new StoreUnregisterAction(stoSelect);
+        Action delete = new StoreDeleteAction(stoSelect);
 
-      JPopupMenu actions = new JPopupMenu();
-      actions.add(new JMenuItem(browse));
-      actions.add(new JSeparator(SwingConstants.HORIZONTAL));
-      actions.add(new JMenuItem(unregister));
-      actions.add(new JMenuItem(delete));
-      return actions;
-   }
+        JPopupMenu actions = new JPopupMenu();
+        actions.add(new JMenuItem(browse));
+        actions.add(new JSeparator(SwingConstants.HORIZONTAL));
+        actions.add(new JMenuItem(unregister));
+        actions.add(new JMenuItem(delete));
+        return actions;
+    }
 
-   public static JPopupMenu get(_ModuleSelector modSelect, ModuleOut modOut) {
-      if (modOut.isLoaded()) {
-         return null;
-      } else {
-         JPopupMenu actions = new JPopupMenu();
-         actions.add(new JMenuItem(new ModuleLoadAction(modSelect)));
-         return actions;
-      }
-   }
+    public static JPopupMenu get(_ModuleSelector modSelect, ModuleOut modOut) {
+        if (modOut.isLoaded()) {
+            return null;
+        } else {
+            JPopupMenu actions = new JPopupMenu();
+            actions.add(new JMenuItem(new ModuleLoadAction(modSelect)));
+            return actions;
+        }
+    }
 
 }

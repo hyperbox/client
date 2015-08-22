@@ -26,13 +26,13 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public class ConnectorAddedEvent extends ConnectorEvent {
 
-   public ConnectorAddedEvent(ConnectorOutput conOut) {
-      super(ClientEvents.ConnectorAdded, conOut);
-   }
+    public ConnectorAddedEvent(ConnectorOutput conOut) {
+        super(ClientEvents.ConnectorAdded, conOut);
+    }
 
-   @Override
-   public String toString() {
-      return "Connector " + getConnector().getLabel() + " was added @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Connector " + getConnector().getLabel() + " was added @ " + getTime();
+    }
 
 }

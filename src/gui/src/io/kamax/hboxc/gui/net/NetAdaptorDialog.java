@@ -40,90 +40,90 @@ import net.miginfocom.swing.MigLayout;
 
 public class NetAdaptorDialog implements _Saveable, _Cancelable {
 
-   private NetAdaptorIn adaptIn;
-   private _NetAdaptorConfigureView configView;
+    private NetAdaptorIn adaptIn;
+    private _NetAdaptorConfigureView configView;
 
-   private JPanel buttonsPanel;
-   private JButton saveButton;
-   private JButton cancelButton;
+    private JPanel buttonsPanel;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-   private JDialog dialog;
+    private JDialog dialog;
 
-   private NetAdaptorDialog(final String srvId, final String modeId, final String adaptId) {
-      configView = Gui.getHypervisorModel(Gui.getServer(srvId).getHypervisor().getInfo().getId()).getNetAdaptorConfig(srvId, modeId, adaptId);
-      saveButton = new JButton(new SaveAction(this));
-      cancelButton = new JButton(new CancelAction(this));
+    private NetAdaptorDialog(final String srvId, final String modeId, final String adaptId) {
+        configView = Gui.getHypervisorModel(Gui.getServer(srvId).getHypervisor().getInfo().getId()).getNetAdaptorConfig(srvId, modeId, adaptId);
+        saveButton = new JButton(new SaveAction(this));
+        cancelButton = new JButton(new CancelAction(this));
 
-      buttonsPanel = new JPanel(new MigLayout("ins 0"));
-      buttonsPanel.add(saveButton);
-      buttonsPanel.add(cancelButton);
+        buttonsPanel = new JPanel(new MigLayout("ins 0"));
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(cancelButton);
 
-      dialog = JDialogBuilder.get("Add Network Adaptor", saveButton);
-      dialog.getContentPane().add(configView.getComponent(), "grow, push, wrap");
-      dialog.getContentPane().add(buttonsPanel, "center");
+        dialog = JDialogBuilder.get("Add Network Adaptor", saveButton);
+        dialog.getContentPane().add(configView.getComponent(), "grow, push, wrap");
+        dialog.getContentPane().add(buttonsPanel, "center");
 
-      if (!AxStrings.isEmpty(adaptId)) {
-         new SwingWorker<NetAdaptorOut, Void>() {
+        if (!AxStrings.isEmpty(adaptId)) {
+            new SwingWorker<NetAdaptorOut, Void>() {
 
-            {
-               dialog.setTitle("Modifying Network Adator - Loading...");
-            }
+                {
+                    dialog.setTitle("Modifying Network Adator - Loading...");
+                }
 
-            @Override
-            protected NetAdaptorOut doInBackground() throws Exception {
-               return Gui.getServer(srvId).getHypervisor().getNetAdaptor(modeId, adaptId);
-            }
+                @Override
+                protected NetAdaptorOut doInBackground() throws Exception {
+                    return Gui.getServer(srvId).getHypervisor().getNetAdaptor(modeId, adaptId);
+                }
 
-            @Override
-            protected void done() {
-               try {
-                  NetAdaptorOut naOut = get();
-                  configView.update(naOut);
-                  dialog.setTitle("Modifying Network Adaptor - " + naOut.getLabel());
-               } catch (InterruptedException e) {
-                  Gui.showError(e);
-               } catch (ExecutionException e) {
-                  Gui.showError(e.getCause());
-               }
-            }
-         }.execute();
-      }
-   }
+                @Override
+                protected void done() {
+                    try {
+                        NetAdaptorOut naOut = get();
+                        configView.update(naOut);
+                        dialog.setTitle("Modifying Network Adaptor - " + naOut.getLabel());
+                    } catch (InterruptedException e) {
+                        Gui.showError(e);
+                    } catch (ExecutionException e) {
+                        Gui.showError(e.getCause());
+                    }
+                }
+            }.execute();
+        }
+    }
 
-   private NetAdaptorIn getInput() {
-      show();
-      return adaptIn;
-   }
+    private NetAdaptorIn getInput() {
+        show();
+        return adaptIn;
+    }
 
-   public static NetAdaptorIn getInput(String srvId, String modeId, String adaptId) {
-      try {
-         return new NetAdaptorDialog(srvId, modeId, adaptId).getInput();
-      } catch (HyperboxException e) {
-         Gui.showError(e.getMessage());
-         return null;
-      }
-   }
+    public static NetAdaptorIn getInput(String srvId, String modeId, String adaptId) {
+        try {
+            return new NetAdaptorDialog(srvId, modeId, adaptId).getInput();
+        } catch (HyperboxException e) {
+            Gui.showError(e.getMessage());
+            return null;
+        }
+    }
 
-   private void show() {
-      dialog.pack();
-      dialog.setLocationRelativeTo(dialog.getParent());
-      dialog.setVisible(true);
-   }
+    private void show() {
+        dialog.pack();
+        dialog.setLocationRelativeTo(dialog.getParent());
+        dialog.setVisible(true);
+    }
 
-   private void hide() {
-      dialog.setVisible(false);
-   }
+    private void hide() {
+        dialog.setVisible(false);
+    }
 
-   @Override
-   public void cancel() {
-      adaptIn = null;
-      hide();
-   }
+    @Override
+    public void cancel() {
+        adaptIn = null;
+        hide();
+    }
 
-   @Override
-   public void save() {
-      adaptIn = configView.getInput();
-      hide();
-   }
+    @Override
+    public void save() {
+        adaptIn = configView.getInput();
+        hide();
+    }
 
 }

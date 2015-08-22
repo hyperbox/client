@@ -26,34 +26,34 @@ import io.kamax.hbox.comm._AnswerReceiver;
 
 public final class MessageInput {
 
-   private Request req;
-   private _AnswerReceiver recv;
+    private Request req;
+    private _AnswerReceiver recv;
 
-   public MessageInput(Request req) {
-      this.req = req;
-      recv = new NullAnswerReceiver();
-   }
+    public MessageInput(Request req) {
+        this.req = req;
+        recv = new NullAnswerReceiver();
+    }
 
-   public MessageInput(Request req, _AnswerReceiver recv) {
-      this.req = req;
-      this.recv = recv;
-   }
+    public MessageInput(Request req, _AnswerReceiver recv) {
+        this.req = req;
+        this.recv = recv;
+    }
 
-   public Request getRequest() {
-      return req;
-   }
+    public Request getRequest() {
+        return req;
+    }
 
-   public _AnswerReceiver getReceiver() {
-      return recv;
-   }
+    public _AnswerReceiver getReceiver() {
+        return recv;
+    }
 
-   private class NullAnswerReceiver implements _AnswerReceiver {
+    private class NullAnswerReceiver implements _AnswerReceiver {
 
-      @Override
-      public void putAnswer(Answer ans) {
-         // We do nothing
-      }
+        @Override
+        public void putAnswer(Answer ans) {
+            // We do nothing
+        }
 
-   }
+    }
 
 }

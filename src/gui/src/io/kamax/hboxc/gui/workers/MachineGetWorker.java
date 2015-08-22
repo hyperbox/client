@@ -29,27 +29,27 @@ import java.util.concurrent.ExecutionException;
 
 public class MachineGetWorker extends AxSwingWorker<_MachineReceiver, MachineOut, Void> {
 
-   private MachineOut mOut;
+    private MachineOut mOut;
 
-   public MachineGetWorker(_MachineReceiver recv, MachineOut mOut) {
-      super(recv);
-      this.mOut = mOut;
-   }
+    public MachineGetWorker(_MachineReceiver recv, MachineOut mOut) {
+        super(recv);
+        this.mOut = mOut;
+    }
 
-   @Override
-   protected MachineOut doInBackground() throws Exception {
-      MachineOut newMachineOut = Gui.getServer(mOut.getServerId()).getMachine(mOut.getUuid());
-      return newMachineOut;
-   }
+    @Override
+    protected MachineOut doInBackground() throws Exception {
+        MachineOut newMachineOut = Gui.getServer(mOut.getServerId()).getMachine(mOut.getUuid());
+        return newMachineOut;
+    }
 
-   @Override
-   protected void innerDone() throws InterruptedException, ExecutionException {
-      MachineOut mOut = get();
-      getReceiver().put(mOut);
-   }
+    @Override
+    protected void innerDone() throws InterruptedException, ExecutionException {
+        MachineOut mOut = get();
+        getReceiver().put(mOut);
+    }
 
-   public static void execute(_WorkerTracker tracker, _MachineReceiver recv, MachineOut mOut) {
-      tracker.register(new MachineGetWorker(recv, mOut)).execute();
-   }
+    public static void execute(_WorkerTracker tracker, _MachineReceiver recv, MachineOut mOut) {
+        tracker.register(new MachineGetWorker(recv, mOut)).execute();
+    }
 
 }

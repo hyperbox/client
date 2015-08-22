@@ -30,24 +30,24 @@ import io.kamax.hboxc.gui.store.utils.StoreItemChooser;
 
 public class MediumBrowser {
 
-   private static MediumOut getMedium(ServerOut srvOut, StoreItemOut siOut, String deviceType) {
-      MediumIn medIn = new MediumIn();
-      medIn.setLocation(siOut.getPath());
-      medIn.setType(deviceType);
-      MediumOut medOut = Gui.getServer(srvOut).getMedium(medIn);
-      return medOut;
-   }
+    private static MediumOut getMedium(ServerOut srvOut, StoreItemOut siOut, String deviceType) {
+        MediumIn medIn = new MediumIn();
+        medIn.setLocation(siOut.getPath());
+        medIn.setType(deviceType);
+        MediumOut medOut = Gui.getServer(srvOut).getMedium(medIn);
+        return medOut;
+    }
 
-   public static MediumOut browse(ServerOut srvOut, String deviceType) {
-      StoreItemOut siOut = StoreItemChooser.getExisitingFile(srvOut.getId());
-      if ((siOut == null) || siOut.isContainer()) {
-         return null;
-      }
-      return getMedium(srvOut, siOut, deviceType);
-   }
+    public static MediumOut browse(ServerOut srvOut, String deviceType) {
+        StoreItemOut siOut = StoreItemChooser.getExisitingFile(srvOut.getId());
+        if ((siOut == null) || siOut.isContainer()) {
+            return null;
+        }
+        return getMedium(srvOut, siOut, deviceType);
+    }
 
-   public static MediumOut browse(ServerOut srvOut, String storeId, String deviceType) {
-      return browse(srvOut, deviceType);
-   }
+    public static MediumOut browse(ServerOut srvOut, String storeId, String deviceType) {
+        return browse(srvOut, deviceType);
+    }
 
 }

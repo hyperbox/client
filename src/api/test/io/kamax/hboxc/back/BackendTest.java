@@ -53,160 +53,160 @@ import org.junit.Test;
 
 public abstract class BackendTest {
 
-   private static _Backend backend;
+    private static _Backend backend;
 
-   public static void init(_Backend b, ServerIn srvIn) throws HyperboxException {
-      Logger.setLevel(LogLevel.Tracking);
+    public static void init(_Backend b, ServerIn srvIn) throws HyperboxException {
+        Logger.setLevel(LogLevel.Tracking);
 
-      BackendTest.backend = b;
+        BackendTest.backend = b;
 
-      EventManager.get().start();
-      b.start();
-      assertFalse(b.isConnected());
-      assertTrue(b.isConnected());
-      b.disconnect();
-      assertFalse(b.isConnected());
-   }
+        EventManager.get().start();
+        b.start();
+        assertFalse(b.isConnected());
+        assertTrue(b.isConnected());
+        b.disconnect();
+        assertFalse(b.isConnected());
+    }
 
-   @Before
-   public void before() throws HyperboxException {
-      assertFalse(backend.isConnected());
-      assertTrue(backend.isConnected());
-   }
+    @Before
+    public void before() throws HyperboxException {
+        assertFalse(backend.isConnected());
+        assertTrue(backend.isConnected());
+    }
 
-   @After
-   public void after() {
-      backend.disconnect();
-      assertFalse(backend.isConnected());
-   }
+    @After
+    public void after() {
+        backend.disconnect();
+        assertFalse(backend.isConnected());
+    }
 
-   @AfterClass
-   public static void afterClass() {
-      EventManager.get().stop();
-   }
+    @AfterClass
+    public static void afterClass() {
+        EventManager.get().stop();
+    }
 
-   @Test
-   public void helloTest() {
-      Transaction t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.Hello));
-      assertTrue(t.sendAndWait());
-      Queue<Answer> answers = t.getBody();
-      assertTrue("We must have only one reply", answers.size() == 1);
-      Answer ans = answers.poll();
-      assertTrue("The answer must containt the Hello data", ans.has("Hello"));
-      assertNotNull("The Hello data must be a String", ans.get("Hello").toString());
-      System.out.println("Server banner : " + ans.get("Hello"));
-   }
+    @Test
+    public void helloTest() {
+        Transaction t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.Hello));
+        assertTrue(t.sendAndWait());
+        Queue<Answer> answers = t.getBody();
+        assertTrue("We must have only one reply", answers.size() == 1);
+        Answer ans = answers.poll();
+        assertTrue("The answer must containt the Hello data", ans.has("Hello"));
+        assertNotNull("The Hello data must be a String", ans.get("Hello").toString());
+        System.out.println("Server banner : " + ans.get("Hello"));
+    }
 
-   @Test
-   public void listVmTest() {
-      String newUuid = UUID.randomUUID().toString();
-      MachineIn mIn = new MachineIn(newUuid);
-      mIn.setName(Long.toString(System.currentTimeMillis()));
+    @Test
+    public void listVmTest() {
+        String newUuid = UUID.randomUUID().toString();
+        MachineIn mIn = new MachineIn(newUuid);
+        mIn.setName(Long.toString(System.currentTimeMillis()));
 
-      Transaction t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachineCreate, mIn));
-      t.sendAndWaitForTask();
-      assertFalse(t.getError(), t.hasFailed());
+        Transaction t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachineCreate, mIn));
+        t.sendAndWaitForTask();
+        assertFalse(t.getError(), t.hasFailed());
 
-      t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachineList));
-      t.sendAndWait();
-      assertFalse(t.getError(), t.hasFailed());
-      assertFalse(t.getBody().isEmpty());
-      Queue<Answer> answers = t.getBody();
+        t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachineList));
+        t.sendAndWait();
+        assertFalse(t.getError(), t.hasFailed());
+        assertFalse(t.getBody().isEmpty());
+        Queue<Answer> answers = t.getBody();
 
-      for (Answer ans : answers) {
-         assertTrue(ans.has(MachineOut.class));
-         MachineOut mOut = ans.get(MachineOut.class);
-         MachineOutputTest.validateSimple(mOut);
-      }
-   }
+        for (Answer ans : answers) {
+            assertTrue(ans.has(MachineOut.class));
+            MachineOut mOut = ans.get(MachineOut.class);
+            MachineOutputTest.validateSimple(mOut);
+        }
+    }
 
-   @Test
-   public void listUsers() {
-      Transaction t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.UserList));
-      assertTrue(t.sendAndWait());
-      Queue<Answer> answers = t.getBody();
-      for (Answer ans : answers) {
-         assertTrue(ans.has(UserOut.class));
-         UserOut objOut = ans.get(UserOut.class);
-         assertNotNull(objOut);
-         assertFalse(objOut.getId().isEmpty());
-         assertFalse(objOut.getUsername().isEmpty());
-      }
-   }
+    @Test
+    public void listUsers() {
+        Transaction t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.UserList));
+        assertTrue(t.sendAndWait());
+        Queue<Answer> answers = t.getBody();
+        for (Answer ans : answers) {
+            assertTrue(ans.has(UserOut.class));
+            UserOut objOut = ans.get(UserOut.class);
+            assertNotNull(objOut);
+            assertFalse(objOut.getId().isEmpty());
+            assertFalse(objOut.getUsername().isEmpty());
+        }
+    }
 
-   @Test
-   public void listTasks() {
-      Transaction t = null;
+    @Test
+    public void listTasks() {
+        Transaction t = null;
 
-      String newUuid = UUID.randomUUID().toString();
-      MachineIn mIn = new MachineIn(newUuid);
-      mIn.setName(Long.toString(System.currentTimeMillis()));
+        String newUuid = UUID.randomUUID().toString();
+        MachineIn mIn = new MachineIn(newUuid);
+        mIn.setName(Long.toString(System.currentTimeMillis()));
 
-      t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachineCreate, mIn));
-      t.sendAndWaitForTask();
-      assertFalse(t.getError(), t.hasFailed());
+        t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachineCreate, mIn));
+        t.sendAndWaitForTask();
+        assertFalse(t.getError(), t.hasFailed());
 
-      t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachinePowerOn, mIn));
-      t.sendAndWaitForTask();
-      assertFalse(t.getError(), t.hasFailed());
+        t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MachinePowerOn, mIn));
+        t.sendAndWaitForTask();
+        assertFalse(t.getError(), t.hasFailed());
 
-      t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.GuestShutdown, mIn));
-      t.sendAndWait();
-      assertFalse(t.getError(), t.hasFailed());
-      TaskOut tOutFinal = t.extractItem(TaskOut.class);
-      assertNotNull(tOutFinal);
+        t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.GuestShutdown, mIn));
+        t.sendAndWait();
+        assertFalse(t.getError(), t.hasFailed());
+        TaskOut tOutFinal = t.extractItem(TaskOut.class);
+        assertNotNull(tOutFinal);
 
-      try {
-         t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.TaskList));
-         t.sendAndWait();
-         assertFalse(t.getError(), t.hasFailed());
-         assertFalse(t.getBody().isEmpty());
+        try {
+            t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.TaskList));
+            t.sendAndWait();
+            assertFalse(t.getError(), t.hasFailed());
+            assertFalse(t.getBody().isEmpty());
 
-         Queue<Answer> answers = t.getBody();
-         assertTrue(answers.size() >= 1);
-         for (Answer ans : answers) {
-            assertTrue(ans.has(TaskOut.class));
-            TaskOut tOut = ans.get(TaskOut.class);
-            assertNotNull("TaskOutput shouldn't be null", tOut);
-            assertFalse(tOut.getId().isEmpty());
-            assertNotNull(tOut.getUser());
-         }
-      } finally {
-         t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.TaskCancel, new TaskIn(tOutFinal.getId())));
-         t.sendAndWait();
-         assertFalse(t.getError(), t.hasFailed());
-      }
-   }
+            Queue<Answer> answers = t.getBody();
+            assertTrue(answers.size() >= 1);
+            for (Answer ans : answers) {
+                assertTrue(ans.has(TaskOut.class));
+                TaskOut tOut = ans.get(TaskOut.class);
+                assertNotNull("TaskOutput shouldn't be null", tOut);
+                assertFalse(tOut.getId().isEmpty());
+                assertNotNull(tOut.getUser());
+            }
+        } finally {
+            t = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.TaskCancel, new TaskIn(tOutFinal.getId())));
+            t.sendAndWait();
+            assertFalse(t.getError(), t.hasFailed());
+        }
+    }
 
-   @Test
-   public void listMediums() {
-      Transaction t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MediumList));
-      t.sendAndWait();
-      assertFalse(t.getError(), t.hasFailed());
+    @Test
+    public void listMediums() {
+        Transaction t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MediumList));
+        t.sendAndWait();
+        assertFalse(t.getError(), t.hasFailed());
 
-      List<MediumOut> medOutList = t.extractItems(MediumOut.class);
-      if (medOutList.isEmpty()) {
-         t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MediumGet, new MediumIn("/usr/share/VBoxGuestAdditions")));
-         t.sendAndWait();
-         assertFalse(t.getError(), t.hasFailed());
-         MediumOut newMedOut = t.extractItem(MediumOut.class);
-         MediumOutputTest.validateFull(newMedOut);
-      } else {
-         for (MediumOut medOut : medOutList) {
-            MediumOutputTest.validateSimple(medOut);
-            t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MediumGet, new MediumIn(medOut.getUuid())));
+        List<MediumOut> medOutList = t.extractItems(MediumOut.class);
+        if (medOutList.isEmpty()) {
+            t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MediumGet, new MediumIn("/usr/share/VBoxGuestAdditions")));
             t.sendAndWait();
             assertFalse(t.getError(), t.hasFailed());
             MediumOut newMedOut = t.extractItem(MediumOut.class);
             MediumOutputTest.validateFull(newMedOut);
-         }
-      }
-   }
+        } else {
+            for (MediumOut medOut : medOutList) {
+                MediumOutputTest.validateSimple(medOut);
+                t = new Transaction(backend, new Request(Command.VBOX, HypervisorTasks.MediumGet, new MediumIn(medOut.getUuid())));
+                t.sendAndWait();
+                assertFalse(t.getError(), t.hasFailed());
+                MediumOut newMedOut = t.extractItem(MediumOut.class);
+                MediumOutputTest.validateFull(newMedOut);
+            }
+        }
+    }
 
-   @Test(expected = HyperboxException.class)
-   public void sendDisconnectedFail() {
-      backend.disconnect();
-      backend.putRequest(new Request(Command.HBOX, HyperboxTasks.Hello));
-   }
+    @Test(expected = HyperboxException.class)
+    public void sendDisconnectedFail() {
+        backend.disconnect();
+        backend.putRequest(new Request(Command.HBOX, HyperboxTasks.Hello));
+    }
 
 }

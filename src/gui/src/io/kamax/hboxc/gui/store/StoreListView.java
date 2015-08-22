@@ -52,139 +52,139 @@ import net.miginfocom.swing.MigLayout;
 
 public final class StoreListView implements _StoreSelector, _Refreshable, _SingleServerSelector, _StoreListReceiver {
 
-   private ServerOut srvOut;
+    private ServerOut srvOut;
 
-   private JLabel statusLabel;
+    private JLabel statusLabel;
 
-   private StoreListTableModel itemListModel;
-   private JTable itemList;
-   private JScrollPane scrollPane;
+    private StoreListTableModel itemListModel;
+    private JTable itemList;
+    private JScrollPane scrollPane;
 
-   private JButton addButton;
-   private JButton registerButton;
-   private JPanel buttonPanel;
+    private JButton addButton;
+    private JButton registerButton;
+    private JPanel buttonPanel;
 
-   private JPanel panel;
+    private JPanel panel;
 
-   public StoreListView() {
+    public StoreListView() {
 
-      statusLabel = new JLabel();
-      statusLabel.setVisible(false);
+        statusLabel = new JLabel();
+        statusLabel.setVisible(false);
 
-      itemListModel = new StoreListTableModel();
-      itemList = new JTable(itemListModel);
-      itemList.setAutoCreateRowSorter(true);
-      itemList.setFillsViewportHeight(true);
-      itemList.getRowSorter().setSortKeys(Arrays.asList(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
-      itemList.addMouseListener(new ItemListMouseListener());
-      scrollPane = new JScrollPane(itemList);
-      MouseWheelController.install(scrollPane);
+        itemListModel = new StoreListTableModel();
+        itemList = new JTable(itemListModel);
+        itemList.setAutoCreateRowSorter(true);
+        itemList.setFillsViewportHeight(true);
+        itemList.getRowSorter().setSortKeys(Arrays.asList(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
+        itemList.addMouseListener(new ItemListMouseListener());
+        scrollPane = new JScrollPane(itemList);
+        MouseWheelController.install(scrollPane);
 
-      addButton = new JButton(new StoreCreateAction(this));
-      registerButton = new JButton(new StoreRegisterAction(this));
-      buttonPanel = new JPanel(new MigLayout("ins 0"));
-      buttonPanel.add(addButton);
-      buttonPanel.add(registerButton);
+        addButton = new JButton(new StoreCreateAction(this));
+        registerButton = new JButton(new StoreRegisterAction(this));
+        buttonPanel = new JPanel(new MigLayout("ins 0"));
+        buttonPanel.add(addButton);
+        buttonPanel.add(registerButton);
 
-      panel = new JPanel(new MigLayout("ins 0"));
-      panel.add(statusLabel, "hidemode 3, growx, pushx, wrap");
-      panel.add(buttonPanel, "hidemode 3, growx, pushx, wrap");
-      panel.add(scrollPane, "hidemode 3, grow, push, wrap");
+        panel = new JPanel(new MigLayout("ins 0"));
+        panel.add(statusLabel, "hidemode 3, growx, pushx, wrap");
+        panel.add(buttonPanel, "hidemode 3, growx, pushx, wrap");
+        panel.add(scrollPane, "hidemode 3, grow, push, wrap");
 
-      ViewEventManager.register(this);
-   }
+        ViewEventManager.register(this);
+    }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+    public JComponent getComponent() {
+        return panel;
+    }
 
-   @Override
-   public List<String> getSelection() {
-      List<String> listSelectedItems = new ArrayList<String>();
-      for (int row : itemList.getSelectedRows()) {
-         listSelectedItems.add(itemListModel.getObjectAtRow(itemList.convertRowIndexToModel(row)).getId());
-      }
-      return listSelectedItems;
-   }
+    @Override
+    public List<String> getSelection() {
+        List<String> listSelectedItems = new ArrayList<String>();
+        for (int row : itemList.getSelectedRows()) {
+            listSelectedItems.add(itemListModel.getObjectAtRow(itemList.convertRowIndexToModel(row)).getId());
+        }
+        return listSelectedItems;
+    }
 
-   @Handler
-   public void postStoreState(StoreEventOut event) {
-      refresh();
-   }
+    @Handler
+    public void postStoreState(StoreEventOut event) {
+        refresh();
+    }
 
-   private class ItemListMouseListener extends MouseAdapter {
+    private class ItemListMouseListener extends MouseAdapter {
 
-      private void showPopup(MouseEvent ev) {
-         if (ev.isPopupTrigger() && (itemList.getSelectedRow() > -1)) {
-            JPopupMenu actions = PopupMenuBuilder.get(StoreListView.this,
-                  itemListModel.getObjectAtRow(itemList.convertRowIndexToModel(itemList.getSelectedRow())));
-            actions.show(ev.getComponent(), ev.getX(), ev.getY());
-         }
-      }
+        private void showPopup(MouseEvent ev) {
+            if (ev.isPopupTrigger() && (itemList.getSelectedRow() > -1)) {
+                JPopupMenu actions = PopupMenuBuilder.get(StoreListView.this,
+                        itemListModel.getObjectAtRow(itemList.convertRowIndexToModel(itemList.getSelectedRow())));
+                actions.show(ev.getComponent(), ev.getX(), ev.getY());
+            }
+        }
 
-      @Override
-      public void mouseReleased(MouseEvent ev) {
-         showPopup(ev);
-      }
-
-      @Override
-      public void mousePressed(MouseEvent ev) {
-         showPopup(ev);
-      }
-
-      @Override
-      public void mouseClicked(MouseEvent ev) {
-         if ((ev.getButton() == MouseEvent.BUTTON1) && (itemList.rowAtPoint(ev.getPoint()) == -1)) {
-            itemList.clearSelection();
-         } else if ((ev.getButton() == MouseEvent.BUTTON1) && (ev.getClickCount() == 2) && (itemList.rowAtPoint(ev.getPoint()) != -1)) {
-            // StoreOutput stoOut = itemListModel.getObjectAtRowId(itemList.convertRowIndexToModel(itemList.rowAtPoint(ev.getPoint())));
-            StoreItemChooser.browse(srvOut.getId());
-         } else {
+        @Override
+        public void mouseReleased(MouseEvent ev) {
             showPopup(ev);
-         }
-      }
+        }
 
-   }
+        @Override
+        public void mousePressed(MouseEvent ev) {
+            showPopup(ev);
+        }
 
-   public void show(ServerOut srvOut) {
-      if (srvOut == null) {
-         itemListModel.clear();
-      } else {
-         this.srvOut = srvOut;
-         refresh();
-      }
-   }
+        @Override
+        public void mouseClicked(MouseEvent ev) {
+            if ((ev.getButton() == MouseEvent.BUTTON1) && (itemList.rowAtPoint(ev.getPoint()) == -1)) {
+                itemList.clearSelection();
+            } else if ((ev.getButton() == MouseEvent.BUTTON1) && (ev.getClickCount() == 2) && (itemList.rowAtPoint(ev.getPoint()) != -1)) {
+                // StoreOutput stoOut = itemListModel.getObjectAtRowId(itemList.convertRowIndexToModel(itemList.rowAtPoint(ev.getPoint())));
+                StoreItemChooser.browse(srvOut.getId());
+            } else {
+                showPopup(ev);
+            }
+        }
 
-   @Override
-   public ServerOut getServer() {
-      return srvOut;
-   }
+    }
 
-   @Override
-   public void refresh() {
-      StoreListWorker.execute(this, srvOut.getId());
-   }
+    public void show(ServerOut srvOut) {
+        if (srvOut == null) {
+            itemListModel.clear();
+        } else {
+            this.srvOut = srvOut;
+            refresh();
+        }
+    }
 
-   @Override
-   public void loadingStarted() {
-      itemListModel.clear();
-      statusLabel.setText("Loading...");
-      statusLabel.setVisible(true);
-      buttonPanel.setEnabled(false);
-      scrollPane.setEnabled(false);
-   }
+    @Override
+    public ServerOut getServer() {
+        return srvOut;
+    }
 
-   @Override
-   public void loadingFinished(boolean isSuccessful, String message) {
-      statusLabel.setText(message);
-      statusLabel.setVisible(!isSuccessful);
-      buttonPanel.setEnabled(isSuccessful);
-      scrollPane.setEnabled(isSuccessful);
-   }
+    @Override
+    public void refresh() {
+        StoreListWorker.execute(this, srvOut.getId());
+    }
 
-   @Override
-   public void add(List<StoreOut> stoOutList) {
-      itemListModel.merge(stoOutList);
-   }
+    @Override
+    public void loadingStarted() {
+        itemListModel.clear();
+        statusLabel.setText("Loading...");
+        statusLabel.setVisible(true);
+        buttonPanel.setEnabled(false);
+        scrollPane.setEnabled(false);
+    }
+
+    @Override
+    public void loadingFinished(boolean isSuccessful, String message) {
+        statusLabel.setText(message);
+        statusLabel.setVisible(!isSuccessful);
+        buttonPanel.setEnabled(isSuccessful);
+        scrollPane.setEnabled(isSuccessful);
+    }
+
+    @Override
+    public void add(List<StoreOut> stoOutList) {
+        itemListModel.merge(stoOutList);
+    }
 
 }

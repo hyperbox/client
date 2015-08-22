@@ -25,6 +25,6 @@ import java.util.List;
 
 public interface _UserListReceiver extends _WorkerDataReceiver {
 
-   public void add(List<UserOut> usrOutList);
+    public void add(List<UserOut> usrOutList);
 
 }

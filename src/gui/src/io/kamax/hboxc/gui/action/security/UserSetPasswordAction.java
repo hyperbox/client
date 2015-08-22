@@ -28,24 +28,25 @@ import io.kamax.hboxc.gui.security.user._UserSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class UserSetPasswordAction extends AbstractAction {
 
-   private _UserSelector selector;
+    private static final long serialVersionUID = 6518020230621674797L;
+    private _UserSelector selector;
 
-   public UserSetPasswordAction(_UserSelector selector) {
-      this(selector, "Reset Password");
-   }
+    public UserSetPasswordAction(_UserSelector selector) {
+        this(selector, "Reset Password");
+    }
 
-   public UserSetPasswordAction(_UserSelector selector, String label) {
-      super(label, IconBuilder.getTask(HyperboxTasks.UserModify));
-      this.selector = selector;
-   }
+    public UserSetPasswordAction(_UserSelector selector, String label) {
+        super(label, IconBuilder.getTask(HyperboxTasks.UserModify));
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ae) {
-      selector.getServerId();
-      throw new FeatureNotImplementedException("Feature is currently not implemented");
-   }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        selector.getServerId();
+        throw new FeatureNotImplementedException("Feature is currently not implemented");
+    }
 
 }

@@ -25,20 +25,20 @@ import io.kamax.hbox.comm.in.UserIn;
 
 public class ServerCredentials {
 
-   private String srvId;
-   private UserIn usrIn;
+    private String srvId;
+    private UserIn usrIn;
 
-   public ServerCredentials(String srvId, UserIn usrIn) {
-      this.srvId = srvId;
-      this.usrIn = usrIn;
-   }
+    public ServerCredentials(String srvId, UserIn usrIn) {
+        this.srvId = srvId;
+        this.usrIn = usrIn;
+    }
 
-   public String getServerId() {
-      return srvId;
-   }
+    public String getServerId() {
+        return srvId;
+    }
 
-   public UserIn getCredentials() {
-      return usrIn;
-   }
+    public UserIn getCredentials() {
+        return usrIn;
+    }
 
 }

@@ -26,13 +26,13 @@ import javax.swing.JPanel;
 
 public class GeneralSettingsViewer {
 
-   public JComponent getComponet() {
-      return new JPanel();
-   }
+    public JComponent getComponet() {
+        return new JPanel();
+    }
 
-   public void load() {
-      // TODO Auto-generated method stub
+    public void load() {
+        // TODO Auto-generated method stub
 
-   }
+    }
 
 }

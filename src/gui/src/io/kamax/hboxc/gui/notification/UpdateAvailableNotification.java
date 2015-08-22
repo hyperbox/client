@@ -31,38 +31,39 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-@SuppressWarnings("serial")
+
 public class UpdateAvailableNotification extends NotificationInfo {
 
-   private URL downloadUrl;
+    private static final long serialVersionUID = 2225815399285702337L;
+    private URL downloadUrl;
 
-   public UpdateAvailableNotification(_Release release) {
-      downloadUrl = release.getDownloadURL();
-      setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      setText("New update available: " + release.getVersion() + " - " + downloadUrl);
-      addMouseListener(new MouseListener());
-   }
+    public UpdateAvailableNotification(_Release release) {
+        downloadUrl = release.getDownloadURL();
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        setText("New update available: " + release.getVersion() + " - " + downloadUrl);
+        addMouseListener(new MouseListener());
+    }
 
-   private class MouseListener extends MouseAdapter {
+    private class MouseListener extends MouseAdapter {
 
-      @Override
-      public void mouseClicked(MouseEvent ev) {
-         if ((ev.getButton() == MouseEvent.BUTTON1) && (ev.getClickCount() == 1)) {
-            if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-               Gui.showCopyPasteHelper("Browsing is not supported, please copy and paste the download URL in your browser", downloadUrl.toExternalForm());
+        @Override
+        public void mouseClicked(MouseEvent ev) {
+            if ((ev.getButton() == MouseEvent.BUTTON1) && (ev.getClickCount() == 1)) {
+                if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                    Gui.showCopyPasteHelper("Browsing is not supported, please copy and paste the download URL in your browser", downloadUrl.toExternalForm());
+                }
+
+                try {
+                    Desktop.getDesktop().browse(downloadUrl.toURI());
+                } catch (IOException e) {
+                    Gui.showError("Unable to browse to download location: " + e.getMessage());
+                    Logger.exception(e);
+                } catch (URISyntaxException e) {
+                    Gui.showError("Unable to browse to download location: " + e.getMessage());
+                    Logger.exception(e);
+                }
             }
-
-            try {
-               Desktop.getDesktop().browse(downloadUrl.toURI());
-            } catch (IOException e) {
-               Gui.showError("Unable to browse to download location: " + e.getMessage());
-               Logger.exception(e);
-            } catch (URISyntaxException e) {
-               Gui.showError("Unable to browse to download location: " + e.getMessage());
-               Logger.exception(e);
-            }
-         }
-      }
-   }
+        }
+    }
 
 }

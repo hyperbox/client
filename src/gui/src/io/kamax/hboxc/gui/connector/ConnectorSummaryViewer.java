@@ -38,104 +38,104 @@ import net.miginfocom.swing.MigLayout;
 
 public class ConnectorSummaryViewer implements _Refreshable, _ConnectorReceiver {
 
-   private String conId;
+    private String conId;
 
-   private ServerViewer srvView;
+    private ServerViewer srvView;
 
-   private JLabel labelLabel;
-   private JTextField labelValue;
-   private JLabel addressLabel;
-   private JTextField addressValue;
-   private JLabel backendLabel;
-   private JTextField backendValue;
-   private JLabel stateLabel;
-   private JTextField stateValue;
+    private JLabel labelLabel;
+    private JTextField labelValue;
+    private JLabel addressLabel;
+    private JTextField addressValue;
+    private JLabel backendLabel;
+    private JTextField backendValue;
+    private JLabel stateLabel;
+    private JTextField stateValue;
 
-   private JPanel conPanel;
-   private JPanel panel;
+    private JPanel conPanel;
+    private JPanel panel;
 
-   public ConnectorSummaryViewer(ConnectorOutput conOut) {
-      this.conId = conOut.getId();
-      labelLabel = new JLabel("Label");
-      addressLabel = new JLabel("Address");
-      backendLabel = new JLabel("Backend");
-      stateLabel = new JLabel("State");
+    public ConnectorSummaryViewer(ConnectorOutput conOut) {
+        this.conId = conOut.getId();
+        labelLabel = new JLabel("Label");
+        addressLabel = new JLabel("Address");
+        backendLabel = new JLabel("Backend");
+        stateLabel = new JLabel("State");
 
-      labelValue = new JTextField();
-      labelValue.setEditable(false);
-      addressValue = new JTextField();
-      addressValue.setEditable(false);
-      backendValue = new JTextField();
-      backendValue.setEditable(false);
-      stateValue = new JTextField();
-      stateValue.setEditable(false);
+        labelValue = new JTextField();
+        labelValue.setEditable(false);
+        addressValue = new JTextField();
+        addressValue.setEditable(false);
+        backendValue = new JTextField();
+        backendValue.setEditable(false);
+        stateValue = new JTextField();
+        stateValue.setEditable(false);
 
-      srvView = new ServerViewer();
+        srvView = new ServerViewer();
 
-      conPanel = new JPanel(new MigLayout());
-      conPanel.setBorder(BorderFactory.createTitledBorder("Connector"));
-      conPanel.add(labelLabel);
-      conPanel.add(labelValue, "growx,pushx,wrap");
-      conPanel.add(addressLabel);
-      conPanel.add(addressValue, "growx,pushx,wrap");
-      conPanel.add(backendLabel);
-      conPanel.add(backendValue, "growx,pushx,wrap");
-      conPanel.add(stateLabel);
-      conPanel.add(stateValue, "growx,pushx,wrap");
+        conPanel = new JPanel(new MigLayout());
+        conPanel.setBorder(BorderFactory.createTitledBorder("Connector"));
+        conPanel.add(labelLabel);
+        conPanel.add(labelValue, "growx,pushx,wrap");
+        conPanel.add(addressLabel);
+        conPanel.add(addressValue, "growx,pushx,wrap");
+        conPanel.add(backendLabel);
+        conPanel.add(backendValue, "growx,pushx,wrap");
+        conPanel.add(stateLabel);
+        conPanel.add(stateValue, "growx,pushx,wrap");
 
-      panel = new JPanel(new MigLayout("ins 0"));
-      panel.add(conPanel, "growx, pushx, wrap");
-      panel.add(srvView.getComponent(), "growx, pushx, wrap");
-      srvView.getComponent().setVisible(true);
+        panel = new JPanel(new MigLayout("ins 0"));
+        panel.add(conPanel, "growx, pushx, wrap");
+        panel.add(srvView.getComponent(), "growx, pushx, wrap");
+        srvView.getComponent().setVisible(true);
 
-      update(conOut);
-      ViewEventManager.register(this);
-   }
+        update(conOut);
+        ViewEventManager.register(this);
+    }
 
-   @Override
-   public void refresh() {
-      ConnectorGetWorker.execute(this, conId);
-   }
+    @Override
+    public void refresh() {
+        ConnectorGetWorker.execute(this, conId);
+    }
 
-   protected void update(ConnectorOutput conOut) {
-      labelValue.setText(conOut.getLabel());
-      addressValue.setText(conOut.getAddress());
-      backendValue.setText(conOut.getBackendId());
-      stateValue.setText(conOut.getState().toString());
-      if (conOut.isConnected()) {
-         srvView.getComponent().setVisible(true);
-         srvView.show(conOut.getServer());
-      } else {
-         srvView.getComponent().setVisible(false);
-      }
-   }
+    protected void update(ConnectorOutput conOut) {
+        labelValue.setText(conOut.getLabel());
+        addressValue.setText(conOut.getAddress());
+        backendValue.setText(conOut.getBackendId());
+        stateValue.setText(conOut.getState().toString());
+        if (conOut.isConnected()) {
+            srvView.getComponent().setVisible(true);
+            srvView.show(conOut.getServer());
+        } else {
+            srvView.getComponent().setVisible(false);
+        }
+    }
 
-   public JComponent getComponent() {
-      return panel;
-   }
+    public JComponent getComponent() {
+        return panel;
+    }
 
-   @Handler
-   protected void putConnectorEvent(ConnectorEvent ev) {
-      if (ev.getConnector().getId().equals(conId)) {
-         refresh();
-      }
-   }
+    @Handler
+    protected void putConnectorEvent(ConnectorEvent ev) {
+        if (ev.getConnector().getId().equals(conId)) {
+            refresh();
+        }
+    }
 
-   @Override
-   public void loadingStarted() {
-      // stub
-   }
+    @Override
+    public void loadingStarted() {
+        // stub
+    }
 
-   @Override
-   public void loadingFinished(boolean isSuccessful, String message) {
-      if (!isSuccessful) {
-         labelValue.setText(message);
-      }
-   }
+    @Override
+    public void loadingFinished(boolean isSuccessful, String message) {
+        if (!isSuccessful) {
+            labelValue.setText(message);
+        }
+    }
 
-   @Override
-   public void put(ConnectorOutput conOut) {
-      update(conOut);
-   }
+    @Override
+    public void put(ConnectorOutput conOut) {
+        update(conOut);
+    }
 
 }

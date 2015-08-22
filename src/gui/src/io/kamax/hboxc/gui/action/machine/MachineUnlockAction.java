@@ -31,22 +31,22 @@ import io.kamax.hboxc.gui.vm._MachineSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
 public class MachineUnlockAction extends AbstractAction {
 
-   private _MachineSelector selector;
+    private static final long serialVersionUID = 5390279772068064149L;
+    private _MachineSelector selector;
 
-   public MachineUnlockAction(_MachineSelector selector) {
-      super("Unlock", IconBuilder.getTask(HypervisorTasks.MachineUnlock));
-      setEnabled(true);
-      this.selector = selector;
-   }
+    public MachineUnlockAction(_MachineSelector selector) {
+        super("Unlock", IconBuilder.getTask(HypervisorTasks.MachineUnlock));
+        setEnabled(true);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ev) {
-      for (MachineOut mOut : selector.getMachines()) {
-         Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineUnlock, new MachineIn(mOut)));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        for (MachineOut mOut : selector.getMachines()) {
+            Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineUnlock, new MachineIn(mOut)));
+        }
+    }
 
 }

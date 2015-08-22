@@ -25,19 +25,19 @@ import io.kamax.hbox.event.Event;
 
 public abstract class MediumEvent extends Event {
 
-   public MediumEvent(Enum<?> s, MediumOut medOut) {
-      super(s);
-      set(MediumOut.class, medOut);
-   }
+    public MediumEvent(Enum<?> s, MediumOut medOut) {
+        super(s);
+        set(MediumOut.class, medOut);
+    }
 
-   public MediumOut getMedium() {
-      return get(MediumOut.class);
-   }
+    public MediumOut getMedium() {
+        return get(MediumOut.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Event ID " + getEventId() + " for Medium " + getMedium().getUuid() + " located at " + getMedium().getLocation() + " occured @ "
-            + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Event ID " + getEventId() + " for Medium " + getMedium().getUuid() + " located at " + getMedium().getLocation() + " occured @ "
+                + getTime();
+    }
 
 }

@@ -25,8 +25,8 @@ import io.kamax.hboxc.event.ClientEvents;
 
 public final class MachineRemovedEvent extends MachineEvent {
 
-   public MachineRemovedEvent(String srvId, MachineOut mOut) {
-      super(ClientEvents.MachineRemoved, srvId, mOut);
-   }
+    public MachineRemovedEvent(String srvId, MachineOut mOut) {
+        super(ClientEvents.MachineRemoved, srvId, mOut);
+    }
 
 }

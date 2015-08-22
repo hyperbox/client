@@ -25,10 +25,10 @@ import io.kamax.hboxc.core._Entity;
 
 public interface _Machine extends _Entity {
 
-   public _Server getServer();
+    public _Server getServer();
 
-   public _Console getConsole();
+    public _Console getConsole();
 
-   public void takeSnapshot(SnapshotIn snapshotIn);
+    public void takeSnapshot(SnapshotIn snapshotIn);
 
 }

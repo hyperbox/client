@@ -26,18 +26,18 @@ import io.kamax.hboxc.state.BackendStates;
 
 public final class BackendStateEvent extends BackendEvent {
 
-   public BackendStateEvent(_Backend backend, BackendStates s) {
-      super(ClientEventTypes.BackendState, backend);
-      set(s);
-   }
+    public BackendStateEvent(_Backend backend, BackendStates s) {
+        super(ClientEventTypes.BackendState, backend);
+        set(s);
+    }
 
-   public BackendStates getState() {
-      return get(BackendStates.class);
-   }
+    public BackendStates getState() {
+        return get(BackendStates.class);
+    }
 
-   @Override
-   public String toString() {
-      return "Backend ID " + getBackend().getId() + " changed state to " + getState() + " @ " + getTime();
-   }
+    @Override
+    public String toString() {
+        return "Backend ID " + getBackend().getId() + " changed state to " + getState() + " @ " + getTime();
+    }
 
 }

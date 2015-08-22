@@ -24,8 +24,8 @@ import io.kamax.hboxc.gui.utils.AxSwingWorker;
 
 public interface _WorkerTracker {
 
-   public static final _WorkerTracker EMPTY = new WorkerTrackerAdapter();
+    public static final _WorkerTracker EMPTY = new WorkerTrackerAdapter();
 
-   public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker);
+    public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker);
 
 }

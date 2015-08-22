@@ -30,22 +30,23 @@ import io.kamax.hboxc.gui.vm._MachineSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-@SuppressWarnings("serial")
+
 public class GuestRestartAction extends AbstractAction {
 
-   private _MachineSelector selector;
+    private static final long serialVersionUID = -6306218397639618642L;
+    private _MachineSelector selector;
 
-   public GuestRestartAction(_MachineSelector selector) {
-      super("Restart");
-      setEnabled(true);
-      this.selector = selector;
-   }
+    public GuestRestartAction(_MachineSelector selector) {
+        super("Restart");
+        setEnabled(true);
+        this.selector = selector;
+    }
 
-   @Override
-   public void actionPerformed(ActionEvent ev) {
-      for (MachineOut mOut : selector.getMachines()) {
-         Gui.post(new Request(Command.HBOX, HyperboxTasks.GuestRestart, new MachineIn(mOut)));
-      }
-   }
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        for (MachineOut mOut : selector.getMachines()) {
+            Gui.post(new Request(Command.HBOX, HyperboxTasks.GuestRestart, new MachineIn(mOut)));
+        }
+    }
 
 }
