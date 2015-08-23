@@ -32,6 +32,9 @@ import java.util.List;
 
 public interface _CoreReader {
 
+    public static final String CFGKEY_SERVER_CACHE_USE = "client.core.server.cache.use";
+    public static final String CFGVAL_SERVER_CACHE_USE = "1";
+
     public CoreState getCoreState();
 
     public List<ConnectorOutput> listConnectors();

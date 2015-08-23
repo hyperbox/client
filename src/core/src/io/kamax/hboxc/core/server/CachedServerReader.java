@@ -43,7 +43,6 @@ import io.kamax.hbox.comm.out.event.machine.MachineRegistrationEventOut;
 import io.kamax.hbox.comm.out.event.machine.MachineSnapshotDataChangedEventOut;
 import io.kamax.hbox.comm.out.event.machine.MachineStateEventOut;
 import io.kamax.hbox.comm.out.event.module.ModuleEventOut;
-import io.kamax.hbox.comm.out.event.server.ServerConnectionStateEventOut;
 import io.kamax.hbox.comm.out.event.snapshot.SnapshotDeletedEventOut;
 import io.kamax.hbox.comm.out.event.snapshot.SnapshotModifiedEventOut;
 import io.kamax.hbox.comm.out.event.snapshot.SnapshotRestoredEventOut;
@@ -75,6 +74,7 @@ import io.kamax.hboxc.event.machine.MachineDataChangedEvent;
 import io.kamax.hboxc.event.machine.MachineRemovedEvent;
 import io.kamax.hboxc.event.machine.MachineStateChangedEvent;
 import io.kamax.hboxc.event.module.ServerModuleEvent;
+import io.kamax.hboxc.event.server.ServerConnectionStateEvent;
 import io.kamax.hboxc.event.snapshot.SnapshotDeletedEvent;
 import io.kamax.hboxc.event.snapshot.SnapshotModifiedEvent;
 import io.kamax.hboxc.event.snapshot.SnapshotRestoredEvent;
@@ -123,7 +123,13 @@ public class CachedServerReader implements _ServerReader {
         EventManager.get().register(this);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "[id=" + reader.getId() + "|name=" + reader.getName() + "]";
+    }
+
     private void reset() {
+        Logger.info("Clearing cache for server " + toString());
         mOutListCache = new ConcurrentHashMap<String, MachineOut>();
         mOutListCacheUpdate = -1L;
         mOutCache = new ConcurrentHashMap<String, MachineOut>();
@@ -212,11 +218,19 @@ public class CachedServerReader implements _ServerReader {
 
     @Handler
     private void putMachineSnapDataChangedEvent(MachineSnapshotDataChangedEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         snapOutCache.remove(ev.getUuid());
     }
 
     @Handler
     private void putSnapshotTakenEvent(SnapshotTakenEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         updateMachine(ev.getMachine());
         refreshSnapshot(ev.getMachine().getUuid(), ev.getSnapshotUuid());
         refreshSnapshot(ev.getMachine().getUuid(), ev.getSnapshot().getParentUuid());
@@ -225,6 +239,10 @@ public class CachedServerReader implements _ServerReader {
 
     @Handler
     private void putSnashotDeletedEvent(SnapshotDeletedEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         SnapshotOut deletedSnap = snapOutCache.get(ev.getUuid()).get(ev.getSnapshotUuid());
         refreshSnapshot(ev.getMachine().getUuid(), deletedSnap.getParentUuid());
         for (String child : deletedSnap.getChildrenUuid()) {
@@ -237,6 +255,10 @@ public class CachedServerReader implements _ServerReader {
 
     @Handler
     private void putSnapshotRestoredEvent(SnapshotRestoredEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         updateMachine(ev.getMachine());
         updateSnapshot(ev.getMachine().getUuid(), ev.getSnapshot());
         EventManager.post(new SnapshotRestoredEvent(ev.getServer(), ev.getMachine(), ev.getSnapshot()));
@@ -244,18 +266,30 @@ public class CachedServerReader implements _ServerReader {
 
     @Handler
     private void putSnashopModifiedEvent(SnapshotModifiedEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         updateSnapshot(ev.getMachine().getUuid(), ev.getSnapshot());
         EventManager.post(new SnapshotModifiedEvent(ev.getServer(), ev.getMachine(), ev.getSnapshot()));
     }
 
     @Handler
     private void putMachineDataChangedEvent(MachineDataChangeEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         updateMachine(ev.getMachine());
         EventManager.post(new MachineDataChangedEvent(reader.getId(), getMachine(ev.getMachine().getUuid())));
     }
 
     @Handler
     private void putMachineRegistrationEvent(MachineRegistrationEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         if (ev.isRegistered()) {
             insertMachine(ev.getMachine());
             EventManager.post(new MachineAddedEvent(ev.getServerId(), ev.getMachine()));
@@ -267,24 +301,30 @@ public class CachedServerReader implements _ServerReader {
 
     @Handler
     private void putMachineStateEvent(MachineStateEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         updateMachine(ev.getMachine());
         EventManager.post(new MachineStateChangedEvent(reader.getId(), getMachine(ev.getMachine().getUuid())));
     }
 
     @Handler
     private void putHypervisorStateEvent(HypervisorConnectionStateEventOut ev) {
-        if (AxStrings.equals(getId(), ev.getServerId())) {
-            Logger.verbose("Clearing cache for server " + toString());
-            reset();
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
         }
+
+        reset();
     }
 
     @Handler
-    private void putServerConnectionStateEventOut(ServerConnectionStateEventOut ev) {
-        if (AxStrings.equals(getId(), ev.getServerId())) {
-            Logger.verbose("Clearing cache for server " + toString());
-            reset();
+    private void putServerConnectionStateEventOut(ServerConnectionStateEvent ev) {
+        if (!AxStrings.equals(ev.getServer().getId(), reader.getId())) {
+            return;
         }
+
+        reset();
     }
 
     private void insertMachine(String vmId) {
@@ -393,12 +433,20 @@ public class CachedServerReader implements _ServerReader {
 
     @Handler
     public void putTaskStateChangedEvent(TaskStateEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         updateTask(ev.getTask());
         EventManager.post(new TaskStateChangedEvent(ev.getServer(), ev.getTask()));
     }
 
     @Handler
     public void putTaskQueueEvent(TaskQueueEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         if (ev.getQueueEvent().equals(TaskQueueEvents.TaskAdded)) {
             insertTask(ev.getTask());
             EventManager.post(new TaskAddedEvent(ev.getServer(), ev.getTask()));
@@ -411,6 +459,10 @@ public class CachedServerReader implements _ServerReader {
 
     @Handler
     public void putModuleEventOutput(ModuleEventOut ev) {
+        if (!AxStrings.equals(ev.getServerId(), reader.getId())) {
+            return;
+        }
+
         EventManager.post(new ServerModuleEvent(HyperboxEvents.ModuleLoaded, ev.getServer(), ev.getModule()));
     }
 

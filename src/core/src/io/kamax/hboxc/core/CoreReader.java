@@ -21,6 +21,7 @@
 
 package io.kamax.hboxc.core;
 
+import io.kamax.hbox.Configuration;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.comm.input.ConnectorInput;
 import io.kamax.hboxc.comm.io.factory.BackendIoFactory;
@@ -37,15 +38,16 @@ import io.kamax.hboxc.factory.BackendFactory;
 import io.kamax.hboxc.server._ServerReader;
 import io.kamax.hboxc.state.CoreState;
 import io.kamax.hboxc.updater._Updater;
+import io.kamax.tool.AxBooleans;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 import net.engio.mbassy.listener.Handler;
 
 public class CoreReader implements _CoreReader {
 
     private _Core core;
-    private Map<_ServerReader, _ServerReader> cachedServerReaders = new WeakHashMap<_ServerReader, _ServerReader>();
+    private Map<String, _ServerReader> cachedServerReaders = new HashMap<String, _ServerReader>();
 
     public CoreReader(_Core core) {
         this.core = core;
@@ -68,14 +70,15 @@ public class CoreReader implements _CoreReader {
     }
 
     @Override
-    public _ServerReader getServerReader(String id) {
-        _ServerReader cachedReader = cachedServerReaders.get(core.getServer(id));
-        if (cachedReader == null) {
-            cachedReader = new CachedServerReader(core.getServer(id));
-            cachedServerReaders.put(core.getServer(id), cachedReader);
+    public synchronized _ServerReader getServerReader(String id) {
+        if (AxBooleans.get(Configuration.getSetting(CFGKEY_SERVER_CACHE_USE, CFGVAL_SERVER_CACHE_USE))) {
+            if (!cachedServerReaders.containsKey(id)) {
+                cachedServerReaders.put(id, new CachedServerReader(core.getServer(id)));
+            }
+            return cachedServerReaders.get(id);
+        } else {
+            return core.getServer(id);
         }
-
-        return cachedReader;
     }
 
     @Override

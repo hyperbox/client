@@ -38,6 +38,7 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui.action.storage.StorageDeviceAttachmentMediumEditAction;
 import io.kamax.hboxc.gui.net.NetworkInterfaceSummary;
+import io.kamax.hboxc.gui.utils.StorageDeviceAttachmentOutComparator;
 import io.kamax.helper.swing.BorderUtils;
 import io.kamax.helper.swing.JTextFieldUtils;
 import io.kamax.tool.AxStrings;
@@ -110,12 +111,10 @@ public final class VmSummaryView {
     private JTextArea descArea;
 
     public VmSummaryView() {
-
         init();
     }
 
     private void init() {
-
         initGeneral();
         initSystem();
         initDisplay();
@@ -137,7 +136,6 @@ public final class VmSummaryView {
     }
 
     private void initGeneral() {
-
         nameLabel = new JLabel("Name");
         nameField = JTextFieldUtils.createNonEditable();
 
@@ -163,7 +161,6 @@ public final class VmSummaryView {
     }
 
     private void initSystem() {
-
         cpuCountLabel = new JLabel("vCPU");
         cpuCountValue = JTextFieldUtils.createNonEditable();
         memoryLabel = new JLabel("Memory");
@@ -182,7 +179,6 @@ public final class VmSummaryView {
     }
 
     private void initDisplay() {
-
         vramLabel = new JLabel("VRAM");
         vramValue = JTextFieldUtils.createNonEditable();
         consoleModuleLabel = new JLabel("Console Module");
@@ -205,14 +201,12 @@ public final class VmSummaryView {
     }
 
     private void initStorage() {
-
         controllers = new HashMap<String, StorageControllerOut>();
         storagePanel = new JPanel(new MigLayout());
         storagePanel.setBorder(BorderUtils.createTitledBorder(Color.gray, "Storage"));
     }
 
     private void initAudio() {
-
         hostDriverLabel = new JLabel("Host Driver");
         hostDriverValue = JTextFieldUtils.createNonEditable();
         audioControllerLabel = new JLabel("Controller");
@@ -227,13 +221,11 @@ public final class VmSummaryView {
     }
 
     private void initNetwork() {
-
         networkPanel = new JPanel(new MigLayout());
         networkPanel.setBorder(BorderUtils.createTitledBorder(Color.gray, "Network"));
     }
 
     private void initDesc() {
-
         descArea = new JTextArea();
         descArea.setEditable(false);
 
@@ -243,7 +235,6 @@ public final class VmSummaryView {
     }
 
     private void clearGeneral() {
-
         nameField.setText(null);
         uuidField.setText(null);
         stateField.setText(null);
@@ -251,42 +242,35 @@ public final class VmSummaryView {
     }
 
     private void clearSystem() {
-
         cpuCountValue.setText(null);
         memoryValue.setText(null);
         accelValue.setText(null);
     }
 
     private void clearDisplay() {
-
         vramValue.setText(null);
         consoleModuleValue.setText(null);
         consoleAddressValue.setText(null);
     }
 
     private void clearStorage() {
-
         storagePanel.removeAll();
     }
 
     private void clearAudio() {
-
         hostDriverValue.setText(null);
         audioControllerValue.setText(null);
     }
 
     private void clearNetwork() {
-
         networkPanel.removeAll();
     }
 
     private void clearDesc() {
-
         descArea.setText(null);
     }
 
     public void clear() {
-
         mOut = null;
         clearGeneral();
         clearSystem();
@@ -298,7 +282,6 @@ public final class VmSummaryView {
     }
 
     public void show(MachineOut mOut, boolean forced) {
-
         if (forced || (this.mOut == null) || !this.mOut.equals(mOut)) {
             this.mOut = mOut;
             refresh();
@@ -306,12 +289,10 @@ public final class VmSummaryView {
     }
 
     public void show(MachineOut mOut) {
-
         show(mOut, false);
     }
 
     public void refreshGeneral() {
-
         nameField.setText(mOut.getName());
         uuidField.setText(mOut.getUuid());
         stateField.setText(mOut.getState());
@@ -319,7 +300,6 @@ public final class VmSummaryView {
     }
 
     public void refreshSystem() {
-
         cpuCountValue.setText(mOut.getSetting(MachineAttribute.CpuCount).getString());
         memoryValue.setText(mOut.getSetting(MachineAttribute.Memory).getString() + " MB");
         List<String> extList = new ArrayList<String>();
@@ -353,9 +333,7 @@ public final class VmSummaryView {
     }
 
     public void refreshDisplay() {
-
         vramValue.setText(mOut.getSetting(MachineAttribute.VRAM).getString());
-
         consoleModuleValue.setText(mOut.getSetting(MachineAttribute.VrdeModule).getString());
 
         if (mOut.getSetting(MachineAttribute.VrdeEnabled).getBoolean()) {
@@ -371,14 +349,12 @@ public final class VmSummaryView {
             } catch (URISyntaxException e) {
                 consoleAddressValue.setText("Invalid address: " + e.getMessage());
             }
-
         } else {
             consoleAddressValue.setText("Not available (Disabled or Console Module not installed)");
         }
     }
 
     public void refreshStorage() {
-
         clearStorage();
         if (controllers.isEmpty()) {
             for (StorageControllerOut scOut : mOut.listStorageController()) {
@@ -399,14 +375,7 @@ public final class VmSummaryView {
             try {
                 storagePanel.add(new JLabel(scOut.getType()), "wrap");
                 List<StorageDeviceAttachmentOut> scaSorted = new ArrayList<StorageDeviceAttachmentOut>(scOut.getAttachments());
-                Collections.sort(scaSorted, new Comparator<StorageDeviceAttachmentOut>() {
-
-                    @Override
-                    public int compare(StorageDeviceAttachmentOut o1, StorageDeviceAttachmentOut o2) {
-                        return (o1.getPortId() + ":" + o1.getDeviceId()).compareTo((o2.getPortId() + ":" + o2.getDeviceId()));
-                    }
-
-                });
+                Collections.sort(scaSorted, new StorageDeviceAttachmentOutComparator());
                 for (StorageDeviceAttachmentOut sdaOut : scaSorted) {
                     storagePanel.add(new JLabel(""));
                     storagePanel.add(new JLabel(sdaOut.getPortId() + ":" + sdaOut.getDeviceId()));
@@ -437,7 +406,6 @@ public final class VmSummaryView {
     }
 
     public void refreshAudio() {
-
         audioPanel.removeAll();
         if (mOut.getSetting(MachineAttribute.AudioEnable).getBoolean()) {
             hostDriverValue.setText(mOut.getSetting(MachineAttribute.AudioDriver).getString());
@@ -454,7 +422,6 @@ public final class VmSummaryView {
     }
 
     public void refreshNetwork() {
-
         clearNetwork();
         for (NetworkInterfaceOut nicOut : mOut.listNetworkInterface()) {
             if (nicOut.isEnabled()) {
@@ -464,12 +431,10 @@ public final class VmSummaryView {
     }
 
     public void refreshDesc() {
-
         descArea.setText(mOut.getSetting(MachineAttribute.Description).getString());
     }
 
     public void refresh() {
-
         if (mOut == null) {
             clear();
         } else {
@@ -511,7 +476,6 @@ public final class VmSummaryView {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-
             Gui.post(new Request(ClientTasks.ConsoleViewerUse, new ServerIn(mOut.getServerId()), new MachineIn(mOut)));
         }
 

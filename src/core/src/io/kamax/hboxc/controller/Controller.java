@@ -47,15 +47,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public final class Controller implements _ClientMessageReceiver, _RequestReceiver {
 
     private ClientCore core;
     private _Front front = new MiniUI();
 
-    private RequestWorker msgWorker;
     private Map<String, _ClientControllerAction> actionsMap;
 
     static {
@@ -119,9 +116,6 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
 
             loadActions();
 
-            msgWorker = new RequestWorker();
-            msgWorker.start();
-
             String classToLoad = Configuration.getSetting("view.class", "io.kamax.hboxc.gui.Gui");
             Logger.info("Loading frontend class: " + classToLoad);
             _Front front = ClassManager.loadClass(_Front.class, classToLoad);
@@ -159,10 +153,6 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
                 front.stop();
             }
             Logger.debug("Front-end was stopped");
-            if (msgWorker != null) {
-                msgWorker.stop();
-            }
-            Logger.debug("Message Worker was stopped");
 
             EventManager.get().stop();
             Logger.debug("EventManager was stopped");
@@ -177,90 +167,41 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
 
     @Override
     public void post(MessageInput mIn) {
-        msgWorker.post(mIn);
+        try {
+            Request req = mIn.getRequest();
+            _AnswerReceiver recv = mIn.getReceiver();
+
+            try {
+                if (actionsMap.containsKey(mIn.getRequest().getName())) {
+                    _ClientControllerAction action = actionsMap.get(mIn.getRequest().getName());
+                    recv.putAnswer(new Answer(mIn.getRequest(), action.getStartReturn()));
+                    action.run(core, front, req, recv);
+                    recv.putAnswer(new Answer(mIn.getRequest(), action.getFinishReturn()));
+                } else {
+                    if (req.has(ServerIn.class)) {
+                        core.getServer(req.get(ServerIn.class).getId()).sendRequest(req);
+                    } else if (req.has(MachineIn.class)) {
+                        core.getServer(req.get(MachineIn.class).getServerId()).sendRequest(req);
+                    } else {
+                        throw new HyperboxException("Server ID or Machine ID is required for generic requests");
+                    }
+                }
+            } catch (ServerDisconnectedException e) {
+                Logger.error(e);
+            } catch (HyperboxException e) {
+                Logger.error("Unable to perform the request [ " + req.getName() + " ] : " + e.getMessage());
+                front.postError(e);
+            }
+        } catch (Throwable e) {
+            Logger.error("Unknown error : " + e.getMessage());
+            Logger.exception(e);
+            front.postError(e, "Unexpected error occured: " + e.getMessage());
+        }
     }
 
     @Override
     public void putRequest(Request request) {
-        msgWorker.post(new MessageInput(request));
-    }
-
-    private class RequestWorker implements _ClientMessageReceiver, Runnable {
-
-        private boolean running;
-        private Thread thread;
-        private BlockingQueue<MessageInput> queue;
-
-        @Override
-        public void post(MessageInput mIn) {
-
-            if (!queue.offer(mIn)) {
-                throw new HyperboxException("Couldn't queue the request : queue is full (" + queue.size() + " messages)");
-            }
-        }
-
-        public void start() throws HyperboxException {
-            running = true;
-            queue = new LinkedBlockingQueue<MessageInput>();
-            thread = new Thread(this, "FRQMGR");
-            thread.setDaemon(true);
-            thread.start();
-        }
-
-        public void stop() {
-            running = false;
-            thread.interrupt();
-            try {
-                thread.join(5000);
-            } catch (InterruptedException e) {
-                Logger.debug("Worker thread didn't stop on request after 5 sec");
-            }
-        }
-
-        @Override
-        public void run() {
-            Logger.verbose("RequestWorker Thread started");
-            while (running) {
-                try {
-                    MessageInput mIn = queue.take();
-
-                    Request req = mIn.getRequest();
-                    _AnswerReceiver recv = mIn.getReceiver();
-
-                    try {
-                        if (actionsMap.containsKey(mIn.getRequest().getName())) {
-                            _ClientControllerAction action = actionsMap.get(mIn.getRequest().getName());
-                            recv.putAnswer(new Answer(mIn.getRequest(), action.getStartReturn()));
-                            action.run(core, front, req, recv);
-                            recv.putAnswer(new Answer(mIn.getRequest(), action.getFinishReturn()));
-                        } else {
-                            if (req.has(ServerIn.class)) {
-                                core.getServer(req.get(ServerIn.class).getId()).sendRequest(req);
-                            } else if (req.has(MachineIn.class)) {
-                                core.getServer(req.get(MachineIn.class).getServerId()).sendRequest(req);
-                            } else {
-                                throw new HyperboxException("Server ID or Machine ID is required for generic requests");
-                            }
-                        }
-                    } catch (ServerDisconnectedException e) {
-                        Logger.error(e);
-                    } catch (HyperboxException e) {
-                        Logger.error("Unable to perform the request [ " + req.getName() + " ] : " + e.getMessage());
-                        front.postError(e);
-                    }
-                } catch (InterruptedException e) {
-                    Logger.debug("Got interupted, halting");
-                    running = false;
-                } catch (Throwable e) {
-                    Logger.error("Unknown error : " + e.getMessage());
-                    Logger.exception(e);
-                    front.postError(e, "Unexpected error occured: " + e.getMessage());
-                }
-            }
-
-            Logger.verbose("RequestWorker Thread halted");
-        }
-
+        post(new MessageInput(request));
     }
 
 }
