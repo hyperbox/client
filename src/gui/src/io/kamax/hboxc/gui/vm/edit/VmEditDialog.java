@@ -40,6 +40,7 @@ import io.kamax.hboxc.gui.workers._WorkerTracker;
 import io.kamax.tool.logging.Logger;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -214,12 +215,9 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
 
     }
 
-    
+
     private class LabelCellRenderer extends DefaultListCellRenderer {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = 3884145295010503208L;
 
         @Override
@@ -252,6 +250,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
         @Override
         public void loadingStarted() {
             saveButton.setEnabled(false);
+            mainDialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             refreshProgress.setIndeterminate(true);
             refreshProgress.setVisible(true);
         }
@@ -283,18 +282,18 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
 
         refreshProgress.setMinimum(0);
         refreshProgress.setMaximum(total);
-        if (remainingWorkers.isEmpty()) {
-            finishedWorkers.clear();
-            refreshProgress.setValue(refreshProgress.getMaximum());
-        } else {
-            if (finishedWorkers.isEmpty()) {
-                refreshProgress.setIndeterminate(true);
-            } else {
-                refreshProgress.setValue(finished);
-            }
-        }
-        refreshProgress.setVisible(!remainingWorkers.isEmpty());
+        refreshProgress.setValue(finished);
         saveButton.setEnabled(remainingWorkers.isEmpty() && !loadingFailed);
+        refreshProgress.setVisible(!remainingWorkers.isEmpty());
+
+        if (remainingWorkers.isEmpty()) {
+            mainDialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            saveButton.setEnabled(!loadingFailed);
+            finishedWorkers.clear();
+        } else {
+            mainDialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            refreshProgress.setIndeterminate(finishedWorkers.isEmpty());
+        }
     }
 
     @Override
@@ -321,6 +320,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
         });
 
         remainingWorkers.add(worker);
+        refreshLoadingStatus();
         return worker;
     }
 }
