@@ -66,9 +66,6 @@ public class StoreEditor implements _Saveable, _Cancelable {
     
     private class BrowseAction extends AbstractAction {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = -7633225674262983219L;
 
         public BrowseAction() {

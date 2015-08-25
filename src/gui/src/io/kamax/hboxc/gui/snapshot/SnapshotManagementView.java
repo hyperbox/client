@@ -296,9 +296,6 @@ public class SnapshotManagementView implements _SnapshotSelector, _Refreshable {
     
     private class TreeCellRenderer extends DefaultTreeCellRenderer {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = -4333779603957385968L;
 
         @Override

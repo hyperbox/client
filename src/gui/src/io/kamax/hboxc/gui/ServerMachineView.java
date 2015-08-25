@@ -430,9 +430,6 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
     
     private class TreeCellRenderer extends DefaultTreeCellRenderer {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = 5488166000202423711L;
 
         @Override
