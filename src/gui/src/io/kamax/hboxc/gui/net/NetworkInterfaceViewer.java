@@ -23,6 +23,7 @@ package io.kamax.hboxc.gui.net;
 import io.kamax.hbox.comm.in.NetworkInterfaceIn;
 import io.kamax.hbox.comm.out.network.NetworkAttachNameOut;
 import io.kamax.hbox.comm.out.network.NetworkInterfaceOut;
+import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.worker.receiver._NetworkAttachNameReceiver;
 import io.kamax.hboxc.gui.workers.NetworkAttachNameListWorker;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
@@ -177,6 +178,12 @@ public class NetworkInterfaceViewer {
 
         @Override
         public void loadingFinished(boolean isSuccessful, String message) {
+            try {
+                attachNameValue.setEditable(Gui.getServer(srvId).getHypervisor().getNetworkMode(attachModeValue.getSelectedItem().toString())
+                        .canLinkNetworkName());
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
             if (isSuccessful) {
                 if (attachModeValue.getSelectedItem().equals(nicOut.getAttachMode())) {
                     attachNameValue.setSelectedItem(nicOut.getAttachName());
