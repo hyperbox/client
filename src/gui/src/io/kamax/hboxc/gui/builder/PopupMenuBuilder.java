@@ -25,6 +25,7 @@ import io.kamax.hbox.comm.out.ModuleOut;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.StoreOut;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
+import io.kamax.hbox.comm.out.storage.MediumOut;
 import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.gui.action.connector.ConnectorConnectAction;
@@ -70,9 +71,9 @@ import javax.swing.SwingConstants;
 
 public class PopupMenuBuilder {
 
-    public static JPopupMenu get(String serverId, StorageDeviceAttachmentOut sdaOut, _AnswerWorkerReceiver recv) {
+    public static JPopupMenu get(String serverId, StorageDeviceAttachmentOut sdaOut, MediumOut hypTools, _AnswerWorkerReceiver recv) {
         JPopupMenu stoMenuActions = new JPopupMenu();
-        stoMenuActions.add(new JMenuItem(new HypervisorToolsMediumAttachAction(serverId, sdaOut, recv)));
+        stoMenuActions.add(new JMenuItem(new HypervisorToolsMediumAttachAction(serverId, sdaOut, hypTools, recv)));
         stoMenuActions.add(new JMenuItem(new MediumAttachAction(serverId, sdaOut, recv)));
         stoMenuActions.add(new JMenuItem(new MediumDettachAction(serverId, sdaOut, sdaOut.hasMediumInserted(), recv)));
         return stoMenuActions;

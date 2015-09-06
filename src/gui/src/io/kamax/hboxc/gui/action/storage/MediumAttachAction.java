@@ -30,10 +30,10 @@ import io.kamax.hbox.comm.in.StorageDeviceAttachmentIn;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.storage.MediumOut;
 import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.storage.MediumBrowser;
 import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -60,19 +60,19 @@ public class MediumAttachAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-
         MediumOut medOut = MediumBrowser.browse(new ServerOut(serverId), sdaOut.getDeviceType());
-        if (medOut != null) {
-            Logger.debug("Medium was choosen to be mounted: " + medOut.getName() + " - " + medOut.getLocation());
-            Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
-            req.set(new ServerIn(serverId));
-            req.set(new MachineIn(sdaOut.getMachineUuid()));
-            req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
-            req.set(new MediumIn(medOut.getLocation(), medOut.getDeviceType()));
-            Gui.post(req);
-        } else {
+        if (medOut == null) {
             Logger.debug("No medium was choosen to be mounted");
+            return;
         }
+
+        Logger.debug("Medium was choosen to be mounted: " + medOut.getName() + " - " + medOut.getLocation());
+        Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
+        req.set(new ServerIn(serverId));
+        req.set(new MachineIn(sdaOut.getMachineUuid()));
+        req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
+        req.set(new MediumIn(medOut.getLocation(), medOut.getDeviceType()));
+        MessageWorker.execute(req, recv);
     }
 
 }

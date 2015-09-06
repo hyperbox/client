@@ -287,7 +287,7 @@ public final class VmSummaryView {
     }
 
     public void show(MachineOut mOut, boolean forced) {
-        if (forced || (this.mOut == null) || !this.mOut.equals(mOut)) {
+        if (forced || this.mOut == null || !this.mOut.equals(mOut)) {
             this.mOut = mOut;
             refresh();
         }
@@ -422,7 +422,8 @@ public final class VmSummaryView {
                                 loader.setIcon(oldIcon);
                             }
                         };
-                        Action ac = new StorageDeviceAttachmentMediumEditAction(mOut.getServerId(), sdaOut, recv);
+                        MediumOut hypTools = Gui.getServer(mOut.getServerId()).getHypervisor().getToolsMedium();
+                        Action ac = new StorageDeviceAttachmentMediumEditAction(mOut.getServerId(), sdaOut, hypTools, recv);
                         loader.setAction(ac);
                         storagePanel.add(loader, "wrap");
                     } else {
@@ -488,7 +489,7 @@ public final class VmSummaryView {
 
     @Handler
     public void putMachineStateChangedEvent(MachineStateChangedEvent ev) {
-        if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
+        if (AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
             stateField.setText(ev.getMachine().getState());
             // TODO improve next line
             consoleConnectButton.setEnabled(ev.getMachine().getState().equalsIgnoreCase("running"));
@@ -497,7 +498,7 @@ public final class VmSummaryView {
 
     @Handler
     public void putStorageControllerAttachmentDataChanged(StorageControllerAttachmentDataModifiedEventOut ev) {
-        if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
+        if (AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
             controllers.put(ev.getStorageController().getId(), ev.getStorageController());
             refreshStorage();
         }

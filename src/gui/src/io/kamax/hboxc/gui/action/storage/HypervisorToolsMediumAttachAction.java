@@ -29,10 +29,9 @@ import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.StorageDeviceAttachmentIn;
 import io.kamax.hbox.comm.out.storage.MediumOut;
 import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
-import io.kamax.hboxc.HyperboxClient;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -43,33 +42,30 @@ public class HypervisorToolsMediumAttachAction extends AbstractAction {
     private _AnswerWorkerReceiver recv;
     private String serverId;
     private StorageDeviceAttachmentOut sdaOut;
+    private MediumOut hypTools;
 
-    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, _AnswerWorkerReceiver recv) {
-        this(serverId, sdaOut, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true, recv);
+    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, MediumOut hypTools, _AnswerWorkerReceiver recv) {
+        this(serverId, sdaOut, hypTools, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true, recv);
     }
 
-    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled,
+    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, MediumOut hypTools, String label, ImageIcon icon, boolean isEnabled,
             _AnswerWorkerReceiver recv) {
         super(label, icon);
-        setEnabled(isEnabled);
+        setEnabled(isEnabled && hypTools != null);
         this.serverId = serverId;
         this.sdaOut = sdaOut;
+        this.hypTools = hypTools;
         this.recv = recv;
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        MediumOut medOut = Gui.getReader().getServerReader(serverId).getHypervisor().getToolsMedium();
-        if (medOut != null) {
-            Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
-            req.set(new ServerIn(serverId));
-            req.set(new MachineIn(sdaOut.getMachineUuid()));
-            req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
-            req.set(new MediumIn(medOut.getLocation(), medOut.getDeviceType()));
-            Gui.post(req);
-        } else {
-            HyperboxClient.getView().postError("Cannot attach - No Hypervisor Tools available");
-        }
+        Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
+        req.set(new ServerIn(serverId));
+        req.set(new MachineIn(sdaOut.getMachineUuid()));
+        req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
+        req.set(new MediumIn(hypTools.getLocation(), hypTools.getDeviceType()));
+        MessageWorker.execute(req, recv);
     }
 
 }

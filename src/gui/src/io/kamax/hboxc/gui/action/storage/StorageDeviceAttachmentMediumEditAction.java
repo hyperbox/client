@@ -21,6 +21,7 @@
 package io.kamax.hboxc.gui.action.storage;
 
 import io.kamax.hbox.comm.HypervisorTasks;
+import io.kamax.hbox.comm.out.storage.MediumOut;
 import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.builder.PopupMenuBuilder;
@@ -37,21 +38,23 @@ public class StorageDeviceAttachmentMediumEditAction extends AbstractAction {
     private _AnswerWorkerReceiver recv;
     private String serverId;
     private StorageDeviceAttachmentOut sdaOut;
+    private MediumOut hypTools;
 
-    public StorageDeviceAttachmentMediumEditAction(String serverId, StorageDeviceAttachmentOut sdaOut) {
-        this(serverId, sdaOut, new AnswerWorkerReceiver());
+    public StorageDeviceAttachmentMediumEditAction(String serverId, StorageDeviceAttachmentOut sdaOut, MediumOut hypTools) {
+        this(serverId, sdaOut, hypTools, new AnswerWorkerReceiver());
     }
 
-    public StorageDeviceAttachmentMediumEditAction(String serverId, StorageDeviceAttachmentOut sdaOut, _AnswerWorkerReceiver recv) {
+    public StorageDeviceAttachmentMediumEditAction(String serverId, StorageDeviceAttachmentOut sdaOut, MediumOut hypTools, _AnswerWorkerReceiver recv) {
         super("", IconBuilder.getTask(HypervisorTasks.MediumModify));
         this.serverId = serverId;
         this.sdaOut = sdaOut;
         this.recv = recv;
+        this.hypTools = hypTools;
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        JPopupMenu menuActions = PopupMenuBuilder.get(serverId, sdaOut, recv);
+        JPopupMenu menuActions = PopupMenuBuilder.get(serverId, sdaOut, hypTools, recv);
         if (ae.getSource() instanceof JComponent) {
             JComponent component = (JComponent) ae.getSource();
             menuActions.show(component, 0, component.getHeight());
