@@ -29,6 +29,7 @@ import io.kamax.hboxc.gui.snapshot.SnapshotManagementView;
 import io.kamax.hboxc.gui.worker.receiver._MachineReceiver;
 import io.kamax.hboxc.gui.workers.MachineGetWorker;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
+import io.kamax.tool.AxStrings;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,7 +49,6 @@ public final class VmDetailedView implements _MachineReceiver, _Refreshable {
     private JLabel errorLabel;
 
     public VmDetailedView(MachineOut mOut) {
-
         this.mOut = mOut;
 
         summaryTab = new VmSummaryView();
@@ -72,7 +72,6 @@ public final class VmDetailedView implements _MachineReceiver, _Refreshable {
     }
 
     private void update() {
-
         if (mOut.isAvailable()) {
             summaryTab.show(mOut, true);
             tabs.setEnabledAt(tabs.indexOfComponent(summaryTab.getComponent()), true);
@@ -87,24 +86,19 @@ public final class VmDetailedView implements _MachineReceiver, _Refreshable {
 
     @Handler
     public void getMachineUpdate(MachineDataChangedEvent ev) {
-
-        if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
-
+        if (AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
             put(ev.getMachine());
         }
     }
 
     @Handler
     public void getMachineRemove(MachineRemovedEvent ev) {
-
-        if ((mOut != null) && ev.getUuid().contentEquals(mOut.getUuid())) {
-
+        if (AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
             clear();
         }
     }
 
     private void clear() {
-
         errorLabel.setVisible(false);
         tabs.setVisible(false);
         summaryTab.clear();
@@ -136,7 +130,6 @@ public final class VmDetailedView implements _MachineReceiver, _Refreshable {
 
     @Override
     public void put(MachineOut mOut) {
-
         this.mOut = mOut;
         update();
     }
