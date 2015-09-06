@@ -133,8 +133,8 @@ public class VmConsoleView implements _Refreshable, _MachineScreenshotReceiver {
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
-        statusLabel.setText(message);
+    public void loadingFinished(boolean isSuccessful, Throwable message) {
+        statusLabel.setText(message.getMessage());
         if (isSuccessful) {
             stop();
         }

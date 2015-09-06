@@ -101,13 +101,13 @@ public final class NetworkVmEdit {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccessful, String message) {
+        public void loadingFinished(boolean isSuccessful, Throwable message) {
             for (NetworkInterfaceViewer viewer : viewers) {
                 if (isSuccessful) {
                     viewer.getAttachModeList().setSelectedItem(viewer.nicOut.getAttachMode());
                 } else {
                     viewer.getAttachModeList().removeAllItems();
-                    viewer.getAttachModeList().addItem("Error loading attach modes: " + message);
+                    viewer.getAttachModeList().addItem("Error loading attach modes: " + message.getMessage());
                 }
                 viewer.getAttachModeList().setEnabled(true);
             }
@@ -136,13 +136,13 @@ public final class NetworkVmEdit {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccessful, String message) {
+        public void loadingFinished(boolean isSuccessful, Throwable message) {
             for (NetworkInterfaceViewer viewer : viewers) {
                 if (isSuccessful) {
                     viewer.getAadapterTypeList().setSelectedItem(viewer.nicOut.getAdapterType());
                 } else {
                     viewer.getAadapterTypeList().removeAllItems();
-                    viewer.getAadapterTypeList().addItem("Error loading network interface types: " + message);
+                    viewer.getAadapterTypeList().addItem("Error loading network interface types: " + message.getMessage());
                 }
                 viewer.getAadapterTypeList().setEnabled(true);
             }

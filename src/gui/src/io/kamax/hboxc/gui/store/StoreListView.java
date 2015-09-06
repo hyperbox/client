@@ -175,8 +175,8 @@ public final class StoreListView implements _StoreSelector, _Refreshable, _Singl
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
-        statusLabel.setText(message);
+    public void loadingFinished(boolean isSuccessful, Throwable message) {
+        statusLabel.setText(message.getMessage());
         statusLabel.setVisible(!isSuccessful);
         buttonPanel.setEnabled(isSuccessful);
         scrollPane.setEnabled(isSuccessful);

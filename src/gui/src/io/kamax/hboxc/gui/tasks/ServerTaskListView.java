@@ -170,13 +170,13 @@ public class ServerTaskListView implements _TaskSelector, _Refreshable {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccessful, String message) {
+        public void loadingFinished(boolean isSuccessful, Throwable message) {
 
             finish();
             if (isSuccessful) {
                 loadingLabel.setVisible(false);
             } else {
-                loadingLabel.setText("Error when loading tasks: " + message);
+                loadingLabel.setText("Error when loading tasks: " + message.getMessage());
             }
         }
 

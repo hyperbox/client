@@ -123,12 +123,11 @@ public final class VmDetailedView implements _MachineReceiver, _Refreshable {
     }
 
     @Override
-    public void loadingFinished(final boolean isSuccessful, final String message) {
-
+    public void loadingFinished(boolean isSuccessful, Throwable message) {
         loadingLabel.setVisible(false);
         tabs.setEnabled(isSuccessful);
         if (!isSuccessful) {
-            errorLabel.setText("Unable to retrieve VM information: " + message);
+            errorLabel.setText("Unable to retrieve VM information: " + message.getMessage());
             errorLabel.setVisible(true);
         } else {
             tabs.setVisible(mOut.isAvailable());

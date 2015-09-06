@@ -142,7 +142,7 @@ public class ServerViewer implements _Refreshable, _ServerReceiver {
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable message) {
         // TODO implement in case of error
     }
 

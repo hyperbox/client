@@ -155,7 +155,7 @@ public class TaskView implements _Cancelable {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccessful, String message) {
+        public void loadingFinished(boolean isSuccessful, Throwable message) {
             if (isSuccessful) {
                 dialog.setTitle("Task Details - #" + tskOut.getId());
                 actionField.setText(tskOut.getActionId());
@@ -193,7 +193,7 @@ public class TaskView implements _Cancelable {
                 userField.setText(tskOut.getUser().getDomainLogonName());
             } else {
                 dialog.setTitle("Task Details - Loading failed");
-                errorField.setText(message);
+                errorField.setText(message.getMessage());
             }
         }
 

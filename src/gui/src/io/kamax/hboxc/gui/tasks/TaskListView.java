@@ -187,7 +187,7 @@ public class TaskListView implements _TaskSelector, _Refreshable, _TaskListRecei
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable message) {
         // stub
     }
 

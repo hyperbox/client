@@ -152,14 +152,14 @@ public class GeneralVmEdit {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccess, String message) {
+        public void loadingFinished(boolean isSuccess, Throwable message) {
             osTypeField.setEnabled(true);
             if (isSuccess) {
                 osTypeField.setSelectedItem(mOut.getSetting(MachineAttribute.OsType).getRawValue());
                 osTypeField.removeItem("Loading...");
             } else {
                 osTypeField.removeAllItems();
-                osTypeField.addItem("Failed to load: " + message);
+                osTypeField.addItem("Failed to load: " + message.getMessage());
             }
         }
 
@@ -183,14 +183,14 @@ public class GeneralVmEdit {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccessful, String message) {
+        public void loadingFinished(boolean isSuccessful, Throwable message) {
             keyboardTypeBox.removeItem("Loading...");
             keyboardTypeBox.setEnabled(isSuccessful);
             if (isSuccessful) {
                 keyboardTypeBox.setSelectedItem(mOut.getSetting(MachineAttribute.KeyboardMode).getRawValue());
             } else {
                 keyboardTypeBox.removeAllItems();
-                keyboardTypeBox.addItem("Failed to load Keyboard Types list: " + message);
+                keyboardTypeBox.addItem("Failed to load Keyboard Types list: " + message.getMessage());
             }
 
         }

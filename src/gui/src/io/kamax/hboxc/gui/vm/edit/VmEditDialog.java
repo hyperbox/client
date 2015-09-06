@@ -256,7 +256,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
         }
 
         @Override
-        public void loadingFinished(boolean isFinished, String message) {
+        public void loadingFinished(boolean isFinished, Throwable message) {
             refreshProgress.setMinimum(0);
             refreshProgress.setMaximum(100);
             refreshProgress.setValue(0);
