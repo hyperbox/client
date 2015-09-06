@@ -60,6 +60,11 @@ public class Updater implements _Updater {
 
     @Override
     public void start() {
+        if (Version.UNKNOWN.equals(Hyperbox.getVersion())) {
+            Logger.info("Updater is disabled, version is not known");
+            return;
+        }
+
         startSchedule();
     }
 
@@ -173,8 +178,9 @@ public class Updater implements _Updater {
             String rep_base = Configuration.getSetting(CFGKEY_UPDATER_REPOSITORY_LOCATION, CFGVAL_UPDATER_REPOSITORY_LOCATION);
             String repo_channel = getChannel().toLowerCase();
             String repo_extension = Configuration.getSetting(CFGKEY_UPDATER_REPOSITORY_EXTENSION, CFGVAL_UPDATER_REPOSITORY_EXTENSION);
-            String repoUrlRaw = rep_base + repo_channel + repo_extension;
+            String repoUrlRaw = rep_base + repo_channel + repo_extension + "?v=" + Hyperbox.getVersion().getFormated();
             try {
+                Logger.info("Checking for update at " + repoUrlRaw);
                 URL repoUrl = new URL(repoUrlRaw);
                 URLConnection repoUrlConn = repoUrl.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(repoUrlConn.getInputStream()));
