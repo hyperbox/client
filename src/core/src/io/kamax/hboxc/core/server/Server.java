@@ -335,7 +335,8 @@ public class Server implements _Server, _AnswerReceiver {
         return trans.getBody().poll().get(StoreItemOut.class);
     }
 
-    private Transaction getTransaction(Request req) {
+    @Override
+    public Transaction getTransaction(Request req) {
         if ((backend == null) || !backend.isConnected() || (getId() == null)) {
             throw new HyperboxException("Not connected to the server");
         }

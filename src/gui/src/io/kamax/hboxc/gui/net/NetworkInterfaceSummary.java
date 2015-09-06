@@ -78,9 +78,9 @@ public class NetworkInterfaceSummary extends JPanel implements _GuestNetworkInte
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
         if (!isSuccessful) {
-            ipv4Value.setText(nicOut.getMacAddress() + " | Error: " + message);
+            ipv4Value.setText(nicOut.getMacAddress() + " | Error: " + t.getMessage());
         }
     }
 

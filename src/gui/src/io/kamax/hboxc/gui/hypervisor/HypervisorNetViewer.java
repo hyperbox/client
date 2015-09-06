@@ -132,9 +132,9 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
         isRefreshing = false;
-        status.setText(message);
+        status.setText(t.getMessage());
         setDataVisible(isSuccessful);
     }
 

@@ -171,7 +171,7 @@ public class PermissionAddDialog implements _Saveable, _Cancelable, _MachineList
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
         saveButton.setEnabled(isSuccessful);
         itemValue.setEnabled(isSuccessful);
     }

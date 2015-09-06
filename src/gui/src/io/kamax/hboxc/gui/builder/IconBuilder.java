@@ -52,6 +52,8 @@ public class IconBuilder {
     public static final ImageIcon AddIcon = new ImageIcon(getBasePath() + "add.png");
     public static final ImageIcon DelIcon = new ImageIcon(getBasePath() + "delete.png");
 
+    public static final ImageIcon LoadingIcon = new ImageIcon(getBasePath() + "34.gif");
+
     private static Map<HypervisorTasks, ImageIcon> vbTasks;
     private static Map<HyperboxTasks, ImageIcon> hbTasks;
     private static Map<ClientTasks, ImageIcon> clientTasks;

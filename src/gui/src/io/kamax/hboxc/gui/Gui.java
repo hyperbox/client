@@ -23,11 +23,11 @@ package io.kamax.hboxc.gui;
 import io.kamax.hbox.ClassManager;
 import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.Request;
-import io.kamax.hbox.comm._RequestReceiver;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.exception.HyperboxException;
 import io.kamax.hboxc.controller.ClientTasks;
 import io.kamax.hboxc.controller.MessageInput;
+import io.kamax.hboxc.controller._ClientMessageReceiver;
 import io.kamax.hboxc.core._CoreReader;
 import io.kamax.hboxc.event.CoreStateEvent;
 import io.kamax.hboxc.event.EventManager;
@@ -36,6 +36,7 @@ import io.kamax.hboxc.gui.action.CloseAction;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
 import io.kamax.hboxc.gui.hypervisor._HypervisorModel;
 import io.kamax.hboxc.gui.utils.JDialogUtils;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.hboxc.server._ServerReader;
 import io.kamax.hboxc.state.CoreState;
 import io.kamax.tool.logging.Logger;
@@ -55,7 +56,7 @@ import net.engio.mbassy.listener.Handler;
 
 public final class Gui implements _Front {
 
-    private static _RequestReceiver reqRecv;
+    private static _ClientMessageReceiver reqRecv;
     private static _CoreReader reader;
 
     private MainView mainView;
@@ -179,7 +180,7 @@ public final class Gui implements _Front {
     }
 
     @Override
-    public void setRequestReceiver(_RequestReceiver reqRecv) {
+    public void setRequestReceiver(_ClientMessageReceiver reqRecv) {
         Gui.reqRecv = reqRecv;
     }
 
@@ -196,7 +197,7 @@ public final class Gui implements _Front {
         getReqRecv().putRequest(req);
     }
 
-    public static _RequestReceiver getReqRecv() {
+    public static _ClientMessageReceiver getReqRecv() {
         return reqRecv;
     }
 
@@ -218,7 +219,7 @@ public final class Gui implements _Front {
 
     public static void exit() {
         Logger.info("Got exit signal from user");
-        post(new MessageInput(new Request(Command.CUSTOM, ClientTasks.Exit)));
+        MessageWorker.execute(new Request(Command.CUSTOM, ClientTasks.Exit));
     }
 
     public static _HypervisorModel getHypervisorModel(String hypId) {

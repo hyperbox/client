@@ -61,4 +61,6 @@ public interface _ServerWriter {
 
     public SessionOut closeSession(SessionIn sIn);
 
+    public Transaction getTransaction(Request req);
+
 }

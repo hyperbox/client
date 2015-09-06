@@ -25,6 +25,6 @@ public interface _WorkerDataReceiver {
 
     public void loadingStarted();
 
-    public void loadingFinished(boolean isSuccessful, String message);
+    public void loadingFinished(boolean isSuccessful, Throwable t);
 
 }

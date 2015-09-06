@@ -132,7 +132,7 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
         refreshProgress.setIndeterminate(false);
         refreshProgress.setVisible(false);
         itemList.setEnabled(true);

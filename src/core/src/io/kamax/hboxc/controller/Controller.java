@@ -26,7 +26,6 @@ import io.kamax.hbox.HyperboxAPI;
 import io.kamax.hbox.comm.Answer;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm._AnswerReceiver;
-import io.kamax.hbox.comm._RequestReceiver;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.exception.HyperboxException;
@@ -48,7 +47,7 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Controller implements _ClientMessageReceiver, _RequestReceiver {
+public final class Controller implements _ClientMessageReceiver {
 
     private ClientCore core;
     private _Front front = new MiniUI();
@@ -175,8 +174,12 @@ public final class Controller implements _ClientMessageReceiver, _RequestReceive
                 if (actionsMap.containsKey(mIn.getRequest().getName())) {
                     _ClientControllerAction action = actionsMap.get(mIn.getRequest().getName());
                     recv.putAnswer(new Answer(mIn.getRequest(), action.getStartReturn()));
-                    action.run(core, front, req, recv);
-                    recv.putAnswer(new Answer(mIn.getRequest(), action.getFinishReturn()));
+                    try {
+                        action.run(core, front, req, recv);
+                        recv.putAnswer(new Answer(mIn.getRequest(), action.getFinishReturn()));
+                    } catch (Throwable t) {
+                        recv.putAnswer(new Answer(mIn.getRequest(), action.getFailReturn(), t));
+                    }
                 } else {
                     if (req.has(ServerIn.class)) {
                         core.getServer(req.get(ServerIn.class).getId()).sendRequest(req);

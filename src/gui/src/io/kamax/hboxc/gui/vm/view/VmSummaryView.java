@@ -37,8 +37,11 @@ import io.kamax.hboxc.event.machine.MachineStateChangedEvent;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui.action.storage.StorageDeviceAttachmentMediumEditAction;
+import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.net.NetworkInterfaceSummary;
 import io.kamax.hboxc.gui.utils.StorageDeviceAttachmentOutComparator;
+import io.kamax.hboxc.gui.worker.receiver.AnswerWorkerReceiver;
+import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
 import io.kamax.helper.swing.BorderUtils;
 import io.kamax.helper.swing.JTextFieldUtils;
 import io.kamax.tool.AxStrings;
@@ -54,6 +57,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -393,7 +398,33 @@ public final class VmSummaryView {
                         storagePanel.add(new JLabel("[" + sdaOut.getDeviceType() + "] Empty"));
                     }
                     if (sdaOut.getDeviceType().contentEquals(EntityType.DVD.getId())) {
-                        storagePanel.add(new JButton(new StorageDeviceAttachmentMediumEditAction(mOut.getServerId(), sdaOut)), "wrap");
+                        final JButton loader = new JButton();
+                        _AnswerWorkerReceiver recv = new AnswerWorkerReceiver() {
+
+                            private Icon oldIcon;
+
+                            @Override
+                            public void start() {
+                                oldIcon = loader.getIcon();
+                                loader.setIcon(IconBuilder.LoadingIcon);
+                                loader.setEnabled(false);
+                            }
+
+                            @Override
+                            public void success() {
+                                loader.setEnabled(true);
+                                loader.setIcon(oldIcon);
+                            }
+
+                            @Override
+                            public void fail(Throwable t) {
+                                loader.setEnabled(true);
+                                loader.setIcon(oldIcon);
+                            }
+                        };
+                        Action ac = new StorageDeviceAttachmentMediumEditAction(mOut.getServerId(), sdaOut, recv);
+                        loader.setAction(ac);
+                        storagePanel.add(loader, "wrap");
                     } else {
                         storagePanel.add(new JLabel(""), "wrap");
                     }

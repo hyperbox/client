@@ -67,10 +67,10 @@ public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends
             recv.loadingFinished(true, null);
         } catch (ExecutionException e) {
             failed = true;
-            recv.loadingFinished(false, e.getCause().getMessage());
+            recv.loadingFinished(false, e);
         } catch (Throwable t) {
             failed = true;
-            recv.loadingFinished(false, t.getMessage());
+            recv.loadingFinished(false, t);
         }
     }
 

@@ -32,6 +32,7 @@ import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
 import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
+import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -39,18 +40,21 @@ import javax.swing.ImageIcon;
 public class HypervisorToolsMediumAttachAction extends AbstractAction {
 
     private static final long serialVersionUID = 9031406546855623059L;
+    private _AnswerWorkerReceiver recv;
     private String serverId;
     private StorageDeviceAttachmentOut sdaOut;
 
-    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut) {
-        this(serverId, sdaOut, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true);
+    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, _AnswerWorkerReceiver recv) {
+        this(serverId, sdaOut, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true, recv);
     }
 
-    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
+    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled,
+            _AnswerWorkerReceiver recv) {
         super(label, icon);
         setEnabled(isEnabled);
         this.serverId = serverId;
         this.sdaOut = sdaOut;
+        this.recv = recv;
     }
 
     @Override

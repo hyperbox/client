@@ -1,6 +1,6 @@
 /*
  * Hyperbox - Virtual Infrastructure Manager
- * Copyright (C) 2015 Maxime Dor
+ * Copyright (C) 2015 - Maxime Dor
  * 
  * http://kamax.io/hbox/
  * 
@@ -11,27 +11,21 @@
  * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
 
-package io.kamax.hboxc.gui.workers;
+package io.kamax.hboxc.gui.worker.receiver;
 
-import io.kamax.hboxc.gui.worker.receiver._WorkerDataReceiver;
+import io.kamax.hbox.comm._AnswerReceiver;
 
-public abstract class WorkerDataReceiver implements _WorkerDataReceiver {
 
-    @Override
-    public void loadingStarted() {
-        // stub
-    }
+public interface _AnswerWorkerReceiver extends _WorkerDataReceiver, _AnswerReceiver {
 
-    @Override
-    public void loadingFinished(boolean isSuccessful, Throwable t) {
-        // stub
-    }
+    // stub
 
 }

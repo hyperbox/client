@@ -67,9 +67,9 @@ public class HypervisorNetModeViewer implements _Refreshable, _NetAdaptorListRec
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
         if (!isSuccessful) {
-            panel.add(new JLabel(message), "wrap");
+            panel.add(new JLabel(t.getMessage()), "wrap");
         } else {
             if (panel.getComponents().length == 0) {
                 panel.add(new JLabel("No adaptor"), "wrap");

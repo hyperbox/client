@@ -20,7 +20,9 @@
 
 package io.kamax.hboxc.controller;
 
-public interface _ClientMessageReceiver {
+import io.kamax.hbox.comm._RequestReceiver;
+
+public interface _ClientMessageReceiver extends _RequestReceiver {
 
     public void post(MessageInput mIn);
 

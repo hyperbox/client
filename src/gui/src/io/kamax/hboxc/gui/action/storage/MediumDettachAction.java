@@ -27,8 +27,9 @@ import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.StorageDeviceAttachmentIn;
 import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
+import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -36,18 +37,20 @@ import javax.swing.ImageIcon;
 public class MediumDettachAction extends AbstractAction {
 
     private static final long serialVersionUID = -3310041024462638526L;
+    private _AnswerWorkerReceiver recv;
     private String serverId;
     private StorageDeviceAttachmentOut sdaOut;
 
-    public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, boolean isEnabled) {
-        this(serverId, sdaOut, "Detach Medium", IconBuilder.getTask(HypervisorTasks.MediumUnmount), isEnabled);
+    public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, boolean isEnabled, _AnswerWorkerReceiver recv) {
+        this(serverId, sdaOut, "Detach Medium", IconBuilder.getTask(HypervisorTasks.MediumUnmount), isEnabled, recv);
     }
 
-    public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled) {
+    public MediumDettachAction(String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled, _AnswerWorkerReceiver recv) {
         super(label, icon);
         setEnabled(isEnabled);
         this.serverId = serverId;
         this.sdaOut = sdaOut;
+        this.recv = recv;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class MediumDettachAction extends AbstractAction {
         req.set(new ServerIn(serverId));
         req.set(new MachineIn(sdaOut.getMachineUuid()));
         req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId()));
-        Gui.post(req);
+        MessageWorker.execute(req, recv);
     }
 
 }

@@ -184,8 +184,8 @@ public class UserListView implements _UserSelector, _Refreshable, _SingleServerS
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
-        statusLabel.setText(message);
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
+        statusLabel.setText(t.getMessage());
         statusLabel.setVisible(!isSuccessful);
         buttonPanel.setEnabled(isSuccessful);
         scrollPane.setEnabled(isSuccessful);

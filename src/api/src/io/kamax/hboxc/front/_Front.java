@@ -20,13 +20,13 @@
 
 package io.kamax.hboxc.front;
 
-import io.kamax.hbox.comm._RequestReceiver;
 import io.kamax.hbox.exception.HyperboxException;
+import io.kamax.hboxc.controller._ClientMessageReceiver;
 import io.kamax.hboxc.core._CoreReader;
 
 public interface _Front {
 
-    public void setRequestReceiver(_RequestReceiver reqRec);
+    public void setRequestReceiver(_ClientMessageReceiver reqRec);
 
     public void setCoreReader(_CoreReader reader);
 

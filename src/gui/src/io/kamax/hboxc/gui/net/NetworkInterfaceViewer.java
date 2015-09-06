@@ -177,12 +177,12 @@ public class NetworkInterfaceViewer {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccessful, String message) {
+        public void loadingFinished(boolean isSuccessful, Throwable t) {
             try {
                 attachNameValue.setEditable(Gui.getServer(srvId).getHypervisor().getNetworkMode(attachModeValue.getSelectedItem().toString())
                         .canLinkNetworkName());
-            } catch (Throwable t) {
-                t.printStackTrace();
+            } catch (Throwable t1) {
+                t1.printStackTrace();
             }
             if (isSuccessful) {
                 if (attachModeValue.getSelectedItem().equals(nicOut.getAttachMode())) {
@@ -192,7 +192,7 @@ public class NetworkInterfaceViewer {
                 }
             } else {
                 attachNameValue.removeAllItems();
-                attachNameValue.addItem("Error loading attach names: " + message);
+                attachNameValue.addItem("Error loading attach names: " + t.getMessage());
             }
             attachNameValue.setEnabled(true);
             attachModeValue.setEnabled(true);

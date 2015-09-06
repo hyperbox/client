@@ -21,8 +21,8 @@
 
 package io.kamax.hboxc.front.minimal;
 
-import io.kamax.hbox.comm._RequestReceiver;
 import io.kamax.hbox.exception.HyperboxException;
+import io.kamax.hboxc.controller._ClientMessageReceiver;
 import io.kamax.hboxc.core._CoreReader;
 import io.kamax.hboxc.front._Front;
 import javax.swing.JOptionPane;
@@ -52,7 +52,7 @@ public final class MiniUI implements _Front {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JOptionPane.showMessageDialog(null, "Fatal error occured during startup: " + t.getMessage(), "Fatal error", JOptionPane.ERROR_MESSAGE);
         } catch (Throwable t1) {
-            System.out.println("Fatal error occured during startup: " + description);
+            System.err.println("Fatal error occured during startup: " + description);
             t.printStackTrace();
         }
     }
@@ -73,7 +73,7 @@ public final class MiniUI implements _Front {
     }
 
     @Override
-    public void setRequestReceiver(_RequestReceiver reqRec) {
+    public void setRequestReceiver(_ClientMessageReceiver reqRec) {
         // stub
     }
 

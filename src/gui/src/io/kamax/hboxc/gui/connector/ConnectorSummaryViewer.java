@@ -127,9 +127,9 @@ public class ConnectorSummaryViewer implements _Refreshable, _ConnectorReceiver 
     }
 
     @Override
-    public void loadingFinished(boolean isSuccessful, String message) {
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
         if (!isSuccessful) {
-            labelValue.setText(message);
+            labelValue.setText(t.getMessage());
         }
     }
 

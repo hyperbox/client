@@ -24,11 +24,9 @@ import io.kamax.hbox.comm.Answer;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm._AnswerReceiver;
 import io.kamax.hbox.comm.out.TaskOut;
-import io.kamax.hbox.comm.out.event.EventOut;
 import io.kamax.hbox.comm.out.event.task.TaskStateEventOut;
 import io.kamax.hbox.exception.HyperboxException;
 import io.kamax.hbox.states.TaskState;
-import io.kamax.hboxc._EventReceiver;
 import io.kamax.hboxc.back._Backend;
 import io.kamax.hboxc.event.EventManager;
 import io.kamax.hboxc.event.backend.BackendStateEvent;
@@ -41,33 +39,27 @@ import java.util.LinkedList;
 import java.util.List;
 import net.engio.mbassy.listener.Handler;
 
-public final class Transaction implements _AnswerReceiver, _EventReceiver {
+public final class Transaction implements _AnswerReceiver {
 
     private _Backend b;
 
     private Long startTime;
     private Long endTime;
     private volatile Answer start;
-    private Deque<Answer> mainQ;
+    private Deque<Answer> mainQ = new LinkedList<Answer>();;
     private volatile Answer end;
     private volatile Long lastMessageTime;
 
     private final Request request;
     private volatile String taskId;
     private TaskStateEventOut evOut;
-    private volatile List<String> finishedTaskId;
+    private volatile boolean taskFinished = false;
 
     private String internalError = "";
 
     public Transaction(_Backend b, Request request) {
         this.b = b;
         this.request = request;
-        mainQ = new LinkedList<Answer>();
-        start = null;
-        end = null;
-        taskId = null;
-        finishedTaskId = new ArrayList<String>();
-        evOut = null;
     }
 
     private void init() {
@@ -163,7 +155,7 @@ public final class Transaction implements _AnswerReceiver, _EventReceiver {
             }
             taskId = extractItem(TaskOut.class).getId();
             synchronized (this) {
-                while (!finishedTaskId.contains(taskId)) {
+                while (!taskFinished) {
                     if (!b.isConnected()) {
                         throw new ServerDisconnectedException();
                     }
@@ -228,20 +220,14 @@ public final class Transaction implements _AnswerReceiver, _EventReceiver {
     }
 
     @Handler
-    @Override
-    public void post(EventOut evOut) {
-
-        Logger.verbose(evOut.toString());
-        if (evOut instanceof TaskStateEventOut) {
-            TaskStateEventOut tsEvOut = (TaskStateEventOut) evOut;
+    public void post(TaskStateEventOut tsEvOut) {
+        if (tsEvOut.getTask().getId().contentEquals(taskId)) {
             Logger.debug("Got event for TaskState: " + tsEvOut.getTask().getState());
             if (tsEvOut.getTask().getState().isFinishing()) {
-                finishedTaskId.add(tsEvOut.getTask().getId());
-                if (tsEvOut.getTask().getId().contentEquals(taskId)) {
-                    this.evOut = tsEvOut;
-                    synchronized (this) {
-                        notifyAll();
-                    }
+                this.evOut = tsEvOut;
+                taskFinished = true;
+                synchronized (this) {
+                    notifyAll();
                 }
             }
         }
