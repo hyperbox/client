@@ -190,10 +190,20 @@ public final class Gui implements _Front {
     }
 
     public static void post(MessageInput msgIn) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            Logger.warning("Posting Message on EDT! " + msgIn.getRequest().getName());
+            new Exception().printStackTrace();
+        }
+
         getReqRecv().putRequest(msgIn.getRequest());
     }
 
     public static void post(Request req) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            Logger.warning("Posting request on EDT! " + req.getName());
+            new Exception().printStackTrace();
+        }
+
         getReqRecv().putRequest(req);
     }
 
@@ -202,6 +212,11 @@ public final class Gui implements _Front {
     }
 
     public static _CoreReader getReader() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            Logger.warning("Accessing Gui::coreReader on EDIT!");
+            new Exception().printStackTrace();
+        }
+
         return reader;
     }
 
