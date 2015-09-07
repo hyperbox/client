@@ -29,12 +29,16 @@ import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.StorageDeviceAttachmentIn;
 import io.kamax.hbox.comm.out.storage.MediumOut;
 import io.kamax.hbox.comm.out.storage.StorageDeviceAttachmentOut;
+import io.kamax.hboxc.controller.MessageInput;
+import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
-import io.kamax.hboxc.gui.workers.MessageWorker;
+import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
+import javax.swing.SwingWorker;
 
 public class HypervisorToolsMediumAttachAction extends AbstractAction {
 
@@ -44,28 +48,79 @@ public class HypervisorToolsMediumAttachAction extends AbstractAction {
     private StorageDeviceAttachmentOut sdaOut;
     private MediumOut hypTools;
 
-    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, MediumOut hypTools, _AnswerWorkerReceiver recv) {
-        this(serverId, sdaOut, hypTools, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true, recv);
+    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, _AnswerWorkerReceiver recv) {
+        this(serverId, sdaOut, "Attach Hypervisor Tools", IconBuilder.getTask(HypervisorTasks.MediumMount), true, recv);
     }
 
-    public HypervisorToolsMediumAttachAction(String serverId, StorageDeviceAttachmentOut sdaOut, MediumOut hypTools, String label, ImageIcon icon, boolean isEnabled,
+    public HypervisorToolsMediumAttachAction(final String serverId, StorageDeviceAttachmentOut sdaOut, String label, ImageIcon icon, boolean isEnabled,
             _AnswerWorkerReceiver recv) {
         super(label, icon);
-        setEnabled(isEnabled && hypTools != null);
+        setEnabled(isEnabled);
         this.serverId = serverId;
         this.sdaOut = sdaOut;
-        this.hypTools = hypTools;
         this.recv = recv;
+
+        new SwingWorker<Void, Void>() {
+
+            private Object oldIcon = getValue(Action.SMALL_ICON);
+
+            {
+                setEnabled(false);
+                putValue(Action.SMALL_ICON, IconBuilder.LoadingIcon);
+            }
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                hypTools = Gui.getServer(serverId).getHypervisor().getToolsMedium();
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    setEnabled(true);
+                } catch (Throwable t) {
+                    Logger.warning("Error checking on Hypervisor tools: " + t.getMessage());
+                } finally {
+                    putValue(Action.SMALL_ICON, oldIcon);
+                }
+            }
+
+        }.execute();
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
-        req.set(new ServerIn(serverId));
-        req.set(new MachineIn(sdaOut.getMachineUuid()));
-        req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
-        req.set(new MediumIn(hypTools.getLocation(), hypTools.getDeviceType()));
-        MessageWorker.execute(req, recv);
+        new SwingWorker<Void,Void>() {
+
+            {
+                recv.loadingStarted();
+            }
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
+                req.set(new ServerIn(serverId));
+                req.set(new MachineIn(sdaOut.getMachineUuid()));
+                req.set(new StorageDeviceAttachmentIn(sdaOut.getControllerName(), sdaOut.getPortId(), sdaOut.getDeviceId(), sdaOut.getDeviceType()));
+                req.set(new MediumIn(hypTools.getLocation(), hypTools.getDeviceType()));
+                Gui.getReqRecv().post(new MessageInput(req, recv));
+
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    recv.loadingFinished(true, null);
+                } catch (Throwable t) {
+                    recv.loadingFinished(false, t);
+                }
+            }
+
+        }.execute();
     }
 
 }

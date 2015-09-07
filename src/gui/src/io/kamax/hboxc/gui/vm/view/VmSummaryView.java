@@ -65,6 +65,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
 
@@ -342,18 +343,46 @@ public final class VmSummaryView {
         consoleModuleValue.setText(mOut.getSetting(MachineAttribute.VrdeModule).getString());
 
         if (mOut.getSetting(MachineAttribute.VrdeEnabled).getBoolean()) {
-            try {
-                URI addrUri = new URI(Gui.getReader().getConnectorForServer(mOut.getServerId()).getAddress());
-                String addr = AxStrings.getNonEmpty(addrUri.getHost(), addrUri.getScheme());
-                if (!AxStrings.isEmpty(mOut.getSetting(MachineAttribute.VrdeAddress).getString())) {
-                    addr = mOut.getSetting(MachineAttribute.VrdeAddress).getString();
+            new SwingWorker<String, Void>() {
+
+                private String buttonText = consoleConnectButton.getText();
+
+                {
+                    consoleAddressValue.setVisible(false);
+                    consoleConnectButton.setText(null);
+                    consoleConnectButton.setIcon(IconBuilder.LoadingIcon);
                 }
-                addr = addr + ":" + mOut.getSetting(MachineAttribute.VrdePort).getString();
-                consoleAddressValue.setText(addr);
-                consoleConnectButton.setEnabled(mOut.getState().equalsIgnoreCase("running"));
-            } catch (URISyntaxException e) {
-                consoleAddressValue.setText("Invalid address: " + e.getMessage());
-            }
+
+                @Override
+                protected String doInBackground() throws Exception {
+                    return Gui.getReader().getConnectorForServer(mOut.getServerId()).getAddress();
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        URI addrUri = new URI(get());
+                        String addr = AxStrings.getNonEmpty(addrUri.getHost(), addrUri.getScheme());
+                        if (!AxStrings.isEmpty(mOut.getSetting(MachineAttribute.VrdeAddress).getString())) {
+                            addr = mOut.getSetting(MachineAttribute.VrdeAddress).getString();
+                        }
+                        addr = addr + ":" + mOut.getSetting(MachineAttribute.VrdePort).getString();
+                        consoleAddressValue.setText(addr);
+                        consoleConnectButton.setEnabled(mOut.getState().equalsIgnoreCase("running"));
+                    } catch (URISyntaxException e) {
+                        consoleConnectButton.setVisible(false);
+                        consoleAddressValue.setText("Invalid address: " + e.getMessage());
+                    } catch (Throwable t) {
+                        consoleConnectButton.setVisible(false);
+                        consoleAddressValue.setText("Error while retrieving console address: " + t.getMessage());
+                    } finally {
+                        consoleAddressValue.setVisible(true);
+                        consoleConnectButton.setText(buttonText);
+                        consoleConnectButton.setIcon(null);
+                    }
+                }
+
+            }.execute();
         } else {
             consoleAddressValue.setText("Not available (Disabled or Console Module not installed)");
         }
@@ -381,21 +410,49 @@ public final class VmSummaryView {
                 storagePanel.add(new JLabel(scOut.getType()), "wrap");
                 List<StorageDeviceAttachmentOut> scaSorted = new ArrayList<StorageDeviceAttachmentOut>(scOut.getAttachments());
                 Collections.sort(scaSorted, new StorageDeviceAttachmentOutComparator());
-                for (StorageDeviceAttachmentOut sdaOut : scaSorted) {
+                for (final StorageDeviceAttachmentOut sdaOut : scaSorted) {
+                    final JLabel medLabel = new JLabel();
                     storagePanel.add(new JLabel(""));
                     storagePanel.add(new JLabel(sdaOut.getPortId() + ":" + sdaOut.getDeviceId()));
 
                     storagePanel.add(new JLabel(""));
                     storagePanel.add(new JLabel(""));
-                    if (sdaOut.hasMediumInserted()) {
-                        MediumOut medOut = Gui.getServer(mOut.getServerId()).getMedium(new MediumIn(sdaOut.getMediumUuid()));
-                        while (medOut.hasParent()) {
-                            Logger.debug(medOut.getName() + " has parent : " + medOut.getParentUuid());
-                            medOut = Gui.getServer(mOut.getServerId()).getMedium(new MediumIn(medOut.getParentUuid()));
-                        }
-                        storagePanel.add(new JLabel("[" + sdaOut.getDeviceType() + "] " + medOut.getName()));
+                    storagePanel.add(medLabel);
+                    if (!sdaOut.hasMediumInserted()) {
+                        medLabel.setText("[" + sdaOut.getDeviceType() + "] Empty");
                     } else {
-                        storagePanel.add(new JLabel("[" + sdaOut.getDeviceType() + "] Empty"));
+                        new SwingWorker<MediumOut, Void>() {
+
+                            {
+                                medLabel.setIcon(IconBuilder.LoadingIcon);
+                            }
+
+                            @Override
+                            protected MediumOut doInBackground() throws Exception {
+                                MediumOut medOut = Gui.getServer(mOut.getServerId()).getMedium(new MediumIn(sdaOut.getMediumUuid()));
+                                while (medOut.hasParent()) {
+                                    medOut = Gui.getServer(mOut.getServerId()).getMedium(new MediumIn(medOut.getParentUuid()));
+                                }
+                                return medOut;
+                            }
+
+                            @Override
+                            protected void done() {
+                                try {
+                                    MediumOut medOut = get();
+                                    medLabel.setText("[" + sdaOut.getDeviceType() + "] " + medOut.getName());
+                                } catch (InterruptedException e) {
+                                    medLabel.setText("[" + sdaOut.getDeviceType() + "] " + sdaOut.getMediumUuid() + " (Interrupted while fetching info)");
+                                } catch (Throwable e) {
+                                    Logger.error("Error when fetching medium " + sdaOut.getMediumUuid(), e);
+                                    medLabel.setText("[" + sdaOut.getDeviceType() + "] " + sdaOut.getMediumUuid() + " (Error while fetching info)");
+                                } finally {
+                                    medLabel.setIcon(null);
+                                }
+
+                            }
+
+                        }.execute();
                     }
                     if (sdaOut.getDeviceType().contentEquals(EntityType.DVD.getId())) {
                         final JButton loader = new JButton();
@@ -422,8 +479,7 @@ public final class VmSummaryView {
                                 loader.setIcon(oldIcon);
                             }
                         };
-                        MediumOut hypTools = Gui.getServer(mOut.getServerId()).getHypervisor().getToolsMedium();
-                        Action ac = new StorageDeviceAttachmentMediumEditAction(mOut.getServerId(), sdaOut, hypTools, recv);
+                        Action ac = new StorageDeviceAttachmentMediumEditAction(mOut.getServerId(), sdaOut, recv);
                         loader.setAction(ac);
                         storagePanel.add(loader, "wrap");
                     } else {
