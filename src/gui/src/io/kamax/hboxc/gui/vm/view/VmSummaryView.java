@@ -564,7 +564,37 @@ public final class VmSummaryView {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            Gui.post(new Request(ClientTasks.ConsoleViewerUse, new ServerIn(mOut.getServerId()), new MachineIn(mOut)));
+            new SwingWorker<Void, Void>() {
+
+                private Icon oldIcon = consoleConnectButton.getIcon();
+
+                {
+                    consoleConnectButton.setEnabled(false);
+                    consoleConnectButton.setIcon(IconBuilder.LoadingIcon);
+                }
+
+                @Override
+                protected Void doInBackground() throws Exception {
+                    Gui.post(new Request(ClientTasks.ConsoleViewerUse, new ServerIn(mOut.getServerId()), new MachineIn(mOut)));
+
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        get();
+                    } catch (Throwable t) {
+                        Logger.error("Unable to start Console viewer", t);
+                        Gui.showError("Unable to start Console viewer: " + t.getMessage());
+                    } finally {
+                        consoleConnectButton.setEnabled(true);
+                        consoleConnectButton.setIcon(oldIcon);
+                    }
+                }
+
+            }.execute();
+
         }
 
     }
