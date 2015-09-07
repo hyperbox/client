@@ -21,6 +21,7 @@
 package io.kamax.hboxc.gui.net;
 
 import io.kamax.hbox.comm.in.NetworkInterfaceIn;
+import io.kamax.hbox.comm.out.network.NetModeOut;
 import io.kamax.hbox.comm.out.network.NetworkAttachNameOut;
 import io.kamax.hbox.comm.out.network.NetworkInterfaceOut;
 import io.kamax.hboxc.gui.Gui;
@@ -32,11 +33,13 @@ import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import net.miginfocom.swing.MigLayout;
 
 public class NetworkInterfaceViewer {
@@ -177,25 +180,45 @@ public class NetworkInterfaceViewer {
         }
 
         @Override
-        public void loadingFinished(boolean isSuccessful, Throwable t) {
-            try {
-                attachNameValue.setEditable(Gui.getServer(srvId).getHypervisor().getNetworkMode(attachModeValue.getSelectedItem().toString())
-                        .canLinkNetworkName());
-            } catch (Throwable t1) {
-                t1.printStackTrace();
-            }
-            if (isSuccessful) {
-                if (attachModeValue.getSelectedItem().equals(nicOut.getAttachMode())) {
-                    attachNameValue.setSelectedItem(nicOut.getAttachName());
-                } else {
-                    attachNameValue.setSelectedIndex(-1);
-                }
-            } else {
+        public void loadingFinished(final boolean isSuccessful, final Throwable t) {
+            attachModeValue.setEnabled(isSuccessful);
+
+            if (!isSuccessful) {
                 attachNameValue.removeAllItems();
                 attachNameValue.addItem("Error loading attach names: " + t.getMessage());
+                return;
             }
-            attachNameValue.setEnabled(true);
-            attachModeValue.setEnabled(true);
+
+            if (attachModeValue.getSelectedItem().equals(nicOut.getAttachMode())) {
+                attachNameValue.setSelectedItem(nicOut.getAttachName());
+            } else {
+                attachNameValue.setSelectedIndex(-1);
+            }
+
+            new SwingWorker<NetModeOut, Void>() {
+
+                @Override
+                protected NetModeOut doInBackground() throws Exception {
+                    return Gui.getServer(srvId).getHypervisor().getNetworkMode(attachModeValue.getSelectedItem().toString());
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        NetModeOut mode = get();
+                        attachNameValue.setEditable(mode.canLinkNetworkName());
+                        attachNameValue.setEnabled(mode.canLinkAdaptor() || mode.canLinkNetworkName());
+                    } catch (Throwable t1) {
+                        if (t1 instanceof ExecutionException && t1.getCause() != null) {
+                            t1 = t1.getCause();
+                        }
+
+                        attachNameValue.removeAllItems();
+                        attachNameValue.addItem("Error loading mode info: " + t1.getMessage());
+                    }
+                }
+
+            }.execute();
         }
 
         @Override
