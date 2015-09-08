@@ -32,16 +32,20 @@ import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
+import io.kamax.hboxc.gui.worker.receiver._ConnectorBackendListReceiver;
+import io.kamax.hboxc.gui.workers.ConnectorBackendListWorker;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
-public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
+public final class ConnectorEditorDialog implements _Saveable, _Cancelable, _ConnectorBackendListReceiver {
 
     private JDialog dialog;
 
@@ -60,12 +64,12 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
     private JPanel buttonPanel;
     private JButton loginButton;
     private JButton cancelButton;
+    private JProgressBar refreshProgress;
 
     private String conId = "-1";
     private ClientTasks task;
 
     private ConnectorEditorDialog() {
-
         hostnameLabel = new JLabel("Hostname");
         hostnameField = new JTextField(15);
         hostnameField.setText("127.0.0.1");
@@ -81,12 +85,12 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
 
         connectorLabel = new JLabel("Connector");
         connectorValue = new JComboBox();
-        for (BackendOutput bckOut : Gui.getReader().listBackends()) {
-            connectorValue.addItem(bckOut);
-        }
 
         loginButton = new JButton(new SaveAction(this));
         cancelButton = new JButton(new CancelAction(this));
+        refreshProgress = new JProgressBar();
+        refreshProgress.setVisible(false);
+        refreshProgress.setStringPainted(true);
 
         inputPanel = new JPanel(new MigLayout());
         inputPanel.add(labelLabel);
@@ -103,26 +107,25 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
         buttonPanel = new JPanel(new MigLayout());
         buttonPanel.add(loginButton);
         buttonPanel.add(cancelButton);
+        buttonPanel.add(refreshProgress, "growx,pushx");
 
         dialog = JDialogBuilder.get(loginButton);
         dialog.add(inputPanel, "growx, pushx, wrap");
-        dialog.add(buttonPanel, "center, bottom");
+        dialog.add(buttonPanel, "growx, pushx");
     }
 
     public void show() {
-
+        ConnectorBackendListWorker.execute(this);
         dialog.pack();
         dialog.setLocationRelativeTo(dialog.getParent());
         dialog.setVisible(true);
     }
 
     public void hide() {
-
         dialog.setVisible(false);
     }
 
     public void create() {
-
         task = ClientTasks.ConnectorAdd;
         dialog.setTitle("Add Server Connection");
 
@@ -130,7 +133,6 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
     }
 
     public void modify(ConnectorOutput conOut) {
-
         conId = conOut.getId();
         task = ClientTasks.ConnectorModify;
         dialog.setTitle("Edit Server Connection");
@@ -181,6 +183,34 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable {
 
     public static void edit(ConnectorOutput srvOut) {
         new ConnectorEditorDialog().modify(srvOut);
+    }
+
+    @Override
+    public void loadingStarted() {
+        loginButton.setEnabled(false);
+        connectorValue.setEnabled(false);
+        connectorValue.setSelectedIndex(-1);
+        refreshProgress.setVisible(true);
+        refreshProgress.setIndeterminate(true);
+    }
+
+    @Override
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
+        refreshProgress.setVisible(false);
+        refreshProgress.setIndeterminate(false);
+        loginButton.setEnabled(isSuccessful);
+        connectorValue.setEnabled(isSuccessful);
+        if (!isSuccessful) {
+            connectorValue.removeAllItems();
+            Gui.showError("Error fetching connector backends: " + t.getMessage());
+        }
+    }
+
+    @Override
+    public void add(List<BackendOutput> objOutList) {
+        for (BackendOutput objOut : objOutList) {
+            connectorValue.addItem(objOut);
+        }
     }
 
 }

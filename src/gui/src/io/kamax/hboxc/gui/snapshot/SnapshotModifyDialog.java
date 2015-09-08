@@ -31,93 +31,49 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui._Cancelable;
 import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
+import io.kamax.hboxc.gui.action.LoadingAction;
 import io.kamax.hboxc.gui.action.SaveAction;
-import io.kamax.hboxc.gui.builder.JDialogBuilder;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import net.miginfocom.swing.MigLayout;
+import io.kamax.hboxc.gui.worker.receiver._SnapshotGetReceiver;
+import io.kamax.hboxc.gui.workers.SnapshotGetWorker;
+import javax.swing.Action;
 
-public class SnapshotModifyDialog implements _Saveable, _Cancelable {
+public class SnapshotModifyDialog implements _Saveable, _Cancelable, _SnapshotGetReceiver {
 
-    private static SnapshotModifyDialog instance;
-    private JDialog mainDialog;
-
-    private JPanel mainPanel;
-    private JLabel nameLabel;
-    private JTextField nameField;
-    private JLabel descLabel;
-    private JTextArea descArea;
-
-    private JPanel buttonsPanel;
-    private JButton saveButton;
-    private JButton cancelButton;
-
+    private Action saveAction = new SaveAction(this);
+    private SnapshotEditorDialog editor;
     private MachineOut mOut;
     private SnapshotIn snapIn;
     private SnapshotOut snapOut;
 
-    private void init(MachineOut mOut, SnapshotOut snapOut) {
+    public SnapshotModifyDialog(MachineOut mOut, SnapshotOut snapOut) {
         this.mOut = mOut;
         this.snapOut = snapOut;
 
-        nameLabel = new JLabel("Name");
-        nameField = new JTextField(40);
-        nameField.setText(snapOut.getName());
-        descLabel = new JLabel("Description");
-        descArea = new JTextArea();
-        descArea.setLineWrap(true);
-        descArea.setRows(10);
-        descArea.setBorder(nameField.getBorder());
-        descArea.setText(snapOut.getDescription());
-
-        mainPanel = new JPanel(new MigLayout());
-        mainPanel.add(nameLabel);
-        mainPanel.add(nameField, "growx,pushx,wrap");
-        mainPanel.add(descLabel);
-        mainPanel.add(descArea, "growx,pushx,wrap");
-
-        saveButton = new JButton(new SaveAction(this));
-        cancelButton = new JButton(new CancelAction(this));
-
-        buttonsPanel = new JPanel(new MigLayout());
-        buttonsPanel.add(saveButton);
-        buttonsPanel.add(cancelButton);
-
-        mainDialog = JDialogBuilder.get("Edit Snapshot", saveButton);
-        mainDialog.getContentPane().setLayout(new MigLayout());
-        mainDialog.getContentPane().add(mainPanel, "grow,push,wrap");
-        mainDialog.getContentPane().add(buttonsPanel, "center, growx");
-        mainDialog.getRootPane().setDefaultButton(saveButton);
+        editor = new SnapshotEditorDialog(new SaveAction(this), new CancelAction(this));
     }
 
     public static void show(MachineOut mOut, SnapshotOut snapOut) {
-        instance = new SnapshotModifyDialog();
-        // FIXME use SwingWorker
-        instance.init(mOut, Gui.getServer(mOut.getServerId()).getSnapshot(mOut.getUuid(), snapOut.getUuid()));
-
-        instance.mainDialog.pack();
-        instance.mainDialog.setLocationRelativeTo(instance.mainDialog.getParent());
-        instance.mainDialog.setVisible(true);
+        SnapshotModifyDialog instance = new SnapshotModifyDialog(mOut, snapOut);
+        SnapshotGetWorker.execute(instance, mOut.getServerId(), mOut.getUuid(), snapOut.getUuid());
+        instance.editor.setDialogTitle("Edit Snapshot");
+        instance.editor.getDialog().pack();
+        instance.editor.getDialog().setLocationRelativeTo(instance.editor.getDialog().getParent());
+        instance.editor.getDialog().setVisible(true);
     }
 
     private void hide() {
-        mainDialog.setVisible(false);
-        mainDialog.dispose();
-        instance = null;
+        editor.getDialog().setVisible(false);
+        editor.getDialog().dispose();
     }
 
     @Override
     public void save() {
         snapIn = new SnapshotIn(snapOut.getUuid());
-        if (!nameField.getText().contentEquals(snapOut.getName())) {
-            snapIn.setName(nameField.getText());
+        if (!editor.getName().contentEquals(snapOut.getName())) {
+            snapIn.setName(editor.getName());
         }
-        if (!descArea.getText().contentEquals(snapOut.getDescription())) {
-            snapIn.setDescription(descArea.getText());
+        if (!editor.getDescription().contentEquals(snapOut.getDescription())) {
+            snapIn.setDescription(editor.getDescription());
         }
 
         if (snapIn.hasNewData()) {
@@ -130,6 +86,22 @@ public class SnapshotModifyDialog implements _Saveable, _Cancelable {
     @Override
     public void cancel() {
         hide();
+    }
+
+    @Override
+    public void loadingStarted() {
+        editor.getSaveButton().setAction(LoadingAction.get());
+    }
+
+    @Override
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
+        editor.getSaveButton().setAction(saveAction);
+        editor.getSaveButton().setEnabled(isSuccessful);
+    }
+
+    @Override
+    public void put(String srvId, String vmId, SnapshotOut snapOut) {
+        // TODO Auto-generated method stub
     }
 
 }
