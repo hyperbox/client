@@ -20,14 +20,16 @@
 
 package io.kamax.hboxc.gui.tasks;
 
+import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.TaskOut;
 import io.kamax.hbox.constant.EntityType;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui._Cancelable;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
 import io.kamax.hboxc.gui.utils.CancelableUtils;
+import io.kamax.hboxc.gui.worker.receiver._ServerReceiver;
 import io.kamax.hboxc.gui.worker.receiver._TaskReceiver;
+import io.kamax.hboxc.gui.workers.ServerGetWorker;
 import io.kamax.hboxc.gui.workers.TaskGetWorker;
 import io.kamax.helper.swing.JTextFieldUtils;
 import javax.swing.JDialog;
@@ -147,6 +149,27 @@ public class TaskView implements _Cancelable {
         dialog.setVisible(false);
     }
 
+    private class ServerReceiver implements _ServerReceiver {
+
+        @Override
+        public void loadingStarted() {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void loadingFinished(boolean isSuccessful, Throwable t) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void put(ServerOut srvOut) {
+            srvField.setText(srvOut.getName());
+        }
+
+    }
+
     private class TaskReceiver implements _TaskReceiver {
 
         @Override
@@ -157,6 +180,8 @@ public class TaskView implements _Cancelable {
         @Override
         public void loadingFinished(boolean isSuccessful, Throwable message) {
             if (isSuccessful) {
+                ServerGetWorker.execute(new ServerReceiver(), tskOut.getServerId());
+
                 dialog.setTitle("Task Details - #" + tskOut.getId());
                 actionField.setText(tskOut.getActionId());
                 if (tskOut.getCreateTime() != null) {
@@ -200,7 +225,6 @@ public class TaskView implements _Cancelable {
         @Override
         public void put(TaskOut tskOut) {
             TaskView.this.tskOut = tskOut;
-            TaskView.this.srvName = Gui.getServer(tskOut.getServerId()).getName();
         }
 
     }

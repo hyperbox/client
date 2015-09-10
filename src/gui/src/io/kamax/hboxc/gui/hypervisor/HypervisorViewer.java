@@ -24,9 +24,10 @@ package io.kamax.hboxc.gui.hypervisor;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorConnectedEventOut;
 import io.kamax.hbox.comm.out.event.hypervisor.HypervisorDisconnectedEventOut;
 import io.kamax.hbox.comm.out.hypervisor.HypervisorOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
+import io.kamax.hboxc.gui.worker.receiver._HypervisorReceiver;
+import io.kamax.hboxc.gui.workers.HypervisorGetWorker;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -35,7 +36,7 @@ import javax.swing.JTextField;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
 
-public class HypervisorViewer implements _Refreshable {
+public class HypervisorViewer implements _Refreshable, _HypervisorReceiver {
 
     private String srvId;
 
@@ -98,7 +99,7 @@ public class HypervisorViewer implements _Refreshable {
         ViewEventManager.register(this);
     }
 
-    private void toogleConnected(final boolean isConnected) {
+    private void toogleConnected(boolean isConnected) {
         stateData.setText(isConnected ? "Connected" : "Disconnected");
         typeLabel.setVisible(isConnected);
         typeData.setVisible(isConnected);
@@ -112,13 +113,9 @@ public class HypervisorViewer implements _Refreshable {
         revisionData.setVisible(isConnected);
     }
 
-    public void show(HypervisorOut srvOut) {
-        typeData.setText(srvOut.getType());
-        vendorData.setText(srvOut.getVendor());
-        productData.setText(srvOut.getProduct());
-        versionData.setText(srvOut.getVersion());
-        revisionData.setText(srvOut.getRevision());
-        toogleConnected(true);
+    public void show(String srvId) {
+        setSrvId(srvId);
+        refresh();
     }
 
     public void setDisconnected() {
@@ -155,7 +152,30 @@ public class HypervisorViewer implements _Refreshable {
 
     @Override
     public void refresh() {
-        show(Gui.getServer(srvId).getHypervisor().getInfo());
+        HypervisorGetWorker.execute(this, srvId);
+    }
+
+    @Override
+    public void loadingStarted() {
+        toogleConnected(false);
+        stateData.setText("Loading...");
+    }
+
+    @Override
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
+        toogleConnected(isSuccessful);
+        if (!isSuccessful) {
+            stateData.setText(t.getMessage());
+        }
+    }
+
+    @Override
+    public void put(HypervisorOut hypOut) {
+        typeData.setText(hypOut.getType());
+        vendorData.setText(hypOut.getVendor());
+        productData.setText(hypOut.getProduct());
+        versionData.setText(hypOut.getVersion());
+        revisionData.setText(hypOut.getRevision());
     }
 
 }

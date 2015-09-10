@@ -23,7 +23,6 @@ package io.kamax.hboxc.gui.server;
 
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.event.server.ServerEvent;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.hypervisor.HypervisorViewer;
@@ -122,7 +121,7 @@ public class ServerViewer implements _Refreshable, _ServerReceiver {
         netProtocolValue.setText(srvOut.getNetworkProtocolVersion() != null ? srvOut.getNetworkProtocolVersion() : "Unknown");
 
         if (srvOut.isHypervisorConnected()) {
-            hypViewer.show(Gui.getServer(srvOut).getHypervisor().getInfo());
+            hypViewer.show(srvId);
         } else {
             hypViewer.setDisconnected();
         }
@@ -130,7 +129,6 @@ public class ServerViewer implements _Refreshable, _ServerReceiver {
 
     @Handler
     public void putServerEvent(ServerEvent ev) {
-
         if ((srvId != null) && srvId.equals(ev.getServer().getId())) {
             refresh();
         }
@@ -148,7 +146,6 @@ public class ServerViewer implements _Refreshable, _ServerReceiver {
 
     @Override
     public void put(ServerOut srvOut) {
-
         update(srvOut);
     }
 
