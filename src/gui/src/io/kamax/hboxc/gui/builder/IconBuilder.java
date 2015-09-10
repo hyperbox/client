@@ -53,6 +53,7 @@ public class IconBuilder {
     public static final ImageIcon DelIcon = new ImageIcon(getBasePath() + "delete.png");
 
     public static final ImageIcon LoadingIcon = new ImageIcon(getBasePath() + "34.gif");
+    public static final ImageIcon RefreshIcon = new ImageIcon(getBasePath() + "reload.png");
 
     private static Map<HypervisorTasks, ImageIcon> vbTasks;
     private static Map<HyperboxTasks, ImageIcon> hbTasks;
@@ -107,6 +108,9 @@ public class IconBuilder {
         hbTasks.put(HyperboxTasks.StoreDelete, new ImageIcon(getBasePath() + "store_delete.png"));
         hbTasks.put(HyperboxTasks.StoreRegister, new ImageIcon(getBasePath() + "store_register.png"));
         hbTasks.put(HyperboxTasks.StoreUnregister, new ImageIcon(getBasePath() + "store_unregister.png"));
+
+        hbTasks.put(HyperboxTasks.ModuleRegister, new ImageIcon(getBasePath() + "module_add.png"));
+        hbTasks.put(HyperboxTasks.ModuleRefresh, RefreshIcon);
     }
 
     private static void initVbTasks() {
@@ -189,6 +193,7 @@ public class IconBuilder {
         entTypes.put(EntityType.User.getId(), new ImageIcon(getBasePath() + "user.png"));
         entTypes.put(EntityType.Store.getId(), new ImageIcon(getBasePath() + "store.png"));
         entTypes.put(EntityType.Task.getId(), new ImageIcon(getBasePath() + "task.png"));
+        entTypes.put(EntityType.Module.getId(), new ImageIcon(getBasePath() + "module.png"));
     }
 
     public static ImageIcon getHyperbox() {
