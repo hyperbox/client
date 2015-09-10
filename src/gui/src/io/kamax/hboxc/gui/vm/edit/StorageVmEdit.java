@@ -346,7 +346,7 @@ public class StorageVmEdit {
 
     }
 
-    
+
     private class StorageTreeCellRenderer extends DefaultTreeCellRenderer {
 
         /**
@@ -412,26 +412,31 @@ public class StorageVmEdit {
             else if (e.getSource().equals(addIdeMenuItem)) {
                 Logger.debug("Adding IDE controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.IDE.getId(), StorageControllerType.IDE.getId());
+                scIn.setAction(Action.Create);
                 add(scIn);
             }
             else if (e.getSource().equals(addSataMenuItem)) {
                 Logger.debug("Adding SATA controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SATA.getId(), StorageControllerType.SATA.getId());
+                scIn.setAction(Action.Create);
                 add(scIn);
             }
             else if (e.getSource().equals(addScsiMenuItem)) {
                 Logger.debug("Adding SCSI controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SCSI.getId(), StorageControllerType.SCSI.getId());
+                scIn.setAction(Action.Create);
                 add(scIn);
             }
             else if (e.getSource().equals(addSasMenuItem)) {
                 Logger.debug("Adding SAS controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SAS.getId(), StorageControllerType.SAS.getId());
+                scIn.setAction(Action.Create);
                 add(scIn);
             }
             else if (e.getSource().equals(addFloppyMenuItem)) {
                 Logger.debug("Adding Floppy controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.Floppy.getId(), StorageControllerType.Floppy.getId());
+                scIn.setAction(Action.Create);
                 add(scIn);
             }
             else {
