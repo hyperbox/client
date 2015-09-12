@@ -52,6 +52,10 @@ public class UserModifyAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
+        trigger(selector);
+    }
+
+    public static void trigger(_UserSelector selector) {
         List<String> selection = selector.getSelection();
         if (!selection.isEmpty()) {
             UserOut usrOut = Gui.getReader().getServerReader(selector.getServerId()).getUser(new UserIn(selector.getSelection().get(0)));
@@ -60,7 +64,6 @@ public class UserModifyAction extends AbstractAction {
                 Logger.debug("Got user input");
                 Gui.post(new Request(Command.HBOX, HyperboxTasks.UserModify, new ServerIn(selector.getServerId()), usrIn));
             }
-
         }
     }
 

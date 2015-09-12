@@ -34,6 +34,7 @@ import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.worker.receiver._UserListReceiver;
 import io.kamax.hboxc.gui.workers.UserListWorker;
 import io.kamax.helper.swing.MouseWheelController;
+import io.kamax.tool.AxStrings;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -110,7 +111,9 @@ public class UserListView implements _UserSelector, _Refreshable, _SingleServerS
     // TODO add specific handlers
     @Handler
     public void putUserEvent(UserEventOut evOut) {
-        refresh();
+        if (AxStrings.equals(evOut.getServerId(), srvOut.getId())) {
+            refresh();
+        }
     }
 
     private class ItemListMouseListener extends MouseAdapter {
@@ -133,8 +136,16 @@ public class UserListView implements _UserSelector, _Refreshable, _SingleServerS
 
         @Override
         public void mouseClicked(MouseEvent ev) {
-            if ((ev.getButton() == MouseEvent.BUTTON1) && (itemList.rowAtPoint(ev.getPoint()) == -1)) {
-                itemList.clearSelection();
+            if (ev.getButton() == MouseEvent.BUTTON1) {
+                if (itemList.rowAtPoint(ev.getPoint()) == -1) {
+                    itemList.clearSelection();
+                }
+                else if (ev.getClickCount() == 2) {
+                    UserModifyAction.trigger(UserListView.this);
+                }
+                else {
+                    // nothing to do
+                }
             } else {
                 showPopup(ev);
             }
