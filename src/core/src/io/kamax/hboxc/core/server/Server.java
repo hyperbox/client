@@ -741,10 +741,10 @@ public class Server implements _Server, _AnswerReceiver {
 
             setState(ConnectionState.Connected);
             EventManager.post(new ServerConnectedEvent(ServerIoFactory.get(this)));
-        } catch (Throwable e) {
-            Logger.exception(e);
-            disconnect();
-            throw new HyperboxException(e);
+        } finally {
+            if (ConnectionState.Connecting.equals(getState())) {
+                disconnect();
+            }
         }
     }
 

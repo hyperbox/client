@@ -131,27 +131,29 @@ public class Connector implements _Connector {
             setState(ConnectionState.Connected);
 
             return server;
-        } catch (Throwable e) {
-            disconnect();
-            throw new HyperboxException("Failed to connect to server", e);
+        } finally {
+            if (ConnectionState.Connecting.equals(getState())) {
+                disconnect();
+            }
         }
     }
 
     @Override
     public void disconnect() {
-        if (getState().equals(ConnectionState.Connected) || getState().equals(ConnectionState.Connecting)) {
-            setState(ConnectionState.Disconnecting);
-
-            if (server != null) {
-                server.disconnect();
-                server = null;
-            }
-
-            setState(ConnectionState.Disconnected);
-            EventManager.unregister(this);
-        } else {
+        if (!getState().equals(ConnectionState.Connected) && !getState().equals(ConnectionState.Connecting)) {
             Logger.debug("Ignoring disconnect call, already in " + getState() + " state");
+            return;
         }
+
+        setState(ConnectionState.Disconnecting);
+
+        if (server != null) {
+            server.disconnect();
+            server = null;
+        }
+
+        setState(ConnectionState.Disconnected);
+        EventManager.unregister(this);
     }
 
     @Override

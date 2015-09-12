@@ -48,14 +48,15 @@ import io.kamax.hboxc.gui.builder.PopupMenuBuilder;
 import io.kamax.hboxc.gui.connector.ConnectorDetailedView;
 import io.kamax.hboxc.gui.connector._ConnectorSelector;
 import io.kamax.hboxc.gui.server._ServerSelector;
+import io.kamax.hboxc.gui.utils.KxAnonymousWorker;
 import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.vm._MachineSelector;
 import io.kamax.hboxc.gui.vm.view.VmDetailedView;
+import io.kamax.hboxc.gui.worker.receiver.WorkerDataReceiver;
 import io.kamax.hboxc.gui.worker.receiver._MachineListReceiver;
 import io.kamax.hboxc.gui.worker.receiver._SnapshotGetReceiver;
 import io.kamax.hboxc.gui.workers.MachineListWorker;
 import io.kamax.hboxc.gui.workers.SnapshotGetWorker;
-import io.kamax.hboxc.gui.workers.WorkerDataReceiver;
 import io.kamax.helper.swing.MouseWheelController;
 import io.kamax.helper.swing.SortedTreeModel;
 import io.kamax.tool.logging.Logger;
@@ -77,7 +78,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
-import javax.swing.SwingWorker;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -427,7 +427,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
         updateConnector(Gui.getReader().getConnector(((ConnectorOutput) conNode.getUserObject()).getId()));
     }
 
-    
+
     private class TreeCellRenderer extends DefaultTreeCellRenderer {
 
         private static final long serialVersionUID = 5488166000202423711L;
@@ -494,13 +494,19 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                         final ConnectorOutput conOut = (ConnectorOutput) node.getUserObject();
                         if (!conOut.isConnected()) {
                             Logger.debug("User request: Connect to server using " + conOut);
-                            new SwingWorker<Void, Void>() {
+
+                            new KxAnonymousWorker() {
 
                                 @Override
                                 protected Void doInBackground() throws Exception {
-                                    Gui.post(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
+                                    try {
+                                        Gui.post(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
+                                    } catch (Throwable t) {
+                                        Logger.exception(t);
+                                    }
                                     return null;
                                 }
+
                             }.execute();
                         }
                     }

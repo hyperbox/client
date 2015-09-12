@@ -23,7 +23,6 @@ package io.kamax.hboxc.controller;
 import io.kamax.hbox.ClassManager;
 import io.kamax.hbox.Configuration;
 import io.kamax.hbox.HyperboxAPI;
-import io.kamax.hbox.comm.Answer;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm._AnswerReceiver;
 import io.kamax.hbox.comm.in.MachineIn;
@@ -173,13 +172,7 @@ public final class Controller implements _ClientMessageReceiver {
             try {
                 if (actionsMap.containsKey(mIn.getRequest().getName())) {
                     _ClientControllerAction action = actionsMap.get(mIn.getRequest().getName());
-                    recv.putAnswer(new Answer(mIn.getRequest(), action.getStartReturn()));
-                    try {
-                        action.run(core, front, req, recv);
-                        recv.putAnswer(new Answer(mIn.getRequest(), action.getFinishReturn()));
-                    } catch (Throwable t) {
-                        recv.putAnswer(new Answer(mIn.getRequest(), action.getFailReturn(), t));
-                    }
+                    action.run(core, front, req, recv);
                 } else {
                     if (req.has(ServerIn.class)) {
                         core.getServer(req.get(ServerIn.class).getId()).sendRequest(req);

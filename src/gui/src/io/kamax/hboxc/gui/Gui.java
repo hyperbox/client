@@ -59,7 +59,7 @@ public final class Gui implements _Front {
     private static _ClientMessageReceiver reqRecv;
     private static _CoreReader reader;
 
-    private MainView mainView;
+    private static MainView mainView;
 
     @Override
     public void start() throws HyperboxException {
@@ -110,7 +110,7 @@ public final class Gui implements _Front {
     }
 
     public static void showError(String s) {
-        JOptionPane.showMessageDialog(null, s, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(MainView.getMainFrame(), s, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public static void showError(Throwable t) {

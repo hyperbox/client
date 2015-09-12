@@ -72,9 +72,6 @@ public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends
                 Logger.exception(t);
                 Gui.showError(t);
             }
-        } catch (ExecutionException e) {
-            failed = true;
-            recv.loadingFinished(false, e);
         } catch (Throwable t) {
             failed = true;
             recv.loadingFinished(false, t);
