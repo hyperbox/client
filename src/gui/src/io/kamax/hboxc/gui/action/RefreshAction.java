@@ -22,6 +22,7 @@
 package io.kamax.hboxc.gui.action;
 
 import io.kamax.hboxc.gui._Refreshable;
+import io.kamax.hboxc.gui.builder.IconBuilder;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -32,6 +33,7 @@ public class RefreshAction extends AbstractAction {
     private _Refreshable refreshable;
 
     public RefreshAction(_Refreshable r) {
+        super("Refresh", IconBuilder.RefreshIcon);
         refreshable = r;
     }
 

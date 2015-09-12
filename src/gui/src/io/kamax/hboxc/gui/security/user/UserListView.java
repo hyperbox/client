@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.security.user;
 
-import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.event.security.UserEventOut;
 import io.kamax.hbox.comm.out.security.UserOut;
@@ -30,11 +29,11 @@ import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.action.security.UserCreateAction;
 import io.kamax.hboxc.gui.action.security.UserModifyAction;
 import io.kamax.hboxc.gui.action.security.UserRemoveAction;
-import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
 import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.worker.receiver._UserListReceiver;
 import io.kamax.hboxc.gui.workers.UserListWorker;
+import io.kamax.helper.swing.MouseWheelController;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -58,20 +58,22 @@ public class UserListView implements _UserSelector, _Refreshable, _SingleServerS
     private ServerOut srvOut;
 
     private JLabel statusLabel;
-
-    private JPanel panel;
+    private JProgressBar refreshProgress;
     private UserTableModel itemListModel;
     private JTable itemList;
     private JScrollPane scrollPane;
 
     private JButton addButton;
     private JPanel buttonPanel;
+    private JPanel panel;
 
     private JPopupMenu actions;
 
     public UserListView() {
         statusLabel = new JLabel();
         statusLabel.setVisible(false);
+        refreshProgress = new JProgressBar();
+        refreshProgress.setVisible(false);
 
         itemListModel = new UserTableModel();
         itemList = new JTable(itemListModel);
@@ -81,14 +83,15 @@ public class UserListView implements _UserSelector, _Refreshable, _SingleServerS
         itemList.addMouseListener(new ItemListMouseListener());
 
         scrollPane = new JScrollPane(itemList);
+        MouseWheelController.install(scrollPane);
 
         addButton = new JButton(new UserCreateAction(this));
-        addButton.setIcon(IconBuilder.getTask(HyperboxTasks.UserCreate));
         buttonPanel = new JPanel(new MigLayout("ins 0"));
         buttonPanel.add(addButton);
 
         panel = new JPanel(new MigLayout("ins 0"));
         panel.add(statusLabel, "hidemode 3, growx, pushx, wrap");
+        panel.add(refreshProgress, "hidemode 3, growx, pushx, wrap");
         panel.add(buttonPanel, "hidemode 3, growx, pushx, wrap");
         panel.add(scrollPane, "hidemode 3, grow, push, wrap");
 
@@ -179,14 +182,22 @@ public class UserListView implements _UserSelector, _Refreshable, _SingleServerS
     public void loadingStarted() {
         statusLabel.setText("Loading...");
         statusLabel.setVisible(true);
+        refreshProgress.setIndeterminate(true);
+        refreshProgress.setVisible(true);
+
         buttonPanel.setEnabled(false);
         scrollPane.setEnabled(false);
     }
 
     @Override
     public void loadingFinished(boolean isSuccessful, Throwable t) {
-        statusLabel.setText(t.getMessage());
         statusLabel.setVisible(!isSuccessful);
+        if (!isSuccessful) {
+            statusLabel.setText(t.getMessage());
+        }
+        refreshProgress.setIndeterminate(false);
+        refreshProgress.setVisible(false);
+
         buttonPanel.setEnabled(isSuccessful);
         scrollPane.setEnabled(isSuccessful);
     }

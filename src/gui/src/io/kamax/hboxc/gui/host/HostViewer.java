@@ -132,7 +132,9 @@ public class HostViewer implements _Refreshable, _HostReceiver {
     @Override
     public void loadingFinished(boolean isSuccessful, Throwable t) {
         setDataVisible(isSuccessful);
-        status.setText(t.getMessage());
+        if (!isSuccessful) {
+            status.setText(t.getMessage());
+        }
     }
 
     @Override

@@ -25,7 +25,7 @@ import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.event.module.ServerModuleEvent;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
-import io.kamax.hboxc.gui.action.module.ModuleRefreshAction;
+import io.kamax.hboxc.gui.action.RefreshAction;
 import io.kamax.hboxc.gui.action.module.ModuleRegisterAction;
 import io.kamax.hboxc.gui.builder.PopupMenuBuilder;
 import io.kamax.hboxc.gui.worker.receiver._ModuleListReceiver;
@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
@@ -52,6 +53,7 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
 
     private String srvId;
 
+    private JLabel statusLabel;
     private JProgressBar refreshProgress;
     private ModuleListTableModel itemListModel;
     private JTable itemList;
@@ -64,7 +66,8 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
     private JPanel panel;
 
     public ModuleListView() {
-
+        statusLabel = new JLabel();
+        statusLabel.setVisible(false);
         refreshProgress = new JProgressBar();
         refreshProgress.setVisible(false);
 
@@ -74,16 +77,18 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
         itemList.setFillsViewportHeight(true);
         itemList.getRowSorter().setSortKeys(Arrays.asList(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
         itemList.addMouseListener(new ItemListMouseListener());
+
         scrollPane = new JScrollPane(itemList);
         MouseWheelController.install(scrollPane);
 
-        refreshButton = new JButton(new ModuleRefreshAction(this));
+        refreshButton = new JButton(new RefreshAction(this));
         registerButton = new JButton(new ModuleRegisterAction(this));
         buttonPanel = new JPanel(new MigLayout("ins 0"));
         buttonPanel.add(refreshButton);
         buttonPanel.add(registerButton);
 
         panel = new JPanel(new MigLayout("ins 0"));
+        panel.add(statusLabel, "hidemode 3, growx, pushx, wrap");
         panel.add(refreshProgress, "hidemode 3, growx, pushx, wrap");
         panel.add(buttonPanel, "hidemode 3, growx, pushx, wrap");
         panel.add(scrollPane, "hidemode 3, grow, push, wrap");
@@ -125,16 +130,24 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
 
     @Override
     public void loadingStarted() {
-        itemListModel.clear();
-        itemList.setEnabled(false);
+        statusLabel.setText("Loading...");
+        statusLabel.setVisible(true);
         refreshProgress.setIndeterminate(true);
         refreshProgress.setVisible(true);
+
+        itemListModel.clear();
+        itemList.setEnabled(false);
     }
 
     @Override
     public void loadingFinished(boolean isSuccessful, Throwable t) {
+        statusLabel.setVisible(!isSuccessful);
+        if (!isSuccessful) {
+            statusLabel.setText(t.getMessage());
+        }
         refreshProgress.setIndeterminate(false);
         refreshProgress.setVisible(false);
+
         itemList.setEnabled(true);
     }
 

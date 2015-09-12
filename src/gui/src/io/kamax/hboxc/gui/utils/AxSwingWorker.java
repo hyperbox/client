@@ -21,7 +21,9 @@
 
 package io.kamax.hboxc.gui.utils;
 
+import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.worker.receiver._WorkerDataReceiver;
+import io.kamax.tool.logging.Logger;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.ExecutionException;
@@ -64,7 +66,12 @@ public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends
     protected final void done() {
         try {
             innerDone();
-            recv.loadingFinished(true, null);
+            try {
+                recv.loadingFinished(true, null);
+            } catch (Throwable t) {
+                Logger.exception(t);
+                Gui.showError(t);
+            }
         } catch (ExecutionException e) {
             failed = true;
             recv.loadingFinished(false, e);

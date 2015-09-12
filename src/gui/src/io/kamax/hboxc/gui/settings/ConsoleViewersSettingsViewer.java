@@ -104,7 +104,6 @@ public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
     }
 
     public void load() {
-
         consViewerTableModel.put(Gui.getReader().listConsoleViewers());
     }
 
