@@ -68,6 +68,7 @@ public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
 
         addButton = new JButton(new ConsoleViewerCreateAction());
         remButton = new JButton(new ConsoleViewerRemoveAction(this));
+
         buttonPanel = new JPanel(new MigLayout("ins 0"));
         buttonPanel.add(addButton);
         buttonPanel.add(remButton);

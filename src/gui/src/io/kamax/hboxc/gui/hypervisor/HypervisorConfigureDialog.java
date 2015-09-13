@@ -21,22 +21,24 @@
 package io.kamax.hboxc.gui.hypervisor;
 
 import io.kamax.hbox.comm.in.HypervisorIn;
+import io.kamax.hbox.comm.out.hypervisor.HypervisorOut;
 import io.kamax.hbox.constant.EntityType;
-import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui._Cancelable;
 import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
+import io.kamax.hboxc.gui.action.LoadingAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
+import io.kamax.hboxc.gui.worker.receiver._HypervisorReceiver;
+import io.kamax.hboxc.gui.workers.HypervisorGetWorker;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
-public class HypervisorConfigureDialog implements _Saveable, _Cancelable {
+public class HypervisorConfigureDialog implements _Saveable, _Cancelable, _HypervisorReceiver {
 
     private _GlobalConfigureView configView;
     private JButton saveButton;
@@ -60,19 +62,9 @@ public class HypervisorConfigureDialog implements _Saveable, _Cancelable {
     }
 
     private HypervisorIn getInternalInput() {
-        try {
-            // TODO Use Swing worker
-            configView = Gui.getHypervisorModel(Gui.getServer(srvId).getHypervisor().getInfo().getId()).getConfigureView();
-            configView.update(Gui.getServer(srvId).getHypervisor().getInfo());
-            dialog.add(configView.getComponent(), "grow,push,wrap");
-            dialog.add(buttonPanel, "growx,pushx,wrap");
-            dialog.pack();
-            dialog.setSize(650, dialog.getHeight());
-            dialog.setLocationRelativeTo(dialog.getParent());
-            dialog.setVisible(true);
-        } catch (HyperboxException t) {
-            HyperboxClient.getView().postError(t.getMessage());
-        }
+        HypervisorGetWorker.execute(this, srvId);
+        dialog.setVisible(true);
+
         return hypIn;
     }
 
@@ -89,6 +81,31 @@ public class HypervisorConfigureDialog implements _Saveable, _Cancelable {
 
     public static HypervisorIn getInput(String srvId) {
         return (new HypervisorConfigureDialog(srvId)).getInternalInput();
+    }
+
+    @Override
+    public void loadingStarted() {
+        saveButton.setAction(new LoadingAction());
+    }
+
+    @Override
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
+        saveButton.setAction(new SaveAction(this));
+        saveButton.setEnabled(isSuccessful);
+        if (!isSuccessful) {
+            Gui.showError("Unable to fetch hypervisor info: "+t.getMessage());
+        }
+    }
+
+    @Override
+    public void put(HypervisorOut hypOut) {
+        configView = Gui.getHypervisorModel(hypOut.getId()).getConfigureView();
+        configView.update(hypOut);
+        dialog.add(configView.getComponent(), "grow,push,wrap");
+        dialog.add(buttonPanel, "growx,pushx,wrap");
+        dialog.pack();
+        dialog.setSize(650, dialog.getHeight());
+        dialog.setLocationRelativeTo(dialog.getParent());
     }
 
 }

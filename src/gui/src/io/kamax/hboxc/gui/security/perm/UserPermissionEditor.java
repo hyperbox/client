@@ -32,6 +32,7 @@ import io.kamax.hbox.comm.out.security.UserOut;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
+import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -74,7 +75,8 @@ public class UserPermissionEditor implements _Refreshable {
         refreshProgress = new JProgressBar();
         refreshProgress.setVisible(false);
 
-        addButton = new JButton("+");
+        addButton = new JButton(IconBuilder.AddIcon);
+        addButton.setToolTipText("Add a new permission for the user");
         addButton.addActionListener(new ActionListener() {
 
             @Override
@@ -93,7 +95,8 @@ public class UserPermissionEditor implements _Refreshable {
             }
         });
 
-        delButton = new JButton("-");
+        delButton = new JButton(IconBuilder.DelIcon);
+        delButton.setToolTipText("Delete the selected user permission");
         delButton.addActionListener(new ActionListener() {
 
             @Override
@@ -136,7 +139,6 @@ public class UserPermissionEditor implements _Refreshable {
     }
 
     private void clear() {
-
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {
 
@@ -152,7 +154,6 @@ public class UserPermissionEditor implements _Refreshable {
 
     @Override
     public void refresh() {
-
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {
 

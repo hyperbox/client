@@ -21,6 +21,7 @@
 
 package io.kamax.hboxc.gui.action;
 
+import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.vm.console.viewer.ConsoleViewerEditor;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -31,7 +32,7 @@ public class ConsoleViewerCreateAction extends AbstractAction {
     private static final long serialVersionUID = -1616888552624355955L;
 
     public ConsoleViewerCreateAction() {
-        super("+");
+        super(null, IconBuilder.AddIcon);
     }
 
     @Override

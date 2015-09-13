@@ -27,6 +27,7 @@ import io.kamax.hboxc.comm.output.ConsoleViewerOutput;
 import io.kamax.hboxc.controller.ClientTasks;
 import io.kamax.hboxc.controller.MessageInput;
 import io.kamax.hboxc.gui.Gui;
+import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.vm.console.viewer._ConsoleViewerSelector;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -38,7 +39,7 @@ public class ConsoleViewerRemoveAction extends AbstractAction {
     private _ConsoleViewerSelector selector;
 
     public ConsoleViewerRemoveAction(_ConsoleViewerSelector selector) {
-        super("-");
+        super(null, IconBuilder.DelIcon);
         this.selector = selector;
     }
 

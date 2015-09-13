@@ -143,7 +143,7 @@ public class IconBuilder {
         vbTasks.put(HypervisorTasks.MediumRegister, new ImageIcon(getBasePath() + "database_link.png"));
         vbTasks.put(HypervisorTasks.MediumModify, new ImageIcon(getBasePath() + "cd_modify.png"));
 
-        vbTasks.put(HypervisorTasks.NetAdaptorAdd, new ImageIcon(getBasePath() + "add.png"));
+        vbTasks.put(HypervisorTasks.NetAdaptorAdd, AddIcon);
         vbTasks.put(HypervisorTasks.NetAdaptorModify, new ImageIcon(getBasePath() + "edit.png"));
         vbTasks.put(HypervisorTasks.NetAdaptorRemove, new ImageIcon(getBasePath() + "cross.png"));
     }
@@ -152,7 +152,7 @@ public class IconBuilder {
         machineStates = new EnumMap<MachineStates, ImageIcon>(MachineStates.class);
 
         machineStates.put(MachineStates.Aborted, new ImageIcon(getBasePath() + "cross.png"));
-        machineStates.put(MachineStates.Inaccessible, new ImageIcon(getBasePath() + "delete.png"));
+        machineStates.put(MachineStates.Inaccessible, DelIcon);
         machineStates.put(MachineStates.Paused, new ImageIcon(getBasePath() + "pause_blue.png"));
         machineStates.put(MachineStates.PoweredOff, new ImageIcon(getBasePath() + "stop_red.png"));
         machineStates.put(MachineStates.Restoring, new ImageIcon(getBasePath() + "disk_upload.png"));
@@ -160,7 +160,7 @@ public class IconBuilder {
         machineStates.put(MachineStates.Running, new ImageIcon(getBasePath() + "play_green.png"));
         machineStates.put(MachineStates.Saved, new ImageIcon(getBasePath() + "disk.png"));
         machineStates.put(MachineStates.Saving, new ImageIcon(getBasePath() + "disk_download.png"));
-        machineStates.put(MachineStates.Stuck, new ImageIcon(getBasePath() + "delete.png"));
+        machineStates.put(MachineStates.Stuck, DelIcon);
     }
 
     private static void initStorageControllerTypes() {
