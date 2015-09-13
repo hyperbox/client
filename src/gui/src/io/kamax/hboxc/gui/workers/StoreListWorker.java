@@ -36,7 +36,7 @@ public class StoreListWorker extends AxSwingWorker<_StoreListReceiver, Void, Sto
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (StoreOut stoOut : Gui.getServer(srvId).listStores()) {
             publish(stoOut);
         }

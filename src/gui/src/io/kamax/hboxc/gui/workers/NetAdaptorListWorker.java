@@ -38,7 +38,7 @@ public class NetAdaptorListWorker extends AxSwingWorker<_NetAdaptorListReceiver,
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (NetAdaptorOut adaptOut : Gui.getServer(srvId).getHypervisor().listAdaptors(modeId)) {
             publish(adaptOut);
         }

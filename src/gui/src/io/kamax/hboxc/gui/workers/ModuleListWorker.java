@@ -36,7 +36,7 @@ public class ModuleListWorker extends AxSwingWorker<_ModuleListReceiver, Void, M
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (ModuleOut modOut : Gui.getServer(srvId).listModules()) {
             publish(modOut);
         }

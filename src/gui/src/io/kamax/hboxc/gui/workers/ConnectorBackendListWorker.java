@@ -14,7 +14,7 @@ public class ConnectorBackendListWorker extends AxSwingWorker<_ConnectorBackendL
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (BackendOutput bOut : Gui.getReader().listBackends()) {
             publish(bOut);
         }

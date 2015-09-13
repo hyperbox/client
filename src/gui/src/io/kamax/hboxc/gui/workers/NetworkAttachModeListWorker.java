@@ -36,7 +36,7 @@ public class NetworkAttachModeListWorker extends AxSwingWorker<_NetworkAttachMod
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (NetworkAttachModeOut ostOut : Gui.getServer(srvId).listNetworkAttachModes()) {
             publish(ostOut);
         }

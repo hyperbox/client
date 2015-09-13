@@ -37,7 +37,7 @@ public class MachineGetWorker extends AxSwingWorker<_MachineReceiver, MachineOut
     }
 
     @Override
-    protected MachineOut doInBackground() throws Exception {
+    protected MachineOut innerDoInBackground() throws Exception {
         MachineOut newMachineOut = Gui.getServer(mOut.getServerId()).getMachine(mOut.getUuid());
         return newMachineOut;
     }

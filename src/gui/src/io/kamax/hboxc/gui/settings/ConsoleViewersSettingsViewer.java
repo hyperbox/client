@@ -23,26 +23,29 @@ package io.kamax.hboxc.gui.settings;
 
 import io.kamax.hboxc.comm.output.ConsoleViewerOutput;
 import io.kamax.hboxc.event.consoleviewer.ConsoleViewerEvent;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui.action.ConsoleViewerCreateAction;
 import io.kamax.hboxc.gui.action.ConsoleViewerRemoveAction;
+import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.vm.console.viewer.ConsoleViewerEditor;
 import io.kamax.hboxc.gui.vm.console.viewer.ConsoleViewerTableModel;
 import io.kamax.hboxc.gui.vm.console.viewer._ConsoleViewerSelector;
+import io.kamax.hboxc.gui.worker.receiver._ConsoleViewerListReceiver;
+import io.kamax.hboxc.gui.workers.ConsolerViewerListWorker;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
 
-public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
+public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector, _ConsoleViewerListReceiver {
 
     private JPanel panel;
 
@@ -52,6 +55,7 @@ public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
 
     private JButton addButton;
     private JButton remButton;
+    private JLabel loadingLabel;
     private JPanel buttonPanel;
 
     public ConsoleViewersSettingsViewer() {
@@ -68,10 +72,13 @@ public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
 
         addButton = new JButton(new ConsoleViewerCreateAction());
         remButton = new JButton(new ConsoleViewerRemoveAction(this));
+        loadingLabel = new JLabel(IconBuilder.LoadingIcon);
+        loadingLabel.setVisible(false);
 
         buttonPanel = new JPanel(new MigLayout("ins 0"));
         buttonPanel.add(addButton);
         buttonPanel.add(remButton);
+        buttonPanel.add(loadingLabel, "growx,pushx,wrap,hidemode 3");
 
         panel = new JPanel(new MigLayout());
         panel.add(consViewerTablePane, "grow,push,wrap");
@@ -94,7 +101,6 @@ public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
 
         @Override
         public void mouseClicked(MouseEvent ev) {
-
             if (ev.getClickCount() == 2) {
                 ConsoleViewerOutput cvOut = getSelection();
                 if (cvOut != null) {
@@ -105,7 +111,7 @@ public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
     }
 
     public void load() {
-        consViewerTableModel.put(Gui.getReader().listConsoleViewers());
+        ConsolerViewerListWorker.execute(this);
     }
 
     @Override
@@ -120,6 +126,30 @@ public class ConsoleViewersSettingsViewer implements _ConsoleViewerSelector {
     @Handler
     public void putConsoleViewerEvent(ConsoleViewerEvent ev) {
         load();
+    }
+
+    @Override
+    public void loadingStarted() {
+        addButton.setEnabled(false);
+        remButton.setEnabled(false);
+        loadingLabel.setIcon(IconBuilder.LoadingIcon);
+        consViewerTableModel.clear();
+    }
+
+    @Override
+    public void loadingFinished(boolean isSuccessful, Throwable t) {
+        loadingLabel.setVisible(!isSuccessful);
+        addButton.setEnabled(isSuccessful);
+        remButton.setEnabled(isSuccessful);
+        if (!isSuccessful) {
+            loadingLabel.setIcon(null);
+            loadingLabel.setText(t.getMessage());
+        }
+    }
+
+    @Override
+    public void add(List<ConsoleViewerOutput> objOutList) {
+        consViewerTableModel.add(objOutList);
     }
 
 }

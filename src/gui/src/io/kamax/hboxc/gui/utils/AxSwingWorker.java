@@ -63,6 +63,15 @@ public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends
     }
 
     @Override
+    protected final T doInBackground() throws Exception {
+        //Thread.sleep(2000L);
+        return innerDoInBackground();
+
+    }
+
+    protected abstract T innerDoInBackground() throws Exception;
+
+    @Override
     protected final void done() {
         try {
             innerDone();

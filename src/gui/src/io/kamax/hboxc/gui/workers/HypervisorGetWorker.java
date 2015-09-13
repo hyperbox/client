@@ -16,7 +16,7 @@ public class HypervisorGetWorker extends AxSwingWorker<_HypervisorReceiver, Hype
     }
 
     @Override
-    protected HypervisorOut doInBackground() throws Exception {
+    protected HypervisorOut innerDoInBackground() throws Exception {
         return Gui.getServer(srvId).getHypervisor().getInfo();
     }
 

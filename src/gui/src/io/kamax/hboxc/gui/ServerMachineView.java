@@ -498,7 +498,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                             new KxAnonymousWorker() {
 
                                 @Override
-                                protected Void doInBackground() throws Exception {
+                                protected Void innerDoInBackground() throws Exception {
                                     try {
                                         Gui.post(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
                                     } catch (Throwable t) {

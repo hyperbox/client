@@ -37,7 +37,7 @@ public class HostGetWorker extends AxSwingWorker<_HostReceiver, HostOut, Void> {
     }
 
     @Override
-    protected HostOut doInBackground() throws Exception {
+    protected HostOut innerDoInBackground() throws Exception {
         if (!Gui.getServer(srvId).isHypervisorConnected()) {
             throw new HypervisorNotConnectedException("Host information is not available while the hypervisor is not connected");
         }

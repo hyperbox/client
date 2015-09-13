@@ -41,7 +41,7 @@ public class OsTypeListWorker extends AxSwingWorker<_OsTypeListReceiver, Void, O
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         if (vmId != null) {
             for (OsTypeOut ostOut : Gui.getServer(srvId).listOsType(new MachineIn(vmId))) {
                 publish(ostOut);

@@ -38,7 +38,7 @@ public class MachineListWorker extends AxSwingWorker<_MachineListReceiver, Void,
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (MachineOut mOut : Gui.getServer(serverId).listMachines()) {
             publish(mOut);
         }

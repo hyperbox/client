@@ -38,7 +38,7 @@ public class TaskListWorker extends AxSwingWorker<_TaskListReceiver, Void, TaskO
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (TaskOut tOut : Gui.getServer(srvId).listTasks()) {
             publish(tOut);
         }

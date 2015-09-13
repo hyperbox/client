@@ -39,7 +39,7 @@ public class NetworkAttachNameListWorker extends AxSwingWorker<_NetworkAttachNam
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (NetworkAttachNameOut nanOut : Gui.getServer(srvId).listNetworkAttachNames(new NetworkAttachModeIn(netAttachModeId))) {
             publish(nanOut);
         }

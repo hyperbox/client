@@ -36,7 +36,7 @@ public class NetworkInterfaceTypeListWorker extends AxSwingWorker<_NetworkInterf
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (NetworkInterfaceTypeOut nicTypeOut : Gui.getServer(srvId).listNetworkInterfaceTypes()) {
             publish(nicTypeOut);
         }

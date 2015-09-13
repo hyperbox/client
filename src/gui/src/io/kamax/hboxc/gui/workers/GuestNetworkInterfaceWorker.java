@@ -41,7 +41,7 @@ public class GuestNetworkInterfaceWorker extends AxSwingWorker<_GuestNetworkInte
     }
 
     @Override
-    protected GuestNetworkInterfaceOut doInBackground() throws Exception {
+    protected GuestNetworkInterfaceOut innerDoInBackground() throws Exception {
         return Gui.getServer(srvId).getGuest(vmId).findNetworkInterface(nicOut.getMacAddress());
     }
 

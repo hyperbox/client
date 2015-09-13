@@ -37,7 +37,7 @@ public class TaskGetWorker extends AxSwingWorker<_TaskReceiver, TaskOut, Void> {
     }
 
     @Override
-    protected TaskOut doInBackground() throws Exception {
+    protected TaskOut innerDoInBackground() throws Exception {
         return Gui.getServer(objOut.getServerId()).getTask(new TaskIn(objOut));
     }
 

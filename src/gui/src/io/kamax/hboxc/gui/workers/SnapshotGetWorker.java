@@ -40,7 +40,7 @@ public class SnapshotGetWorker extends AxSwingWorker<_SnapshotGetReceiver, Snaps
     }
 
     @Override
-    protected SnapshotOut doInBackground() throws Exception {
+    protected SnapshotOut innerDoInBackground() throws Exception {
         return Gui.getServer(srvId).getSnapshot(vmId, snapId);
     }
 

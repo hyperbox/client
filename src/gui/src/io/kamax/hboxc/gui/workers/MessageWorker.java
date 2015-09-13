@@ -38,7 +38,7 @@ public class MessageWorker extends AxSwingWorker<_AnswerWorkerReceiver, Void, Vo
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         Gui.getReqRecv().post(new MessageInput(req, getReceiver()));
 
         return null;

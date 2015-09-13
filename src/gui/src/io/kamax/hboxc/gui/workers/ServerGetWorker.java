@@ -36,7 +36,7 @@ public class ServerGetWorker extends AxSwingWorker<_ServerReceiver, ServerOut, V
     }
 
     @Override
-    protected ServerOut doInBackground() throws Exception {
+    protected ServerOut innerDoInBackground() throws Exception {
         ServerOut newSrvOut = Gui.getServerInfo(srvId);
         return newSrvOut;
     }

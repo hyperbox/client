@@ -37,7 +37,7 @@ public class NetModeListWorker extends AxSwingWorker<_NetModeListReceiver, Void,
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         if (!Gui.getServer(srvId).isHypervisorConnected()) {
             throw new HypervisorNotConnectedException();
         }

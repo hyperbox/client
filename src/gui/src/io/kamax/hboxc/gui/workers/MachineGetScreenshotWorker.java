@@ -39,7 +39,7 @@ public class MachineGetScreenshotWorker extends AxSwingWorker<_MachineScreenshot
     }
 
     @Override
-    protected ScreenshotOut doInBackground() throws Exception {
+    protected ScreenshotOut innerDoInBackground() throws Exception {
         return Gui.getServer(mOut.getServerId()).getScreenshot(new MachineIn(mOut));
     }
 

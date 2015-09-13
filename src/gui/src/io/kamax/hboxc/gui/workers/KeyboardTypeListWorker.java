@@ -38,7 +38,7 @@ public class KeyboardTypeListWorker extends AxSwingWorker<_KeyboardTypeListRecei
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (String type : Gui.getServer(serverId).listKeyboardMode(new MachineIn(machineId))) {
             publish(type);
         }

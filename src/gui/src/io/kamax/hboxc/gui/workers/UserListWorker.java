@@ -36,7 +36,7 @@ public class UserListWorker extends AxSwingWorker<_UserListReceiver, Void, UserO
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void innerDoInBackground() throws Exception {
         for (UserOut usrOut : Gui.getServer(srvId).listUsers()) {
             publish(usrOut);
         }

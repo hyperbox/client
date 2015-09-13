@@ -36,7 +36,7 @@ public class ConnectorGetWorker extends AxSwingWorker<_ConnectorReceiver, Connec
     }
 
     @Override
-    protected ConnectorOutput doInBackground() throws Exception {
+    protected ConnectorOutput innerDoInBackground() throws Exception {
         return Gui.getReader().getConnector(conId);
     }
 
