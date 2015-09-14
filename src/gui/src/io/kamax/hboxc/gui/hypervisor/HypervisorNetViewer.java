@@ -47,6 +47,7 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
     private volatile boolean isRefreshing = false;
 
     private String srvId;
+    private String hypId;
 
     private JLabel status;
     private JPanel dataPanel;
@@ -54,9 +55,7 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
 
     private Map<String, HypervisorNetModeViewer> compModes = new HashMap<String, HypervisorNetModeViewer>();
 
-    public HypervisorNetViewer(String srvId) {
-        this.srvId = srvId;
-
+    public HypervisorNetViewer() {
         status = new JLabel();
         dataPanel = new JPanel(new MigLayout("ins 0"));
         dataPanel.setVisible(false);
@@ -66,21 +65,21 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
 
         RefreshUtil.set(panel, this);
         ViewEventManager.register(this);
-        refresh();
     }
 
     public JComponent getComponent() {
         return panel;
     }
 
-    public void refresh(String srvId) {
+    public void refresh(String srvId, String hypId) {
         this.srvId = srvId;
+        this.hypId = hypId;
         refresh();
     }
 
     @Override
     public void refresh() {
-        if (!isRefreshing) {
+        if (!isRefreshing && srvId != null && hypId != null) {
             isRefreshing = true;
             NetModeListWorker.execute(this, srvId);
         }
@@ -144,7 +143,7 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
     public void add(List<NetModeOut> modesOut) {
         for (NetModeOut modeOut : modesOut) {
             if (modeOut.canLinkAdaptor()) {
-                HypervisorNetModeViewer viewer = new HypervisorNetModeViewer(srvId, modeOut);
+                HypervisorNetModeViewer viewer = new HypervisorNetModeViewer(srvId, hypId, modeOut);
                 compModes.put(modeOut.getId(), viewer);
                 viewer.getComponent().setBorder(BorderFactory.createTitledBorder(modeOut.getLabel()));
                 dataPanel.add(viewer.getComponent(), "growx, pushx, wrap");

@@ -21,7 +21,6 @@
 package io.kamax.hboxc.gui.module;
 
 import io.kamax.hbox.comm.out.ModuleOut;
-import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.event.module.ServerModuleEvent;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
@@ -96,18 +95,20 @@ public class ModuleListView implements _ModuleSelector, _Refreshable, _ModuleLis
         ViewEventManager.register(this);
     }
 
-    public void show(ServerOut srvOut) {
-        if (srvOut == null) {
+    public void show(String srvId) {
+        if (srvId == null) {
             itemListModel.clear();
         } else {
-            srvId = srvOut.getId();
+            this.srvId = srvId;
             refresh();
         }
     }
 
     @Override
     public void refresh() {
-        ModuleListWorker.execute(this, srvId);
+        if (srvId != null) {
+            ModuleListWorker.execute(this, srvId);
+        }
     }
 
     @Override

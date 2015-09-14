@@ -65,9 +65,7 @@ public class ServerTaskListView implements _TaskSelector, _Refreshable {
 
     private JPopupMenu actions;
 
-    public ServerTaskListView(String srvId) {
-        this.srvId = srvId;
-
+    public ServerTaskListView() {
         itemListModel = new ServerTaskListTableModel();
         itemList = new JTable(itemListModel);
         itemList.setFillsViewportHeight(true);
@@ -91,7 +89,6 @@ public class ServerTaskListView implements _TaskSelector, _Refreshable {
         actions = new JPopupMenu();
         actions.add(new JMenuItem(new TaskCancelAction(this)));
 
-        refresh();
         ViewEventManager.register(this);
     }
 
@@ -151,7 +148,9 @@ public class ServerTaskListView implements _TaskSelector, _Refreshable {
 
     @Override
     public void refresh() {
-        TaskListWorker.execute(new TaskListReceiver(), srvId);
+        if (srvId != null) {
+            TaskListWorker.execute(new TaskListReceiver(), srvId);
+        }
     }
 
     private class TaskListReceiver implements _TaskListReceiver {

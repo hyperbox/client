@@ -39,12 +39,14 @@ import net.miginfocom.swing.MigLayout;
 public class HypervisorNetModeViewer implements _Refreshable, _NetAdaptorListReceiver {
 
     private String srvId;
+    private String hypId;
     private NetModeOut mode;
 
     private JPanel panel = new JPanel(new MigLayout());
 
-    public HypervisorNetModeViewer(String srvId, NetModeOut mode) {
+    public HypervisorNetModeViewer(String srvId, String hypId, NetModeOut mode) {
         this.srvId = srvId;
+        this.hypId = hypId;
         this.mode = mode;
         ViewEventManager.register(this);
         refresh();
@@ -75,7 +77,7 @@ public class HypervisorNetModeViewer implements _Refreshable, _NetAdaptorListRec
                 panel.add(new JLabel("No adaptor"), "wrap");
             }
             if (mode.canAddAdaptor()) {
-                panel.add(new JButton(new NetAdaptorAddAction(srvId, mode.getId())), "wrap");
+                panel.add(new JButton(new NetAdaptorAddAction(srvId, hypId, mode.getId())), "wrap");
             }
         }
         // TODO find out why this is needed
@@ -88,8 +90,8 @@ public class HypervisorNetModeViewer implements _Refreshable, _NetAdaptorListRec
         for (NetAdaptorOut adapt : adaptOutList) {
             panel.add(new JLabel(adapt.getLabel()), "growx, pushx");
             if (mode.canRemoveAdaptor()) {
-                panel.add(new JButton(new NetAdaptorEditAction(srvId, mode.getId(), adapt.getId())));
-                panel.add(new JButton(new NetAdaptorRemoveAction(srvId, mode.getId(), adapt.getId())), "wrap");
+                panel.add(new JButton(new NetAdaptorEditAction(srvId, hypId, mode.getId(), adapt.getId())));
+                panel.add(new JButton(new NetAdaptorRemoveAction(srvId, hypId, mode.getId(), adapt.getId())), "wrap");
             } else {
                 panel.add(new JLabel(), "span 2, wrap");
             }

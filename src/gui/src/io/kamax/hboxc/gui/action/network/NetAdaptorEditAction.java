@@ -36,19 +36,21 @@ public class NetAdaptorEditAction extends AbstractAction {
 
     private static final long serialVersionUID = 1227441578681565462L;
     private String srvId;
+    private String hypId;
     private String modeId;
     private String adaptId;
 
-    public NetAdaptorEditAction(String srvId, String modeId, String adaptId) {
+    public NetAdaptorEditAction(String srvId, String hypId, String modeId, String adaptId) {
         super("Edit", IconBuilder.getTask(HypervisorTasks.NetAdaptorModify));
         this.srvId = srvId;
+        this.hypId = hypId;
         this.modeId = modeId;
         this.adaptId = adaptId;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        NetAdaptorIn adaptIn = NetAdaptorDialog.getInput(srvId, modeId, adaptId);
+        NetAdaptorIn adaptIn = NetAdaptorDialog.getInput(srvId, hypId, modeId, adaptId);
         if (adaptIn != null) {
             Request req = new Request(Command.VBOX, HypervisorTasks.NetAdaptorModify, adaptIn);
             req.set(ServerIn.class, new ServerIn(srvId));

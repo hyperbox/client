@@ -36,17 +36,19 @@ public class NetAdaptorAddAction extends AbstractAction {
 
     private static final long serialVersionUID = -1475838049060205072L;
     private String srvId;
+    private String hypId;
     private String modeId;
 
-    public NetAdaptorAddAction(String srvId, String modeId) {
+    public NetAdaptorAddAction(String srvId, String hypId, String modeId) {
         super("Add", IconBuilder.getTask(HypervisorTasks.NetAdaptorAdd));
         this.srvId = srvId;
+        this.hypId = hypId;
         this.modeId = modeId;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        NetAdaptorIn adaptIn = NetAdaptorDialog.getInput(srvId, modeId, null);
+        NetAdaptorIn adaptIn = NetAdaptorDialog.getInput(srvId, hypId, modeId, null);
         if (adaptIn != null) {
             Request req = new Request(Command.VBOX, HypervisorTasks.NetAdaptorAdd, adaptIn);
             req.set(ServerIn.class, new ServerIn(srvId));

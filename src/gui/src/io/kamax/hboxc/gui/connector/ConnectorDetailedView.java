@@ -21,6 +21,7 @@
 
 package io.kamax.hboxc.gui.connector;
 
+import io.kamax.hbox.comm.out.hypervisor.HypervisorOut;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.event.connector.ConnectorStateChangedEvent;
@@ -59,13 +60,13 @@ public class ConnectorDetailedView implements _Refreshable {
     private UserListView userView;
     private ModuleListView modView;
 
-    public ConnectorDetailedView(ConnectorOutput conOut) {
-        this.conId = conOut.getId();
+    public ConnectorDetailedView(String conId) {
+        this.conId = conId;
 
-        summaryView = new ConnectorSummaryViewer(conOut);
-        hostViewer = new HostViewer(conOut.getServerId());
-        netViewer = new HypervisorNetViewer(conOut.getServerId());
-        taskViewer = new ServerTaskListView(conOut.getServerId());
+        summaryView = new ConnectorSummaryViewer(conId);
+        hostViewer = new HostViewer();
+        netViewer = new HypervisorNetViewer();
+        taskViewer = new ServerTaskListView();
         storeView = new StoreListView();
         userView = new UserListView();
         modView = new ModuleListView();
@@ -91,7 +92,7 @@ public class ConnectorDetailedView implements _Refreshable {
         ViewEventManager.register(this);
     }
 
-    private void update(ConnectorOutput conOut) {
+    private void update(ConnectorOutput conOut, HypervisorOut hypOut) {
         tabs.setEnabledAt(tabs.indexOfTab("Host"), conOut.isConnected());
         tabs.setEnabledAt(tabs.indexOfTab("Network"), conOut.isConnected());
         tabs.setEnabledAt(tabs.indexOfTab("Tasks"), conOut.isConnected());
@@ -101,11 +102,11 @@ public class ConnectorDetailedView implements _Refreshable {
 
         if (conOut.isConnected()) {
             hostViewer.refresh(conOut.getServerId());
-            netViewer.refresh(conOut.getServerId());
+            netViewer.refresh(conOut.getServerId(), hypOut.getId());
             taskViewer.refresh(conOut.getServerId());
             storeView.show(conOut.getServer());
             userView.show(conOut.getServer());
-            modView.show(conOut.getServer());
+            modView.show(conOut.getServerId());
         } else {
             tabs.setSelectedComponent(summaryView.getComponent());
         }
@@ -114,17 +115,28 @@ public class ConnectorDetailedView implements _Refreshable {
     @Override
     public void refresh() {
 
-        new SwingWorker<ConnectorOutput, Void>() {
+        new SwingWorker<Void, Void>() {
+
+            private ConnectorOutput conOut;
+            private HypervisorOut hypOut;
 
             @Override
-            protected ConnectorOutput doInBackground() throws Exception {
-                return Gui.getReader().getConnector(conId);
+            protected Void doInBackground() throws Exception {
+                conOut = Gui.getReader().getConnector(conId);
+                if (conOut.isConnected()) {
+                    if (Gui.getReader().getServerReader(conOut.getServerId()).isHypervisorConnected()) {
+                        hypOut = Gui.getReader().getServerReader(conOut.getServerId()).getHypervisor().getInfo();
+                    }
+                }
+
+                return null;
             }
 
             @Override
             protected void done() {
                 try {
-                    update(get());
+                    get();
+                    update(conOut, hypOut);
                 } catch (InterruptedException e) {
                     Gui.showError(e);
                 } catch (ExecutionException e) {

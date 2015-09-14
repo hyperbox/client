@@ -33,7 +33,7 @@ public class NetAdaptorRemoveAction extends AbstractAction {
     private String modeId;
     private String adaptorId;
 
-    public NetAdaptorRemoveAction(String srvId, String modeId, String adaptorId) {
+    public NetAdaptorRemoveAction(String srvId, String hypId, String modeId, String adaptorId) {
         super("Remove", IconBuilder.getTask(HypervisorTasks.NetAdaptorRemove));
         this.srvId = srvId;
         this.modeId = modeId;

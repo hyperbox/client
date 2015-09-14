@@ -49,8 +49,8 @@ public class NetAdaptorDialog implements _Saveable, _Cancelable {
 
     private JDialog dialog;
 
-    private NetAdaptorDialog(final String srvId, final String modeId, final String adaptId) {
-        configView = Gui.getHypervisorModel(Gui.getServer(srvId).getHypervisor().getInfo().getId()).getNetAdaptorConfig(srvId, modeId, adaptId);
+    private NetAdaptorDialog(final String srvId, final String hypId, final String modeId, final String adaptId) {
+        configView = Gui.getHypervisorModel(hypId).getNetAdaptorConfig(srvId, modeId, adaptId);
         saveButton = new JButton(new SaveAction(this));
         cancelButton = new JButton(new CancelAction(this));
 
@@ -95,9 +95,9 @@ public class NetAdaptorDialog implements _Saveable, _Cancelable {
         return adaptIn;
     }
 
-    public static NetAdaptorIn getInput(String srvId, String modeId, String adaptId) {
+    public static NetAdaptorIn getInput(String srvId, String hypId, String modeId, String adaptId) {
         try {
-            return new NetAdaptorDialog(srvId, modeId, adaptId).getInput();
+            return new NetAdaptorDialog(srvId, hypId, modeId, adaptId).getInput();
         } catch (HyperboxException e) {
             Gui.showError(e.getMessage());
             return null;

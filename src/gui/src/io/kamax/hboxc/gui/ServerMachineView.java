@@ -559,7 +559,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                         rightPanel.add(sp, "grow,push");
                     }
                     if (node.getUserObject() instanceof ConnectorOutput) {
-                        JScrollPane sp = new JScrollPane(new ConnectorDetailedView((ConnectorOutput) node.getUserObject()).getComponent());
+                        JScrollPane sp = new JScrollPane(new ConnectorDetailedView(((ConnectorOutput) node.getUserObject()).getId()).getComponent());
                         MouseWheelController.install(sp);
                         rightPanel.add(sp, "grow,push");
                     }

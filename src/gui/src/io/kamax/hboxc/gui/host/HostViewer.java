@@ -58,9 +58,7 @@ public class HostViewer implements _Refreshable, _HostReceiver {
     private JPanel dataPanel;
     private JPanel panel;
 
-    public HostViewer(String srvId) {
-        this.srvId = srvId;
-
+    public HostViewer() {
         hostnameLabel = new JLabel("Hostname");
         memPercLabel = new JLabel("Memory Usage");
         memUsedLabel = new JLabel("Memory Used");
@@ -93,7 +91,6 @@ public class HostViewer implements _Refreshable, _HostReceiver {
         panel.add(dataPanel, "grow, push, wrap, hidemode 3");
 
         RefreshUtil.set(panel, this);
-        refresh();
         ViewEventManager.register(this);
     }
 
@@ -104,7 +101,9 @@ public class HostViewer implements _Refreshable, _HostReceiver {
 
     @Override
     public void refresh() {
-        HostGetWorker.execute(this, srvId);
+        if (srvId != null) {
+            HostGetWorker.execute(this, srvId);
+        }
     }
 
     private void clear() {

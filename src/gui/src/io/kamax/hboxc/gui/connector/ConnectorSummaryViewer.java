@@ -54,8 +54,8 @@ public class ConnectorSummaryViewer implements _Refreshable, _ConnectorReceiver 
     private JPanel conPanel;
     private JPanel panel;
 
-    public ConnectorSummaryViewer(ConnectorOutput conOut) {
-        this.conId = conOut.getId();
+    public ConnectorSummaryViewer(String conId) {
+        this.conId = conId;
         labelLabel = new JLabel("Label");
         addressLabel = new JLabel("Address");
         backendLabel = new JLabel("Backend");
@@ -88,7 +88,6 @@ public class ConnectorSummaryViewer implements _Refreshable, _ConnectorReceiver 
         panel.add(srvView.getComponent(), "growx, pushx, wrap");
         srvView.getComponent().setVisible(true);
 
-        update(conOut);
         ViewEventManager.register(this);
     }
 
