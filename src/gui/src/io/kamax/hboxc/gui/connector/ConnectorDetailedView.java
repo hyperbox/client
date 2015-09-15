@@ -21,6 +21,7 @@
 
 package io.kamax.hboxc.gui.connector;
 
+import io.kamax.hbox.comm.out.event.hypervisor.HypervisorConnectionStateEventOut;
 import io.kamax.hbox.comm.out.hypervisor.HypervisorOut;
 import io.kamax.hbox.constant.EntityType;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
@@ -36,6 +37,7 @@ import io.kamax.hboxc.gui.security.user.UserListView;
 import io.kamax.hboxc.gui.store.StoreListView;
 import io.kamax.hboxc.gui.tasks.ServerTaskListView;
 import io.kamax.hboxc.gui.utils.RefreshUtil;
+import io.kamax.tool.Validate;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -61,6 +63,8 @@ public class ConnectorDetailedView implements _Refreshable {
     private ModuleListView modView;
 
     public ConnectorDetailedView(String conId) {
+        Validate.notEmpty(conId);
+
         this.conId = conId;
 
         summaryView = new ConnectorSummaryViewer(conId);
@@ -93,20 +97,27 @@ public class ConnectorDetailedView implements _Refreshable {
     }
 
     private void update(ConnectorOutput conOut, HypervisorOut hypOut) {
-        tabs.setEnabledAt(tabs.indexOfTab("Host"), conOut.isConnected());
-        tabs.setEnabledAt(tabs.indexOfTab("Network"), conOut.isConnected());
+        tabs.setEnabledAt(tabs.indexOfTab("Host"), conOut.isConnected() && hypOut != null);
+        tabs.setEnabledAt(tabs.indexOfTab("Network"), conOut.isConnected() && hypOut != null);
         tabs.setEnabledAt(tabs.indexOfTab("Tasks"), conOut.isConnected());
         tabs.setEnabledAt(tabs.indexOfTab("Stores"), conOut.isConnected());
         tabs.setEnabledAt(tabs.indexOfTab("Users"), conOut.isConnected());
         tabs.setEnabledAt(tabs.indexOfTab("Modules"), conOut.isConnected());
 
+        summaryView.update(conOut);
         if (conOut.isConnected()) {
             hostViewer.refresh(conOut.getServerId());
-            netViewer.refresh(conOut.getServerId(), hypOut.getId());
             taskViewer.refresh(conOut.getServerId());
             storeView.show(conOut.getServer());
             userView.show(conOut.getServer());
             modView.show(conOut.getServerId());
+            if (hypOut != null) {
+                netViewer.refresh(conOut.getServerId(), hypOut.getId());
+            } else {
+                if (tabs.getSelectedIndex() == tabs.indexOfTab("Host") || tabs.getSelectedIndex() == tabs.indexOfTab("Network")) {
+                    tabs.setSelectedIndex(0);
+                }
+            }
         } else {
             tabs.setSelectedComponent(summaryView.getComponent());
         }
@@ -119,6 +130,11 @@ public class ConnectorDetailedView implements _Refreshable {
 
             private ConnectorOutput conOut;
             private HypervisorOut hypOut;
+
+            {
+                loadingLabel.setVisible(true);
+                tabs.setVisible(false);
+            }
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -136,6 +152,8 @@ public class ConnectorDetailedView implements _Refreshable {
             protected void done() {
                 try {
                     get();
+                    loadingLabel.setVisible(false);
+                    tabs.setVisible(true);
                     update(conOut, hypOut);
                 } catch (InterruptedException e) {
                     Gui.showError(e);
@@ -154,6 +172,13 @@ public class ConnectorDetailedView implements _Refreshable {
     @Handler
     private void putConnectorStateEvent(ConnectorStateChangedEvent ev) {
         if (conId.equals(ev.getConnector().getId())) {
+            refresh();
+        }
+    }
+
+    @Handler
+    private void putHypervisorStateEvent(HypervisorConnectionStateEventOut ev) {
+        if (Gui.getReader().getConnectorForServer(ev.getServerId()).getId() == conId) {
             refresh();
         }
     }

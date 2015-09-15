@@ -20,6 +20,7 @@
 
 package io.kamax.hboxc.gui;
 
+import io.kamax.tool.logging.Logger;
 import java.awt.Dimension;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -32,6 +33,7 @@ import net.engio.mbassy.PublicationError;
 public class ErrorDisplay implements IPublicationErrorHandler {
 
     public static void display(String description, Throwable t) {
+        Logger.exception(t);
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
         StringWriter writer = new StringWriter();

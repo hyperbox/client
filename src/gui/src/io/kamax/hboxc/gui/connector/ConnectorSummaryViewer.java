@@ -86,7 +86,7 @@ public class ConnectorSummaryViewer implements _Refreshable, _ConnectorReceiver 
         panel = new JPanel(new MigLayout("ins 0"));
         panel.add(conPanel, "growx, pushx, wrap");
         panel.add(srvView.getComponent(), "growx, pushx, wrap");
-        srvView.getComponent().setVisible(true);
+        srvView.getComponent().setVisible(false);
 
         ViewEventManager.register(this);
     }
