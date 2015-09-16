@@ -132,8 +132,7 @@ public class ConnectorDetailedView implements _Refreshable {
             private HypervisorOut hypOut;
 
             {
-                loadingLabel.setVisible(true);
-                tabs.setVisible(false);
+                tabs.setIconAt(0, IconBuilder.LoadingIcon);
             }
 
             @Override
@@ -152,8 +151,7 @@ public class ConnectorDetailedView implements _Refreshable {
             protected void done() {
                 try {
                     get();
-                    loadingLabel.setVisible(false);
-                    tabs.setVisible(true);
+                    tabs.setIconAt(0, IconBuilder.getEntityType(EntityType.Server));
                     update(conOut, hypOut);
                 } catch (InterruptedException e) {
                     Gui.showError(e);

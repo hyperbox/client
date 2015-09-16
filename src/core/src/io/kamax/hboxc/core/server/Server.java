@@ -783,12 +783,8 @@ public class Server implements _Server, _AnswerReceiver {
 
     @Handler
     protected final void putBackendConnectionStateEvent(BackendConnectionStateEvent ev) {
-        if (ev.getBackend().equals(backend)) {
-            Logger.debug("Server " + getName() + " got backend event: " + ev.getEventId());
-            if (!backend.isConnected() && isConnected()) {
-                Logger.debug("and we are disconnecting");
-                disconnect();
-            }
+        if (ev.getBackend().equals(backend) && !backend.isConnected() && isConnected()) {
+            disconnect();
         }
     }
 

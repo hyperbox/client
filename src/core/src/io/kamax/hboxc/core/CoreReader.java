@@ -39,6 +39,7 @@ import io.kamax.hboxc.server._ServerReader;
 import io.kamax.hboxc.state.CoreState;
 import io.kamax.hboxc.updater._Updater;
 import io.kamax.tool.AxBooleans;
+import io.kamax.tool.logging.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,7 @@ public class CoreReader implements _CoreReader {
     public synchronized _ServerReader getServerReader(String id) {
         if (AxBooleans.get(Configuration.getSetting(CFGKEY_SERVER_CACHE_USE, CFGVAL_SERVER_CACHE_USE))) {
             if (!cachedServerReaders.containsKey(id)) {
+                Logger.debug("Creating new cache for server " + id);
                 cachedServerReaders.put(id, new CachedServerReader(core.getServer(id)));
             }
             return cachedServerReaders.get(id);
@@ -107,8 +109,8 @@ public class CoreReader implements _CoreReader {
     }
 
     @Handler
-    protected void putServerDisconnected(ServerDisconnectedEvent ev) {
-        cachedServerReaders.remove(core.getServer(ev.getServer().getId()));
+    private synchronized void putServerDisconnected(ServerDisconnectedEvent ev) {
+        cachedServerReaders.remove(ev.getServer().getId());
     }
 
     @Override
