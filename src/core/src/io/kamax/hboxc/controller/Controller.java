@@ -185,7 +185,7 @@ public final class Controller implements _ClientMessageReceiver {
             } catch (ServerDisconnectedException e) {
                 Logger.error(e);
             } catch (HyperboxException e) {
-                Logger.error("Unable to perform the request [ " + req.getName() + " ] : " + e.getMessage());
+                Logger.error("Unable to perform the request [ " + req.getName() + " ]", e);
                 front.postError(e);
             }
         } catch (Throwable e) {
