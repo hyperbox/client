@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import net.engio.mbassy.IPublicationErrorHandler;
+import net.engio.mbassy.PublicationError;
 import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
 
@@ -76,6 +78,14 @@ public class DefaultEventManager implements _EventManager, Runnable, UncaughtExc
     public void start() throws HyperboxException {
         Logger.verbose("Event Manager - " + label + " - is starting");
         eventBus = new MBassador<Object>(BusConfiguration.Default());
+        eventBus.addErrorHandler(new IPublicationErrorHandler() {
+
+            @Override
+            public void handleError(PublicationError error) {
+                Logger.error("Failed to dispatch event " + error.getPublishedObject(), error.getCause());
+            }
+
+        });
         eventsQueue = new LinkedBlockingQueue<Object>();
         startWorker();
         Logger.verbose("Event Manager - " + label + " - has started");
