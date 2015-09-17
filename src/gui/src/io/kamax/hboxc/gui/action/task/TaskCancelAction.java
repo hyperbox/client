@@ -24,6 +24,8 @@ import io.kamax.hbox.comm.in.TaskIn;
 import io.kamax.hbox.comm.out.TaskOut;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.tasks._TaskSelector;
+import io.kamax.hboxc.gui.utils.AxSwingWorker;
+import io.kamax.hboxc.gui.worker.receiver.WorkerDataReceiver;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -41,10 +43,19 @@ public final class TaskCancelAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        for (TaskOut tOut : selector.getSelection()) {
-            TaskIn tIn = new TaskIn(tOut.getId());
-            Logger.debug("Canceling Task #" + tIn.getId());
-            Gui.getServer(tOut.getServerId()).getTask(tOut.getId()).cancel();
+        for (final TaskOut tOut : selector.getSelection()) {
+            final TaskIn tIn = new TaskIn(tOut.getId());
+            new AxSwingWorker<WorkerDataReceiver, Void, Void>(new WorkerDataReceiver()) {
+
+                @Override
+                protected Void innerDoInBackground() throws Exception {
+                    Logger.debug("Canceling Task #" + tIn.getId());
+                    Gui.getServer(tOut.getServerId()).getTask(tOut.getId()).cancel();
+                    return null;
+                }
+
+            };
+
         }
     }
 

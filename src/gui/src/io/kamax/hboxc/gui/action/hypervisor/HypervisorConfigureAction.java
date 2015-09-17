@@ -26,9 +26,9 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.HypervisorIn;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.out.ServerOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.hypervisor.HypervisorConfigureDialog;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -58,7 +58,7 @@ public class HypervisorConfigureAction extends AbstractAction {
                 Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorConfigure);
                 req.set(new ServerIn(srvOut.getId()));
                 req.set(hypIn);
-                Gui.post(req);
+                MessageWorker.execute(req);
             }
         } else {
             Logger.debug("No server was selected");

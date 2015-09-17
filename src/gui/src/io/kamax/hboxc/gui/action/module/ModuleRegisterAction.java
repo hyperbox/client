@@ -26,10 +26,10 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ModuleIn;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.out.StoreItemOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.module._ModuleSelector;
 import io.kamax.hboxc.gui.store.utils.StoreItemChooser;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -49,7 +49,7 @@ public class ModuleRegisterAction extends AbstractAction {
         if (stoOut != null) {
             ModuleIn modIn = new ModuleIn();
             modIn.setDescriptorFile(stoOut.getPath());
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.ModuleRegister, new ServerIn(selector.getServerId()), modIn));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.ModuleRegister, new ServerIn(selector.getServerId()), modIn));
         }
     }
 

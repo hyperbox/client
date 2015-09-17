@@ -25,8 +25,8 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hboxc.comm.input.ConnectorInput;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.controller.ClientTasks;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.connector._ConnectorSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -48,7 +48,7 @@ public class ConnectorRemoveAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         for (ConnectorOutput conOut : select.listConnectors()) {
-            Gui.post(new Request(ClientTasks.ConnectorRemove, new ConnectorInput(conOut.getId())));
+            MessageWorker.execute(new Request(ClientTasks.ConnectorRemove, new ConnectorInput(conOut.getId())));
         }
     }
 

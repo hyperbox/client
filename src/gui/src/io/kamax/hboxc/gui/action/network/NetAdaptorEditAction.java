@@ -25,9 +25,9 @@ import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.NetAdaptorIn;
 import io.kamax.hbox.comm.in.ServerIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.net.NetAdaptorDialog;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -54,7 +54,7 @@ public class NetAdaptorEditAction extends AbstractAction {
         if (adaptIn != null) {
             Request req = new Request(Command.VBOX, HypervisorTasks.NetAdaptorModify, adaptIn);
             req.set(ServerIn.class, new ServerIn(srvId));
-            Gui.post(req);
+            MessageWorker.execute(req);
         } else {
             Logger.debug("Net Adaptor creation: null input returned");
         }

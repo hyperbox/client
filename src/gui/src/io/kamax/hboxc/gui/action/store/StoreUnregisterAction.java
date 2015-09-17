@@ -26,9 +26,9 @@ import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.StoreIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.store._StoreSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -52,7 +52,7 @@ public class StoreUnregisterAction extends AbstractAction {
         List<String> selection = selector.getSelection();
         if (!selection.isEmpty()) {
             for (String storeId : selection) {
-                Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreUnregister, new ServerIn(selector.getServer()), new StoreIn(storeId)));
+                MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.StoreUnregister, new ServerIn(selector.getServer()), new StoreIn(storeId)));
             }
         }
     }

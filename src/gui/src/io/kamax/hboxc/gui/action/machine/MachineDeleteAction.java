@@ -25,10 +25,10 @@ import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.MainView;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.vm._MachineSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -55,7 +55,7 @@ public final class MachineDeleteAction extends AbstractAction {
                 JOptionPane.OK_CANCEL_OPTION);
         if (info == JOptionPane.YES_OPTION) {
             for (MachineOut mOut : selector.getMachines()) {
-                Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineDelete, new MachineIn(mOut)));
+                MessageWorker.execute(new Request(Command.VBOX, HypervisorTasks.MachineDelete, new MachineIn(mOut)));
             }
         }
     }

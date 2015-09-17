@@ -27,10 +27,10 @@ import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.StoreItemIn;
 import io.kamax.hbox.comm.io.factory.StoreItemIoFactory;
 import io.kamax.hbox.comm.out.StoreItemOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
 import io.kamax.hboxc.gui.store.utils.StoreItemChooser;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -54,7 +54,7 @@ public final class MachineRegisterAction extends AbstractAction {
         StoreItemOut vboxFilePathOut = StoreItemChooser.getExisitingFile(select.getServer().getId());
         if (vboxFilePathOut != null) {
             StoreItemIn vboxFilePathIn = StoreItemIoFactory.get(vboxFilePathOut);
-            Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineRegister, new ServerIn(select.getServer().getId()), vboxFilePathIn));
+            MessageWorker.execute(new Request(Command.VBOX, HypervisorTasks.MachineRegister, new ServerIn(select.getServer().getId()), vboxFilePathIn));
         }
     }
 

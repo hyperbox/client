@@ -24,9 +24,9 @@ import io.kamax.hbox.comm.Command;
 import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ServerIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.server.ServerEditorDialog;
 import io.kamax.hboxc.gui.server._ServerSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -49,7 +49,7 @@ public class ServerConfigureAction extends AbstractAction {
             Logger.info("No server info was returned");
         } else {
             Logger.info("Server info was returned, sending data");
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.ServerConfigure, srvIn));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.ServerConfigure, srvIn));
         }
     }
 

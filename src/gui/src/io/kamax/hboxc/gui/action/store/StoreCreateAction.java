@@ -26,10 +26,10 @@ import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.StoreIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
 import io.kamax.hboxc.gui.store.StoreEditor;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -52,7 +52,7 @@ public class StoreCreateAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         StoreIn stoIn = StoreEditor.getInputCreate(select.getServer().getId());
         if (stoIn != null) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreCreate, new ServerIn(select.getServer()), stoIn));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.StoreCreate, new ServerIn(select.getServer()), stoIn));
         }
     }
 

@@ -26,10 +26,10 @@ import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.UserIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.security.user.UserEditor;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -51,7 +51,7 @@ public class UserCreateAction extends AbstractAction {
     public void actionPerformed(ActionEvent ae) {
         UserIn usrIn = UserEditor.getInput();
         if (usrIn != null) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.UserCreate, new ServerIn(select.getServer()), usrIn));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.UserCreate, new ServerIn(select.getServer()), usrIn));
         }
     }
 

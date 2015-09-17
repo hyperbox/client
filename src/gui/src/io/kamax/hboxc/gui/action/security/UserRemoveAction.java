@@ -26,9 +26,9 @@ import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.UserIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.security.user._UserSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -49,7 +49,7 @@ public class UserRemoveAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         for (String userId : selector.getSelection()) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.UserDelete, new ServerIn(selector.getServerId()), new UserIn(userId)));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.UserDelete, new ServerIn(selector.getServerId()), new UserIn(userId)));
         }
     }
 

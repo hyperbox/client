@@ -25,8 +25,8 @@ import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.in.SnapshotIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.snapshot._SnapshotSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -45,7 +45,7 @@ public class SnapshotRestoreAction extends AbstractAction {
         Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotRestore);
         req.set(new MachineIn(selector.getMachine()));
         req.set(new SnapshotIn(selector.getSelection().get(0).getUuid()));
-        Gui.post(req);
+        MessageWorker.execute(req);
     }
 
 }

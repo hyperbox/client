@@ -31,6 +31,7 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.security.user.UserEditor;
 import io.kamax.hboxc.gui.security.user._UserSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -62,7 +63,7 @@ public class UserModifyAction extends AbstractAction {
             UserIn usrIn = UserEditor.getInput(selector.getServerId(), usrOut);
             if (usrIn != null) {
                 Logger.debug("Got user input");
-                Gui.post(new Request(Command.HBOX, HyperboxTasks.UserModify, new ServerIn(selector.getServerId()), usrIn));
+                MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.UserModify, new ServerIn(selector.getServerId()), usrIn));
             }
         }
     }

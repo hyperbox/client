@@ -26,9 +26,9 @@ import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.in.StoreIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.store._StoreSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -57,7 +57,7 @@ public class StoreDeleteAction extends AbstractAction {
                 JOptionPane.OK_CANCEL_OPTION);
         if (info == JOptionPane.YES_OPTION) {
             for (String storeId : selector.getSelection()) {
-                Gui.post(new Request(Command.HBOX, HyperboxTasks.StoreDelete, new ServerIn(selector.getServer()), new StoreIn(storeId)));
+                MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.StoreDelete, new ServerIn(selector.getServer()), new StoreIn(storeId)));
             }
         }
     }

@@ -26,9 +26,9 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ModuleIn;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.out.ModuleOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.module._ModuleSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -45,7 +45,7 @@ public class ModuleLoadAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         for (ModuleOut mod : selector.getModuleSelection()) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.ModuleLoad, new ServerIn(selector.getServerId()), new ModuleIn(mod.getId())));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.ModuleLoad, new ServerIn(selector.getServerId()), new ModuleIn(mod.getId())));
         }
     }
 

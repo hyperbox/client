@@ -25,9 +25,9 @@ import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.MediumIn;
 import io.kamax.hbox.comm.in.ServerIn;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
 import io.kamax.hboxc.gui.storage.HarddiskCreateDialog;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -49,7 +49,7 @@ public class HarddiskCreateAction extends AbstractAction {
     public void actionPerformed(ActionEvent ae) {
         MediumIn medIn = HarddiskCreateDialog.show(select.getServer());
         if (medIn != null) {
-            Gui.post(new Request(Command.VBOX, HypervisorTasks.MediumCreate, new ServerIn(select.getServer().getId()), medIn));
+            MessageWorker.execute(new Request(Command.VBOX, HypervisorTasks.MediumCreate, new ServerIn(select.getServer().getId()), medIn));
         }
     }
 

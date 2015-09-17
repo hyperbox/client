@@ -27,9 +27,9 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.exception.ServerDisconnectedException;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.MainView;
 import io.kamax.hboxc.gui.server._ServerSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -55,13 +55,13 @@ public class ServerShutdownAction extends AbstractAction {
                     "This will shutdown the Hyperbox Server, canceling all running and pending tasks and disconnect all users.\n"
                             + "The server can only be restarted from the host itself.\n"
                             + "Are you sure?",
-                    "Shutdown confirmation",
-                    JOptionPane.WARNING_MESSAGE,
-                    JOptionPane.OK_CANCEL_OPTION);
+                            "Shutdown confirmation",
+                            JOptionPane.WARNING_MESSAGE,
+                            JOptionPane.OK_CANCEL_OPTION);
             if (info == JOptionPane.YES_OPTION) {
                 Logger.info("User accepted, sending shutdown signal to " + srvOut);
                 try {
-                    Gui.post(new Request(Command.HBOX, HyperboxTasks.ServerShutdown, new ServerIn(srvOut.getId())));
+                    MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.ServerShutdown, new ServerIn(srvOut.getId())));
                 } catch (ServerDisconnectedException e) {
                     // we ignore this exception as it can happen if the connection is terminated before the "ServerShutdown" packet reaches us.
                     // TODO make sure the server sends finishing signals to everything so the disconnect is clean

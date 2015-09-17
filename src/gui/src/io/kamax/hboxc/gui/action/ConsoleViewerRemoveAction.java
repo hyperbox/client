@@ -25,10 +25,9 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hboxc.comm.input.ConsoleViewerInput;
 import io.kamax.hboxc.comm.output.ConsoleViewerOutput;
 import io.kamax.hboxc.controller.ClientTasks;
-import io.kamax.hboxc.controller.MessageInput;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.vm.console.viewer._ConsoleViewerSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -46,7 +45,7 @@ public class ConsoleViewerRemoveAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         for (ConsoleViewerOutput cvOut : selector.getConsoleViewers()) {
-            Gui.post(new MessageInput(new Request(ClientTasks.ConsoleViewerRemove, new ConsoleViewerInput(cvOut.getId()))));
+            MessageWorker.execute(new Request(ClientTasks.ConsoleViewerRemove, new ConsoleViewerInput(cvOut.getId())));
         }
     }
 

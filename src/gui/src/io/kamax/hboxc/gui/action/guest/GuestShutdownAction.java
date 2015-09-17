@@ -25,8 +25,8 @@ import io.kamax.hbox.comm.HyperboxTasks;
 import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.vm._MachineSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -45,7 +45,7 @@ public class GuestShutdownAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent ev) {
         for (MachineOut mOut : selector.getMachines()) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.GuestShutdown, new MachineIn(mOut)));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.GuestShutdown, new MachineIn(mOut)));
         }
     }
 

@@ -23,6 +23,8 @@ package io.kamax.hboxc.gui.action.network;
 import io.kamax.hbox.comm.HypervisorTasks;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
+import io.kamax.hboxc.gui.utils.AxSwingWorker;
+import io.kamax.hboxc.gui.worker.receiver.WorkerDataReceiver;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -42,7 +44,16 @@ public class NetAdaptorRemoveAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Gui.getServer(srvId).getHypervisor().removeAdaptor(modeId, adaptorId);
+        new AxSwingWorker<WorkerDataReceiver, Void, Void>(new WorkerDataReceiver()) {
+
+            @Override
+            protected Void innerDoInBackground() throws Exception {
+                Gui.getServer(srvId).getHypervisor().removeAdaptor(modeId, adaptorId);
+                return null;
+            }
+
+        }.execute();
+
     }
 
 }
