@@ -243,9 +243,9 @@
 		<replace file="${hbox.client.out.build.dir}/client-installer.nsi" token="@CLIENT_INSTALLER_OUTPUT@" value="${hbox.client.out.dist.dir}/${hbox.client.out.dist.package}.exe" />
 		<replace file="${hbox.client.out.build.dir}/client-installer.nsi" token="@CLIENT_OUT_BIN_DIR@" value="${hbox.client.out.bin.dir}" />
 		<replace file="${hbox.client.out.build.dir}/client-installer.nsi" token="@CLIENT_INSTALL_DIR@" value="${hbox.client.install.dir}" />
-		<exec executable="${tools.nsis.dir}\makensis.exe" failonerror="true">
-			<arg value="/DPROJECT_NAME=Hyperbox Client" />
-			<arg value="/V2"/>
+		<exec executable="${tools.nsis.dir}\makensis" failonerror="true">
+			<arg value="-DPROJECT_NAME=Hyperbox Client" />
+			<arg value="-V2"/>
 			<arg value="${hbox.client.out.build.dir}/client-installer.nsi" />
 		</exec>
 	</target>
