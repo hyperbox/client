@@ -25,8 +25,8 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hboxc.comm.input.ConnectorInput;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.controller.ClientTasks;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.connector._ConnectorSelector;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -50,7 +50,7 @@ public class ConnectorDisconnectAction extends AbstractAction {
     public void actionPerformed(ActionEvent ae) {
         List<ConnectorOutput> cons = select.listConnectors();
         for (ConnectorOutput conOut : cons) {
-            Gui.post(new Request(ClientTasks.ConnectorDisconnect, new ConnectorInput(conOut.getId())));
+            MessageWorker.execute(new Request(ClientTasks.ConnectorDisconnect, new ConnectorInput(conOut.getId())));
         }
     }
 
