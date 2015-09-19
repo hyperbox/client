@@ -50,7 +50,7 @@ public final class AudioVmEdit {
     private JComboBox controllerBox;
 
     public AudioVmEdit(_WorkerTracker tracker) {
-        audioEnableLabel = new JLabel("Audio Enabled");
+        audioEnableLabel = new JLabel("Enabled");
         audioEnableBox = new JCheckBox();
 
         driverLabel = new JLabel("Host Driver");
