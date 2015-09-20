@@ -28,6 +28,7 @@ import io.kamax.hbox.constant.AudioController;
 import io.kamax.hbox.constant.AudioDriver;
 import io.kamax.hbox.constant.MachineAttribute;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
+import io.kamax.helper.swing.JCheckBoxUtils;
 import io.kamax.tool.logging.Logger;
 import java.awt.Component;
 import javax.swing.JCheckBox;
@@ -66,6 +67,8 @@ public final class AudioVmEdit {
         panel.add(driverBox, "growx, pushx, wrap");
         panel.add(controllerLabel);
         panel.add(controllerBox, "growx, pushx, wrap");
+
+        JCheckBoxUtils.link(audioEnableBox, driverBox, controllerBox);
     }
 
     public Component getComp() {
