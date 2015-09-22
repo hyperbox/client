@@ -28,6 +28,7 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.worker.receiver._NetworkAttachNameReceiver;
 import io.kamax.hboxc.gui.workers.NetworkAttachNameListWorker;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
+import io.kamax.helper.swing.JCheckBoxUtils;
 import io.kamax.tool.AxStrings;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
@@ -108,6 +109,8 @@ public class NetworkInterfaceViewer {
         enableNicValue.setSelected(nicOut.isEnabled());
         connectedValue.setSelected(nicOut.isCableConnected());
         macAddrValue.setText(nicOut.getMacAddress());
+
+        JCheckBoxUtils.link(enableNicValue, connectedValue, attachModeValue, attachNameValue, adapterTypeValue, macAddrValue);
     }
 
     public NetworkInterfaceViewer(_WorkerTracker tracker, String srvId, NetworkInterfaceOut nicOut, NetworkInterfaceIn nicIn) {
@@ -209,7 +212,7 @@ public class NetworkInterfaceViewer {
                         attachNameValue.setEditable(mode.canLinkNetworkName());
                         attachNameValue.setEnabled(mode.canLinkAdaptor() || mode.canLinkNetworkName());
                     } catch (Throwable t1) {
-                        if (t1 instanceof ExecutionException && t1.getCause() != null) {
+                        if ((t1 instanceof ExecutionException) && (t1.getCause() != null)) {
                             t1 = t1.getCause();
                         }
 
