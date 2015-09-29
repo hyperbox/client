@@ -27,6 +27,7 @@ import io.kamax.hboxc.gui.utils.AbstractListTableModel;
 public class PermissionTableModel extends AbstractListTableModel<PermissionIn> {
 
     private static final long serialVersionUID = -6520950420074634455L;
+
     private final String itemTypeCol = "Item Type";
     private final String itemCol = "Item";
     private final String actionCol = "Action";

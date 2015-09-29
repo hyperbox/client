@@ -131,7 +131,6 @@ public class UserEditor implements _Saveable, _Cancelable {
     }
 
     private void show() {
-
         dialog.pack();
         dialog.setSize(375, dialog.getHeight());
         dialog.setLocationRelativeTo(dialog.getParent());
