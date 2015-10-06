@@ -30,11 +30,15 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui._Cancelable;
 import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
+import io.kamax.hboxc.gui.action.LoadingAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
+import io.kamax.hboxc.gui.worker.receiver.AnswerWorkerReceiver;
 import io.kamax.hboxc.gui.worker.receiver._ConnectorBackendListReceiver;
 import io.kamax.hboxc.gui.workers.ConnectorBackendListWorker;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import java.util.List;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -151,25 +155,12 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable, _Con
         conIn.setLabel(labelField.getText());
         conIn.setBackendId(((BackendOutput) connectorValue.getSelectedItem()).getId());
 
-        if (task.equals(ClientTasks.ConnectorAdd)) {
+        if (task.equals(ClientTasks.ConnectorAdd) || (!userField.getText().isEmpty() && passField.getPassword().length > 0)) {
             UserIn uIn = new UserIn(userField.getText(), passField.getPassword());
-            Gui.post(new Request(task, uIn, conIn));
+            MessageWorker.execute(new Request(task, uIn, conIn), new SaveAnswerReceiver());
         } else {
-            if (!userField.getText().isEmpty()) {
-                char[] pass = passField.getPassword();
-                if (pass.length > 0) {
-                    UserIn uIn = new UserIn(userField.getText(), passField.getPassword());
-                    Gui.post(new Request(task, uIn, conIn));
-                } else {
-                    Gui.post(new Request(task, conIn));
-                }
-            } else {
-                Gui.post(new Request(task, conIn));
-            }
+            MessageWorker.execute(new Request(task, conIn), new SaveAnswerReceiver());
         }
-
-        passField.setText(null);
-        hide();
     }
 
     @Override
@@ -211,6 +202,32 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable, _Con
         for (BackendOutput objOut : objOutList) {
             connectorValue.addItem(objOut);
         }
+    }
+
+    private class SaveAnswerReceiver extends AnswerWorkerReceiver {
+
+        private Action initialAction;
+
+        @Override
+        public void start() {
+            initialAction = loginButton.getAction();
+            loginButton.setAction(new LoadingAction());
+            loginButton.setEnabled(false);
+        }
+
+        @Override
+        public void success() {
+            loginButton.setAction(initialAction);
+            passField.setText(null);
+            hide();
+        }
+
+        @Override
+        public void fail(Throwable t) {
+            loginButton.setAction(initialAction);
+            Gui.showError(t);
+        }
+
     }
 
 }

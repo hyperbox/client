@@ -22,6 +22,7 @@
 package io.kamax.hboxc.gui.worker.receiver;
 
 import io.kamax.hbox.comm.Answer;
+import io.kamax.hboxc.gui.Gui;
 import javax.swing.SwingUtilities;
 
 
@@ -58,7 +59,6 @@ public class AnswerWorkerReceiver implements _AnswerWorkerReceiver {
     @Override
     public void putAnswer(final Answer ans) {
         // stub
-
     }
 
     public void start() {
@@ -70,7 +70,7 @@ public class AnswerWorkerReceiver implements _AnswerWorkerReceiver {
     }
 
     public void fail(Throwable t) {
-        // stub
+        Gui.showError(t);
     }
 
 }

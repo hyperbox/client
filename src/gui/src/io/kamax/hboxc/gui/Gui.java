@@ -114,7 +114,15 @@ public final class Gui implements _Front {
     }
 
     public static void showError(Throwable t) {
-        showError(t.getMessage());
+        StringBuilder errMsg = new StringBuilder();
+        while (t.getCause() != null) {
+            if (!t.getMessage().startsWith(t.getCause().getClass().getName())) {
+                errMsg.append(t.getMessage() + "\n");
+            }
+            t = t.getCause();
+        }
+        errMsg.append(t.getMessage());
+        showError(errMsg.toString());
     }
 
     public static void showCopyPasteHelper(String label, String value) {
@@ -192,7 +200,7 @@ public final class Gui implements _Front {
     public static void post(MessageInput msgIn) {
         if (SwingUtilities.isEventDispatchThread()) {
             Logger.warning("Posting Message on EDT! " + msgIn.getRequest().getName());
-            new Exception().printStackTrace();
+            Logger.exception(new Exception());
         }
 
         getReqRecv().putRequest(msgIn.getRequest());
@@ -201,7 +209,7 @@ public final class Gui implements _Front {
     public static void post(Request req) {
         if (SwingUtilities.isEventDispatchThread()) {
             Logger.warning("Posting request on EDT! " + req.getName());
-            new Exception().printStackTrace();
+            Logger.exception(new Exception());
         }
 
         getReqRecv().putRequest(req);

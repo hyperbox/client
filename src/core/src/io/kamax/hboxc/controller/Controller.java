@@ -35,7 +35,6 @@ import io.kamax.hboxc.controller.action._ClientControllerAction;
 import io.kamax.hboxc.core.ClientCore;
 import io.kamax.hboxc.core.CoreReader;
 import io.kamax.hboxc.event.EventManager;
-import io.kamax.hboxc.exception.ServerDisconnectedException;
 import io.kamax.hboxc.front._Front;
 import io.kamax.hboxc.front.minimal.MiniUI;
 import io.kamax.tool.logging.LogLevel;
@@ -165,33 +164,25 @@ public final class Controller implements _ClientMessageReceiver {
 
     @Override
     public void post(MessageInput mIn) {
-        try {
-            Request req = mIn.getRequest();
-            _AnswerReceiver recv = mIn.getReceiver();
+        Request req = mIn.getRequest();
+        _AnswerReceiver recv = mIn.getReceiver();
 
-            try {
-                if (actionsMap.containsKey(mIn.getRequest().getName())) {
-                    _ClientControllerAction action = actionsMap.get(mIn.getRequest().getName());
-                    action.run(core, front, req, recv);
+        try {
+            if (actionsMap.containsKey(mIn.getRequest().getName())) {
+                _ClientControllerAction action = actionsMap.get(mIn.getRequest().getName());
+                action.run(core, front, req, recv);
+            } else {
+                if (req.has(ServerIn.class)) {
+                    core.getServer(req.get(ServerIn.class).getId()).sendRequest(req);
+                } else if (req.has(MachineIn.class)) {
+                    core.getServer(req.get(MachineIn.class).getServerId()).sendRequest(req);
                 } else {
-                    if (req.has(ServerIn.class)) {
-                        core.getServer(req.get(ServerIn.class).getId()).sendRequest(req);
-                    } else if (req.has(MachineIn.class)) {
-                        core.getServer(req.get(MachineIn.class).getServerId()).sendRequest(req);
-                    } else {
-                        throw new HyperboxException("Server ID or Machine ID is required for generic requests");
-                    }
+                    throw new HyperboxException("Server ID or Machine ID is required for generic requests");
                 }
-            } catch (ServerDisconnectedException e) {
-                Logger.error(e);
-            } catch (HyperboxException e) {
-                Logger.error("Unable to perform the request [ " + req.getName() + " ]", e);
-                front.postError(e);
             }
-        } catch (Throwable e) {
-            Logger.error("Unknown error : " + e.getMessage());
-            Logger.exception(e);
-            front.postError(e, "Unexpected error occured: " + e.getMessage());
+        } catch (RuntimeException e) {
+            Logger.error("Unable to perform the request [ " + req.getName() + " ]", e);
+            throw e;
         }
     }
 

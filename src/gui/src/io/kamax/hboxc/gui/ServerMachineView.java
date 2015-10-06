@@ -48,7 +48,6 @@ import io.kamax.hboxc.gui.builder.PopupMenuBuilder;
 import io.kamax.hboxc.gui.connector.ConnectorDetailedView;
 import io.kamax.hboxc.gui.connector._ConnectorSelector;
 import io.kamax.hboxc.gui.server._ServerSelector;
-import io.kamax.hboxc.gui.utils.KxAnonymousWorker;
 import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.vm._MachineSelector;
 import io.kamax.hboxc.gui.vm.view.VmDetailedView;
@@ -56,6 +55,7 @@ import io.kamax.hboxc.gui.worker.receiver.WorkerDataReceiver;
 import io.kamax.hboxc.gui.worker.receiver._MachineListReceiver;
 import io.kamax.hboxc.gui.worker.receiver._SnapshotGetReceiver;
 import io.kamax.hboxc.gui.workers.MachineListWorker;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.hboxc.gui.workers.SnapshotGetWorker;
 import io.kamax.helper.swing.MouseWheelController;
 import io.kamax.helper.swing.SortedTreeModel;
@@ -494,20 +494,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                         final ConnectorOutput conOut = (ConnectorOutput) node.getUserObject();
                         if (!conOut.isConnected()) {
                             Logger.debug("User request: Connect to server using " + conOut);
-
-                            new KxAnonymousWorker() {
-
-                                @Override
-                                protected Void innerDoInBackground() throws Exception {
-                                    try {
-                                        Gui.post(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
-                                    } catch (Throwable t) {
-                                        Logger.exception(t);
-                                    }
-                                    return null;
-                                }
-
-                            }.execute();
+                            MessageWorker.execute(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
                         }
                     }
                 }
