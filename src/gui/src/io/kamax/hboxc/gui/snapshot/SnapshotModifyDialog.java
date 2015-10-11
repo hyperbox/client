@@ -27,14 +27,16 @@ import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.in.SnapshotIn;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.comm.out.hypervisor.SnapshotOut;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui._Cancelable;
 import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.LoadingAction;
 import io.kamax.hboxc.gui.action.SaveAction;
+import io.kamax.hboxc.gui.worker.receiver.AnswerWorkerReceiver;
 import io.kamax.hboxc.gui.worker.receiver._SnapshotGetReceiver;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.hboxc.gui.workers.SnapshotGetWorker;
+import io.kamax.tool.AxStrings;
 import javax.swing.Action;
 
 public class SnapshotModifyDialog implements _Saveable, _Cancelable, _SnapshotGetReceiver {
@@ -48,8 +50,9 @@ public class SnapshotModifyDialog implements _Saveable, _Cancelable, _SnapshotGe
     public SnapshotModifyDialog(MachineOut mOut, SnapshotOut snapOut) {
         this.mOut = mOut;
         this.snapOut = snapOut;
+        saveAction = new SaveAction(this);
 
-        editor = new SnapshotEditorDialog(new SaveAction(this), new CancelAction(this));
+        editor = new SnapshotEditorDialog(saveAction, new CancelAction(this));
     }
 
     public static void show(MachineOut mOut, SnapshotOut snapOut) {
@@ -69,18 +72,35 @@ public class SnapshotModifyDialog implements _Saveable, _Cancelable, _SnapshotGe
     @Override
     public void save() {
         snapIn = new SnapshotIn(snapOut.getUuid());
-        if (!editor.getName().contentEquals(snapOut.getName())) {
+        if (!AxStrings.contentEquals(editor.getName(), snapOut.getName())) {
             snapIn.setName(editor.getName());
         }
-        if (!editor.getDescription().contentEquals(snapOut.getDescription())) {
+        if (!AxStrings.contentEquals(editor.getDescription(), snapOut.getDescription())) {
             snapIn.setDescription(editor.getDescription());
         }
 
         if (snapIn.hasNewData()) {
-            Gui.post(new Request(Command.VBOX, HypervisorTasks.SnapshotModify, new MachineIn(mOut), snapIn));
+            MessageWorker.execute(new Request(Command.VBOX, HypervisorTasks.SnapshotModify, new MachineIn(mOut), snapIn), new AnswerWorkerReceiver() {
+
+                @Override
+                public void start() {
+                    editor.getSaveButton().setAction(LoadingAction.get());
+                }
+
+                @Override
+                public void success() {
+                    hide();
+                }
+
+                @Override
+                public void fail(Throwable t) {
+                    editor.getSaveButton().setAction(saveAction);
+                    super.fail(t);
+                }
+            });
         }
 
-        hide();
+
     }
 
     @Override
@@ -101,7 +121,10 @@ public class SnapshotModifyDialog implements _Saveable, _Cancelable, _SnapshotGe
 
     @Override
     public void put(String srvId, String vmId, SnapshotOut snapOut) {
-        // TODO Auto-generated method stub
+        this.snapOut = snapOut;
+        editor.setName(snapOut.getName());
+        editor.setDescription(snapOut.getDescription());
+        editor.setDialogTitle("Snapshot Edit - " + snapOut.getName());
     }
 
 }
