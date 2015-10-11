@@ -34,11 +34,16 @@ import io.kamax.hboxc.gui.MainView;
 import io.kamax.hboxc.gui._Cancelable;
 import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
+import io.kamax.hboxc.gui.action.LoadingAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.utils.JDialogUtils;
+import io.kamax.hboxc.gui.worker.receiver.AnswerWorkerReceiver;
+import io.kamax.hboxc.gui.workers.MessageWorker;
+import java.awt.Cursor;
 import java.awt.Dialog.ModalityType;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -161,9 +166,29 @@ public class VmCreateDialog implements _Saveable, _Cancelable {
         mIn.setName(nameField.getText());
         mIn.setSetting(new StringSettingIO(MachineAttribute.OsType, osBox.getSelectedItem().toString()));
 
-        Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineCreate, new ServerIn(srvOut.getId()), mIn));
+        MessageWorker.execute(new Request(Command.VBOX, HypervisorTasks.MachineCreate, new ServerIn(srvOut.getId()), mIn), new AnswerWorkerReceiver() {
 
-        hide();
+            private Action initialAction;
+
+            @Override
+            public void start() {
+                initialAction = saveButton.getAction();
+                saveButton.setAction(LoadingAction.get());
+                mainDialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            }
+
+            @Override
+            public void loadingFinished(boolean isSuccessful, Throwable t) {
+                mainDialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                if (!isSuccessful) {
+                    saveButton.setAction(initialAction);
+                    fail(t);
+                } else {
+                    hide();
+                }
+            }
+        });
     }
 
     @Override

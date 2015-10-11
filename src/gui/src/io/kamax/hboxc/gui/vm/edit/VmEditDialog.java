@@ -26,16 +26,18 @@ import io.kamax.hbox.comm.Request;
 import io.kamax.hbox.comm.in.MachineIn;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
 import io.kamax.hbox.constant.EntityType;
-import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui._Cancelable;
 import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
+import io.kamax.hboxc.gui.action.LoadingAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
 import io.kamax.hboxc.gui.utils.AxSwingWorker;
+import io.kamax.hboxc.gui.worker.receiver.AnswerWorkerReceiver;
 import io.kamax.hboxc.gui.worker.receiver._MachineReceiver;
 import io.kamax.hboxc.gui.workers.MachineGetWorker;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
 import io.kamax.tool.logging.Logger;
 import java.awt.CardLayout;
@@ -47,6 +49,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.Action;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -194,9 +197,31 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
         audioEdit.save();
         networkEdit.save();
 
-        Gui.post(new Request(Command.VBOX, HypervisorTasks.MachineModify, mIn));
+        MessageWorker.execute(new Request(Command.VBOX, HypervisorTasks.MachineModify, mIn), new AnswerWorkerReceiver() {
 
-        hide();
+            private Action initialAction;
+
+            @Override
+            public void start() {
+                initialAction = saveButton.getAction();
+                saveButton.setAction(LoadingAction.get());
+                mainDialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            }
+
+            @Override
+            public void loadingFinished(boolean isSuccessful, Throwable t) {
+                mainDialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                if (!isSuccessful) {
+                    saveButton.setAction(initialAction);
+                    fail(t);
+                } else {
+                    hide();
+                }
+            }
+
+        });
+
     }
 
     @Override

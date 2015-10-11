@@ -33,6 +33,7 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.builder.IconBuilder;
+import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -201,11 +202,11 @@ public class UserPermissionEditor implements _Refreshable {
         ServerIn srvIn = new ServerIn(srvOut);
         UserIn usrIn = new UserIn(usrOut);
         for (PermissionIn permIn : addPermInList) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.PermissionSet, srvIn, usrIn, permIn));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.PermissionSet, srvIn, usrIn, permIn));
         }
         Logger.debug("Permissions to remove: " + delPermInList.size());
         for (PermissionIn permIn : delPermInList) {
-            Gui.post(new Request(Command.HBOX, HyperboxTasks.PermissionDelete, srvIn, usrIn, permIn));
+            MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.PermissionDelete, srvIn, usrIn, permIn));
         }
     }
 
