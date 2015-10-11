@@ -77,8 +77,8 @@ public final class Gui implements _Front {
             public void run() {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                    Logger.error("Couldn't switch to the System Look & Feel");
+                } catch (Throwable e) {
+                    Logger.warning("Couldn't switch to the System Look & Feel", e);
                 }
 
                 mainView = new MainView();
@@ -199,8 +199,7 @@ public final class Gui implements _Front {
 
     public static void post(MessageInput msgIn) {
         if (SwingUtilities.isEventDispatchThread()) {
-            Logger.warning("Posting Message on EDT! " + msgIn.getRequest().getName());
-            Logger.exception(new Exception());
+            Logger.warning("Posting Message on EDT! " + msgIn.getRequest().getName(), new Exception());
         }
 
         getReqRecv().putRequest(msgIn.getRequest());
@@ -208,8 +207,7 @@ public final class Gui implements _Front {
 
     public static void post(Request req) {
         if (SwingUtilities.isEventDispatchThread()) {
-            Logger.warning("Posting request on EDT! " + req.getName());
-            Logger.exception(new Exception());
+            Logger.warning("Posting request on EDT! " + req.getName(), new Exception());
         }
 
         getReqRecv().putRequest(req);
@@ -221,8 +219,7 @@ public final class Gui implements _Front {
 
     public static _CoreReader getReader() {
         if (SwingUtilities.isEventDispatchThread()) {
-            Logger.warning("Accessing Gui::coreReader on EDIT!");
-            new Exception().printStackTrace();
+            Logger.warning("Accessing Gui::coreReader on EDIT!", new Exception());
         }
 
         return reader;
