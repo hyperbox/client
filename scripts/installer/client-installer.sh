@@ -24,6 +24,8 @@
 INSTALL_DIR="/opt/hboxc"
 LOG_FILE="/var/log/hboxc-install.log"
 
+umask 022
+
 function log {
 	echo "$@" >> $LOG_FILE
 }
