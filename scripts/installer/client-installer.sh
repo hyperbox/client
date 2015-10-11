@@ -41,9 +41,19 @@ function abort {
 	exit 1
 }
 
+function parseParameters {
+	if [ $# -gt 0 ]; then
+		log "Parameters given: $@"
+		INSTALL_DIR="$1"
+	else
+		log "No parameters were given to the script"
+	fi
+}
+
+parseParameters $@
 
 if ! [ -x $INSTALL_DIR ]; then
-	mkdir $INSTALL_DIR
+	mkdir -p $INSTALL_DIR
 	if [ $? -eq 0 ]; then
 		echo Created install dir
 	else
