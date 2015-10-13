@@ -39,7 +39,7 @@
 	
 	<property name="hbox.client.out.dist.dir"								location="${hbox.client.out.dir}/${dist.dirname}" />
 
-	<property name="hbox.client.install.win.dir"							value="C:/Program Files/Hyperbox/Client" />
+	<property name="hbox.client.install.win.dir"							value="C:\Program Files\Hyperbox\Client" />
 	<property name="hbox.client.install.linux.dir"							value="/opt/hboxc" />
 		
 	<target name="clean">
@@ -47,12 +47,12 @@
 	</target>
 	
 	<target name="configure.win" if="${ifWin}">
-		<property name="hbox.client.install.dir"				location="${hbox.client.install.win.dir}"/>
+		<property name="hbox.client.install.dir"				value="${hbox.client.install.win.dir}"/>
 		<property name="hbox.client.out.exe"					value="hyperbox.exe"/>
 	</target>
 	
 	<target name="configure.linux" if="${ifLinux}">
-		<property name="hbox.client.install.dir"				location="${hbox.client.install.linux.dir}" />
+		<property name="hbox.client.install.dir"				value="${hbox.client.install.linux.dir}" />
 	</target>
 	
 	<target name="configure" depends="hbox.api.configure, configure.win, configure.linux">
