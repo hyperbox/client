@@ -30,6 +30,7 @@ import io.kamax.hboxc.gui.MainView;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.snapshot._SnapshotSelector;
 import io.kamax.hboxc.gui.workers.MessageWorker;
+import io.kamax.tool.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -65,6 +66,7 @@ public class SnapshotDeleteAction extends AbstractAction {
                     Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotDelete);
                     req.set(new MachineIn(selector.getMachine()));
                     req.set(new SnapshotIn(snapOut.getUuid()));
+                    Logger.info("Deleting snapshot " + snapOut.getUuid() + " on machine " + selector.getMachine());
                     MessageWorker.execute(req);
                 }
             }
