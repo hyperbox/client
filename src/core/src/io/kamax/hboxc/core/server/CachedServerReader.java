@@ -386,10 +386,9 @@ public class CachedServerReader implements _ServerReader {
 
     private void deleteMedium(MediumIn medIn) {
         Logger.debug("Removing Medium ID " + medIn.getId() + " from cache");
-        MediumOut medOut = getMedium(medIn);
-        invalidMedOutSet.add(medOut.getUuid());
-        medOutCache.remove(medOut.getUuid());
-        medOutCache.remove(medOut.getLocation());
+        invalidMedOutSet.add(medIn.getUuid());
+        medOutCache.remove(medIn.getUuid());
+        medOutCache.remove(medIn.getLocation());
     }
 
     private void refreshMedium(MediumIn medIn) {
