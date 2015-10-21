@@ -545,7 +545,7 @@ public final class VmSummaryView {
 
     @Handler
     public void putMachineStateChangedEvent(MachineStateChangedEvent ev) {
-        if (AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
+        if (mOut != null && AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
             stateField.setText(ev.getMachine().getState());
             // TODO improve next line
             consoleConnectButton.setEnabled(ev.getMachine().getState().equalsIgnoreCase("running"));
@@ -554,7 +554,7 @@ public final class VmSummaryView {
 
     @Handler
     public void putStorageControllerAttachmentDataChanged(StorageControllerAttachmentDataModifiedEventOut ev) {
-        if (AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
+        if (mOut != null && AxStrings.equals(ev.getUuid(), mOut.getUuid())) {
             controllers.put(ev.getStorageController().getId(), ev.getStorageController());
             refreshStorage();
         }
