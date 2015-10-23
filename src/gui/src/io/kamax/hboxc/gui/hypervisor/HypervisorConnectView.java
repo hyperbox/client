@@ -283,9 +283,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
                 hide();
                 break;
             }
-
         }
-
     }
 
     public HypervisorIn getUserInput() {
