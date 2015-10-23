@@ -228,6 +228,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
 
     public void show() {
         dialog.pack();
+        dialog.setSize(300, dialog.getHeight());
         dialog.setLocationRelativeTo(dialog.getParent());
         HypervisorLoaderListWorker.execute(new _HypervisorLoaderListReceiver() {
 
@@ -304,12 +305,14 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
             versionData.setEnabled(versionData.getModel().getSize() > 1);
             typeData.setEnabled(typeData.getModel().getSize() > 1);
 
-            connectButton.setEnabled(
-                    vendorData.getSelectedIndex() > -1 &&
+            boolean isSelected = vendorData.getSelectedIndex() > -1 &&
                     productData.getSelectedIndex() > -1 &&
                     versionData.getSelectedIndex() > -1 &&
-                    typeData.getSelectedIndex() > -1
-                    );
+                    typeData.getSelectedIndex() > -1;
+
+                    optionsData.setEnabled(isSelected);
+                    connectButton.setEnabled(isSelected);
+
         }
 
         @Override
