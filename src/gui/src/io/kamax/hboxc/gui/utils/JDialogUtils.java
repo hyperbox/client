@@ -38,4 +38,17 @@ public class JDialogUtils {
         }
     }
 
+    public static void setSizeAtLeast(JDialog dialog, int desiredWidth, int desiredHeight) {
+        dialog.pack();
+        int width = dialog.getWidth();
+        int height = dialog.getHeight();
+        if (desiredWidth > width) {
+            width = desiredWidth;
+        }
+        if (desiredHeight > height) {
+            height = desiredHeight;
+        }
+        dialog.setSize(width, height);
+    }
+
 }

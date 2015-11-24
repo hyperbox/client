@@ -31,6 +31,7 @@ import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
+import io.kamax.hboxc.gui.utils.JDialogUtils;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -123,8 +124,7 @@ public class ConsoleViewerEditor implements _Saveable, _Cancelable {
     }
 
     private void show() {
-
-        dialog.setSize(410, 170);
+        JDialogUtils.setSizeAtLeast(dialog, 410, 170);
         dialog.setLocationRelativeTo(dialog.getParent());
         dialog.setVisible(true);
     }
