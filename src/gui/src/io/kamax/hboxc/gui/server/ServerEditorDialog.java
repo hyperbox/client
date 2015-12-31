@@ -30,6 +30,9 @@ import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.builder.JDialogBuilder;
+import io.kamax.hboxc.gui.utils.JButtonLoadable;
+import io.kamax.hboxc.gui.worker.receiver._ServerReceiver;
+import io.kamax.hboxc.gui.workers.ServerGetWorker;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -45,7 +48,7 @@ public class ServerEditorDialog implements _Saveable, _Cancelable {
     private JLabel logLevelLabel;
     private JComboBox logLevelValue;
 
-    private JButton saveButton;
+    private JButtonLoadable saveButton;
     private JButton cancelButton;
 
     private JDialog dialog;
@@ -67,7 +70,7 @@ public class ServerEditorDialog implements _Saveable, _Cancelable {
         logLevelLabel = new JLabel("Log level");
         logLevelLabel.setLabelFor(logLevelValue);
 
-        saveButton = new JButton(new SaveAction(this));
+        saveButton = new JButtonLoadable(new SaveAction(this));
         cancelButton = new JButton(new CancelAction(this));
         JPanel buttonPanel = new JPanel(new MigLayout("ins 0"));
         buttonPanel.add(saveButton);
@@ -91,6 +94,26 @@ public class ServerEditorDialog implements _Saveable, _Cancelable {
 
         nameValue.setText(srvOut.getName());
         logLevelValue.setSelectedItem(srvOut.getLogLevel());
+
+        ServerGetWorker.execute(new _ServerReceiver() {
+
+            @Override
+            public void loadingStarted() {
+                saveButton.startLoad();
+            }
+
+            @Override
+            public void loadingFinished(boolean isSuccessful, Throwable t) {
+                saveButton.stopLoad(isSuccessful);
+            }
+
+            @Override
+            public void put(ServerOut srvOut) {
+                nameValue.setText(srvOut.getName());
+                logLevelValue.setSelectedItem(srvOut.getLogLevel());
+            }
+
+        }, srvId);
 
         show();
         return srvIn;

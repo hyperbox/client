@@ -18,19 +18,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.kamax.hboxc.gui.hypervisor;
+package io.kamax.hboxc.gui.utils;
 
-import java.util.List;
-import javax.swing.ListCellRenderer;
+import io.kamax.hboxc.gui.action.LoadingAction;
+import javax.swing.Action;
+import javax.swing.JButton;
 
-public interface _HypervisorModel {
 
-    public List<String> getSupported();
+public class JButtonLoadable extends JButton {
 
-    public _GlobalConfigureView getConfigureView();
+    private static final long serialVersionUID = 3159387338470832277L;
+    private Action initialAction;
 
-    public _NetAdaptorConfigureView getNetAdaptorConfig(String srvId, String modeId, String adaptId);
+    public JButtonLoadable(Action action) {
+        super(action);
+    }
 
-    public ListCellRenderer getTypeRenderer(ListCellRenderer parent);
+    public void startLoad() {
+        initialAction = getAction();
+        setAction(LoadingAction.get());
+    }
+
+    public void stopLoad(boolean enable) {
+        initialAction.setEnabled(enable);
+        setAction(initialAction);
+    }
+
+    public void stopLoad() {
+        stopLoad(true);
+    }
 
 }

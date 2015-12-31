@@ -140,7 +140,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
                     typeData.removeAllItems();
                     for (HypervisorLoaderOut hypLoadOut : loaders) {
                         if (isMatching(hypLoadOut, versionData)) {
-                            typeData.addItem(hypLoadOut.getTypeId());
+                            typeData.addItem(hypLoadOut);
                         }
                     }
                 }
@@ -150,6 +150,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
 
         typeData = new JComboBox();
         typeData.getModel().addListDataListener(new RefreshActionListener());
+        typeData.setRenderer(new HypervisorLoaderTypeRenderer(typeData.getRenderer()));
 
         optionsLabel = new JLabel("Connector Options");
         optionsData = new JTextField();
@@ -200,7 +201,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
             return true;
         }
 
-        if (typeData.getSelectedIndex() != -1 && !hlo.getTypeId().equals(typeData.getSelectedItem())) {
+        if (typeData.getSelectedIndex() != -1 && !hlo.getTypeId().equals(((HypervisorLoaderOut) typeData.getSelectedItem()).getTypeId())) {
             return false;
         }
 
