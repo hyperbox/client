@@ -34,7 +34,7 @@
   </classPath>
   <jre>
     <bundledJre64Bit>false</bundledJre64Bit>
-    <minVersion>1.6.0</minVersion>
+    <minVersion>1.7.0</minVersion>
     <jdkPreference>preferJre</jdkPreference>
 	<opt>-splash:icons/login-header.png</opt>
   </jre>
