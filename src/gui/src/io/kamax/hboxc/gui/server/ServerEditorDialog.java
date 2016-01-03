@@ -46,7 +46,7 @@ public class ServerEditorDialog implements _Saveable, _Cancelable {
     private JLabel nameLabel;
     private JTextField nameValue;
     private JLabel logLevelLabel;
-    private JComboBox logLevelValue;
+    private JComboBox<String> logLevelValue;
 
     private JButtonLoadable saveButton;
     private JButton cancelButton;
@@ -66,7 +66,7 @@ public class ServerEditorDialog implements _Saveable, _Cancelable {
         nameLabel = new JLabel("Name");
         nameLabel.setLabelFor(nameValue);
 
-        logLevelValue = new JComboBox();
+        logLevelValue = new JComboBox<>();
         logLevelLabel = new JLabel("Log level");
         logLevelLabel.setLabelFor(logLevelValue);
 

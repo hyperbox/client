@@ -43,7 +43,7 @@ public final class StorageControllerViewer {
     private JLabel typeLabel;
     private JLabel typeValue;
     private JLabel subTypeLabel;
-    private JComboBox subTypeBox;
+    private JComboBox<String> subTypeBox;
 
     private JLabel ioCacheLabel;
     private JCheckBox ioCacheBox;
@@ -61,7 +61,7 @@ public final class StorageControllerViewer {
         typeValue = new JLabel();
 
         subTypeLabel = new JLabel("Sub Type");
-        subTypeBox = new JComboBox();
+        subTypeBox = new JComboBox<>();
 
         ioCacheLabel = new JLabel("Host I/O Cache");
         ioCacheBox = new JCheckBox();

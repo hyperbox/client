@@ -46,7 +46,7 @@ public class StorageDeviceAttachmentViewer {
 
     private JPanel attachPanel;
     private JLabel portCountLabel;
-    private JComboBox portCountBox;
+    private JComboBox<String> portCountBox;
     private JLabel attachTypeLabel;
     private JLabel attachTypeValue;
 
@@ -66,7 +66,7 @@ public class StorageDeviceAttachmentViewer {
 
     public StorageDeviceAttachmentViewer() {
         portCountLabel = new JLabel("Port");
-        portCountBox = new JComboBox();
+        portCountBox = new JComboBox<>();
         attachTypeLabel = new JLabel("Type");
         attachTypeValue = new JLabel();
 

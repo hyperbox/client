@@ -20,6 +20,7 @@
 
 package io.kamax.hboxc.gui.hypervisor;
 
+import io.kamax.hbox.comm.out.hypervisor.HypervisorLoaderOut;
 import java.util.List;
 import javax.swing.ListCellRenderer;
 
@@ -31,6 +32,6 @@ public interface _HypervisorModel {
 
     public _NetAdaptorConfigureView getNetAdaptorConfig(String srvId, String modeId, String adaptId);
 
-    public ListCellRenderer getTypeRenderer(ListCellRenderer parent);
+    public ListCellRenderer<HypervisorLoaderOut> getTypeRenderer(ListCellRenderer<? extends HypervisorLoaderOut> parent);
 
 }

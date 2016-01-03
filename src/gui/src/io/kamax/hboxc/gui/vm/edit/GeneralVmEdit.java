@@ -49,13 +49,13 @@ public class GeneralVmEdit {
     private JLabel nameLabel;
     private JTextField nameField;
     private JLabel osTypeLabel;
-    private JComboBox osTypeField;
+    private JComboBox<String> osTypeField;
     private JLabel snapshotFolderLabel;
     private JTextField snapshotFolderField;
     private JLabel keyboardTypeLabel;
-    private JComboBox keyboardTypeBox;
+    private JComboBox<String> keyboardTypeBox;
     private JLabel mouseTypeLabel;
-    private JComboBox mouseTypeBox;
+    private JComboBox<String> mouseTypeBox;
     private JLabel descLabel;
     private JTextArea descArea;
 
@@ -69,16 +69,16 @@ public class GeneralVmEdit {
         nameField = new JTextField();
 
         osTypeLabel = new JLabel("OS Type");
-        osTypeField = new JComboBox();
+        osTypeField = new JComboBox<>();
 
         snapshotFolderLabel = new JLabel("Snapshot Folder");
         snapshotFolderField = new JTextField();
 
         keyboardTypeLabel = new JLabel("Keyboard Type");
-        keyboardTypeBox = new JComboBox();
+        keyboardTypeBox = new JComboBox<>();
 
         mouseTypeLabel = new JLabel("Mouse Type");
-        mouseTypeBox = new JComboBox();
+        mouseTypeBox = new JComboBox<>();
 
         descLabel = new JLabel("Description");
         descArea = new JTextArea();

@@ -52,7 +52,7 @@ public class StoreEditor implements _Saveable, _Cancelable {
     private JTextField storeLocValue;
     private JButton browseButton;
     private JLabel storeTypeLabel;
-    private JComboBox storeTypeBox;
+    private JComboBox<String> storeTypeBox;
 
     private JButton saveButton;
     private JButton cancelButton;
@@ -63,7 +63,7 @@ public class StoreEditor implements _Saveable, _Cancelable {
     private StoreIn stoIn;
     private StoreOut stoOut;
 
-    
+
     private class BrowseAction extends AbstractAction {
 
         private static final long serialVersionUID = -7633225674262983219L;
@@ -126,7 +126,7 @@ public class StoreEditor implements _Saveable, _Cancelable {
         storeLocValue.getDocument().addDocumentListener(new EmptyValueListener());
         browseButton = new JButton(new BrowseAction());
         storeTypeLabel = new JLabel("Type");
-        storeTypeBox = new JComboBox();
+        storeTypeBox = new JComboBox<>();
         // TODO retrieve full list of supported store types.
         storeTypeBox.addItem("Native Folder");
 

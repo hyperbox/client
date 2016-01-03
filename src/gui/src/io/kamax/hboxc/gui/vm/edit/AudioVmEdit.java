@@ -47,18 +47,18 @@ public final class AudioVmEdit {
     private JLabel driverLabel;
     private JLabel controllerLabel;
     private JCheckBox audioEnableBox;
-    private JComboBox driverBox;
-    private JComboBox controllerBox;
+    private JComboBox<String> driverBox;
+    private JComboBox<String> controllerBox;
 
     public AudioVmEdit(_WorkerTracker tracker) {
         audioEnableLabel = new JLabel("Enabled");
         audioEnableBox = new JCheckBox();
 
         driverLabel = new JLabel("Host Driver");
-        driverBox = new JComboBox();
+        driverBox = new JComboBox<>();
 
         controllerLabel = new JLabel("Guest Controller");
-        controllerBox = new JComboBox();
+        controllerBox = new JComboBox<>();
 
         panel = new JPanel(new MigLayout());
         panel.add(audioEnableLabel);

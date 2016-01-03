@@ -58,10 +58,10 @@ public class HarddiskCreateDialog implements _Saveable, _Cancelable {
 
     private JLabel sizeLabel;
     private JTextField sizeField;
-    private JComboBox sizeUnit;
+    private JComboBox<String> sizeUnit;
 
     private JLabel formatLabel;
-    private JComboBox formatBox;
+    private JComboBox<HardDiskFormat> formatBox;
 
     private JButton saveButton;
     private JButton cancelButton;
@@ -90,12 +90,12 @@ public class HarddiskCreateDialog implements _Saveable, _Cancelable {
 
         sizeLabel = new JLabel("Size");
         sizeField = new JTextField();
-        sizeUnit = new JComboBox();
+        sizeUnit = new JComboBox<>();
         sizeUnit.addItem(GB);
         sizeUnit.addItem(MB);
 
         formatLabel = new JLabel("Format");
-        formatBox = new JComboBox();
+        formatBox = new JComboBox<>();
         for (HardDiskFormat format : HardDiskFormat.values()) {
             formatBox.addItem(format);
         }

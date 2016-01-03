@@ -54,10 +54,10 @@ public class PermissionAddDialog implements _Saveable, _Cancelable, _MachineList
     private JLabel actionLabel;
     private JLabel rightLabel;
 
-    private JComboBox itemTypeValue;
-    private JComboBox itemValue;
-    private JComboBox actionValue;
-    private JComboBox rightValue;
+    private JComboBox<SecurityItem> itemTypeValue;
+    private JComboBox<Object> itemValue; // TODO improve using renderer to add only types of ObjectOut
+    private JComboBox<SecurityAction> actionValue;
+    private JComboBox<SecurityAccess> rightValue;
 
     private JButton saveButton;
     private JButton cancelButton;
@@ -71,18 +71,18 @@ public class PermissionAddDialog implements _Saveable, _Cancelable, _MachineList
         actionLabel = new JLabel("Action");
         rightLabel = new JLabel("Access");
 
-        itemValue = new JComboBox();
+        itemValue = new JComboBox<>();
 
-        itemTypeValue = new JComboBox();
+        itemTypeValue = new JComboBox<>();
         itemTypeValue.addActionListener(new ItemTypeListener());
         itemTypeValue.addItem(SecurityItem.Any);
         itemTypeValue.addItem(SecurityItem.Server);
         itemTypeValue.addItem(SecurityItem.Machine);
 
-        actionValue = new JComboBox();
+        actionValue = new JComboBox<>();
         actionValue.addItem(SecurityAction.Any);
 
-        rightValue = new JComboBox();
+        rightValue = new JComboBox<>();
         rightValue.addItem(SecurityAccess.Grant);
         rightValue.addItem(SecurityAccess.Deny);
 

@@ -49,9 +49,9 @@ public class SystemVmEdit {
     private JLabel ramLabel;
     private JTextField ramField;
     private JLabel mbChipsetLabel;
-    private JComboBox mbChipsetBox;
+    private JComboBox<String> mbChipsetBox;
     private JLabel firmwareLabel;
-    private JComboBox firmwareBox;
+    private JComboBox<String> firmwareBox;
     private JLabel utcClockLabel;
     private JCheckBox utcClockBox;
     private JLabel hosttimeSyncLabel;
@@ -76,11 +76,11 @@ public class SystemVmEdit {
         cpuNbField = new JTextField(5);
         cpuExecCapField = new JTextField(10);
         ramField = new JTextField(15);
-        mbChipsetBox = new JComboBox();
+        mbChipsetBox = new JComboBox<>();
         for (Chipsets chip : Chipsets.values()) {
             mbChipsetBox.addItem(chip.getId());
         }
-        firmwareBox = new JComboBox();
+        firmwareBox = new JComboBox<>();
         for (Firmware firm : Firmware.values()) {
             firmwareBox.addItem(firm.getId());
         }

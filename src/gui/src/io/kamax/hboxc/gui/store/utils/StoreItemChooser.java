@@ -82,7 +82,7 @@ public class StoreItemChooser implements _Saveable, _Cancelable {
     private JPanel addressPanel;
 
     private JLabel storeItemFilterName;
-    private JComboBox storeItemFilterValue;
+    private JComboBox<String> storeItemFilterValue;
 
     private JLabel storeItemName;
     private JTextField storeItemValue;
@@ -117,7 +117,7 @@ public class StoreItemChooser implements _Saveable, _Cancelable {
             vSplit.setResizeWeight(0.2d);
 
             storeItemFilterName = new JLabel("Type");
-            storeItemFilterValue = new JComboBox();
+            storeItemFilterValue = new JComboBox<>();
             storeItemName = new JLabel("Name");
             storeItemValue = new JTextField();
 

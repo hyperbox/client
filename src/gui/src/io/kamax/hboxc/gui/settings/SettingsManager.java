@@ -63,8 +63,8 @@ public class SettingsManager implements _Saveable, _Cancelable {
     private JScrollPane leftPane;
     private JScrollPane rightPane;
 
-    private DefaultListModel listModel;
-    private JList itemList;
+    private DefaultListModel<String> listModel;
+    private JList<String> itemList;
 
     private JPanel sectionPanels;
     private CardLayout layout;
@@ -88,11 +88,11 @@ public class SettingsManager implements _Saveable, _Cancelable {
         sectionPanels.add(generalEdit.getComponet(), GENERAL);
         sectionPanels.add(viewerEdit.getComponet(), VIEWERS);
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         //listModel.addElement(GENERAL);
         listModel.addElement(VIEWERS);
 
-        itemList = new JList(listModel);
+        itemList = new JList<>(listModel);
         itemList.setCellRenderer(new LabelCellRenderer());
         itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         itemList.addListSelectionListener(new ListSelect());
@@ -152,7 +152,7 @@ public class SettingsManager implements _Saveable, _Cancelable {
         private static final long serialVersionUID = -3013644638595005392L;
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
             if (label.getText() == GENERAL) {

@@ -50,7 +50,7 @@ public class NATRulesView {
     }
 
     public NATRulesView() {
-        JComboBox protocolEditor = new JComboBox();
+        JComboBox<String> protocolEditor = new JComboBox<>();
         protocolEditor.addItem("TCP");
         protocolEditor.addItem("UDP");
 

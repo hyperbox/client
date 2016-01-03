@@ -63,7 +63,7 @@ public class VmCreateDialog implements _Saveable, _Cancelable {
     private JLabel nameLabel;
     private JTextField nameField;
     private JLabel osLabel;
-    private JComboBox osBox;
+    private JComboBox<String> osBox;
 
     private JPanel buttonsPanel;
     private JButton saveButton;
@@ -84,7 +84,7 @@ public class VmCreateDialog implements _Saveable, _Cancelable {
         nameLabel = new JLabel("Name");
         nameField = new JTextField(40);
         osLabel = new JLabel("Settings Template");
-        osBox = new JComboBox();
+        osBox = new JComboBox<>();
 
         mainPanel = new JPanel(new MigLayout());
         mainPanel.add(nameLabel);

@@ -56,11 +56,11 @@ public class NetworkInterfaceViewer {
     private JLabel connectedLabel = new JLabel();
     public JCheckBox connectedValue = new JCheckBox();
     private JLabel attachToLabel = new JLabel();
-    public JComboBox attachModeValue = new JComboBox();
+    public JComboBox<String> attachModeValue = new JComboBox<>();
     private JLabel attachNameLabel = new JLabel();
-    public JComboBox attachNameValue = new JComboBox();
+    public JComboBox<String> attachNameValue = new JComboBox<>();
     private JLabel adapterTypeLabel = new JLabel();
-    public JComboBox adapterTypeValue = new JComboBox();
+    public JComboBox<String> adapterTypeValue = new JComboBox<>();
     private JLabel macAddrLabel = new JLabel();
     public JTextField macAddrValue = new JTextField(30);
 
@@ -131,11 +131,11 @@ public class NetworkInterfaceViewer {
         return mainPanel;
     }
 
-    public JComboBox getAadapterTypeList() {
+    public JComboBox<String> getAadapterTypeList() {
         return adapterTypeValue;
     }
 
-    public JComboBox getAttachModeList() {
+    public JComboBox<String> getAttachModeList() {
         return attachModeValue;
     }
 

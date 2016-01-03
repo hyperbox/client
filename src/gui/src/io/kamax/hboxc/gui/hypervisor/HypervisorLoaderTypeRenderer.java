@@ -26,18 +26,19 @@ import java.awt.Component;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-public class HypervisorLoaderTypeRenderer implements ListCellRenderer {
+public class HypervisorLoaderTypeRenderer implements ListCellRenderer<HypervisorLoaderOut> {
 
-    private ListCellRenderer parent;
+    private ListCellRenderer<HypervisorLoaderOut> parent;
 
-    public HypervisorLoaderTypeRenderer(ListCellRenderer parent) {
+    public HypervisorLoaderTypeRenderer(ListCellRenderer<HypervisorLoaderOut> parent) {
         this.parent = parent;
     }
 
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (value instanceof HypervisorLoaderOut) {
-            return Gui.getHypervisorModel(((HypervisorLoaderOut) value).getHypervisorId()).getTypeRenderer(parent)
+    public Component getListCellRendererComponent(JList<? extends HypervisorLoaderOut> list, HypervisorLoaderOut value, int index, boolean isSelected,
+            boolean cellHasFocus) {
+        if (value != null) {
+            return Gui.getHypervisorModel(value.getHypervisorId()).getTypeRenderer(parent)
                     .getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         } else {
             return parent.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

@@ -63,7 +63,7 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable, _Con
     private JLabel passLabel;
     private JPasswordField passField;
     private JLabel connectorLabel;
-    private JComboBox connectorValue;
+    private JComboBox<BackendOutput> connectorValue;
 
     private JPanel buttonPanel;
     private JButton loginButton;
@@ -88,7 +88,7 @@ public final class ConnectorEditorDialog implements _Saveable, _Cancelable, _Con
         passField = new JPasswordField(15);
 
         connectorLabel = new JLabel("Connector");
-        connectorValue = new JComboBox();
+        connectorValue = new JComboBox<>();
 
         loginButton = new JButton(new SaveAction(this));
         cancelButton = new JButton(new CancelAction(this));

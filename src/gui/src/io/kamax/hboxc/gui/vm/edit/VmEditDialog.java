@@ -90,8 +90,8 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
     private JScrollPane leftPane;
     private JScrollPane rightPane;
 
-    private DefaultListModel listModel;
-    private JList itemList;
+    private DefaultListModel<String> listModel;
+    private JList<String> itemList;
 
     private JPanel sectionPanels;
     private CardLayout layout;
@@ -123,7 +123,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
         sectionPanels.add(audioEdit.getComp(), AUDIO);
         sectionPanels.add(networkEdit.getComp(), NETWORK);
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         listModel.addElement(GENERAL);
         listModel.addElement(SYSTEM);
         listModel.addElement(OUTPUT);
@@ -131,7 +131,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
         listModel.addElement(AUDIO);
         listModel.addElement(NETWORK);
 
-        itemList = new JList(listModel);
+        itemList = new JList<>(listModel);
         itemList.setCellRenderer(new LabelCellRenderer());
         itemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         itemList.addListSelectionListener(new ListSelect());
@@ -246,7 +246,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
         private static final long serialVersionUID = 3884145295010503208L;
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
             if (label.getText() == GENERAL) {

@@ -44,6 +44,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import net.miginfocom.swing.MigLayout;
@@ -60,13 +61,13 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
     private JDialog dialog;
 
     private JLabel vendorLabel;
-    private JComboBox vendorData;
+    private JComboBox<String> vendorData;
     private JLabel productLabel;
-    private JComboBox productData;
+    private JComboBox<String> productData;
     private JLabel versionLabel;
-    private JComboBox versionData;
+    private JComboBox<String> versionData;
     private JLabel typeLabel;
-    private JComboBox typeData;
+    private JComboBox<HypervisorLoaderOut> typeData;
 
     private JLabel optionsLabel;
     private JTextField optionsData;
@@ -78,6 +79,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
     private JPanel buttonPanel;
     private HypervisorIn hypIn;
 
+    @SuppressWarnings("unchecked")
     public HypervisorConnectView(String srvId) {
         this.srvId = srvId;
 
@@ -86,7 +88,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
         versionLabel = new JLabel("Version");
         typeLabel = new JLabel("Type");
 
-        vendorData = new JComboBox();
+        vendorData = new JComboBox<>();
         vendorData.addActionListener(new ActionListener() {
 
             @Override
@@ -109,7 +111,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
         });
         vendorData.getModel().addListDataListener(new RefreshActionListener());
 
-        productData = new JComboBox();
+        productData = new JComboBox<>();
         productData.addActionListener(new ActionListener() {
 
             @Override
@@ -131,7 +133,7 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
         });
         productData.getModel().addListDataListener(new RefreshActionListener());
 
-        versionData = new JComboBox();
+        versionData = new JComboBox<>();
         versionData.addActionListener(new ActionListener() {
 
             @Override
@@ -148,9 +150,9 @@ public class HypervisorConnectView implements _Saveable, _Cancelable {
         });
         versionData.getModel().addListDataListener(new RefreshActionListener());
 
-        typeData = new JComboBox();
+        typeData = new JComboBox<>();
         typeData.getModel().addListDataListener(new RefreshActionListener());
-        typeData.setRenderer(new HypervisorLoaderTypeRenderer(typeData.getRenderer()));
+        typeData.setRenderer(new HypervisorLoaderTypeRenderer((ListCellRenderer<HypervisorLoaderOut>) typeData.getRenderer()));
 
         optionsLabel = new JLabel("Connector Options");
         optionsData = new JTextField();
