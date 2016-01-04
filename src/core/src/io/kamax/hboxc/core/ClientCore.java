@@ -56,6 +56,7 @@ import io.kamax.hboxc.updater._Updater;
 import io.kamax.tool.ProcessRunner;
 import io.kamax.tool.logging.Logger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -400,10 +401,14 @@ public class ClientCore implements _Core {
         String arg = cView.getArgs();
         arg = arg.replace("%SA%", address);
         arg = arg.replace("%SP%", port);
+
+        ArrayList<String> args = new ArrayList<>();
+        args.add(cView.getViewerPath());
+        args.addAll(Arrays.asList(arg.split(" ")));
         Logger.info("Starting Console viewer " + cView.getViewerPath() + " for machine " + m.getUuid() + " on server " + srv.getId()
                 + " with arguments: " + arg);
         try {
-            ProcessRunner.runHeadless(new ProcessBuilder(new String[] { cView.getViewerPath(), arg }).start());
+            ProcessRunner.runHeadless(new ProcessBuilder(args).start());
         } catch (Throwable t) {
             throw new HyperboxException("Couldn't launch Console Viewer", t);
         }
