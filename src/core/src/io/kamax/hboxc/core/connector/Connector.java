@@ -177,7 +177,7 @@ public class Connector implements _Connector {
 
     @Handler
     private void putServerDisconnectEvent(ServerDisconnectedEvent ev) {
-        if (AxStrings.equals(ev.getServer().getId(), server.getId())) {
+        if (AxStrings.equals(ev.getServer().getId(), server.getId())) { // FIXME Possible NPE
             disconnect();
         }
     }
