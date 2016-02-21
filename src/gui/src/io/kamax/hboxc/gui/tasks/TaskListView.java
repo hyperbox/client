@@ -96,7 +96,7 @@ public class TaskListView implements _TaskSelector, _Refreshable, _TaskListRecei
         itemListModel.clear();
         for (ConnectorOutput conOut : Gui.getReader().listConnectors()) {
             if (conOut.isConnected()) {
-                refresh(conOut.getServer().getId());
+                TaskListWorker.execute(this, conOut.getServerId());
             }
         }
 
