@@ -252,7 +252,7 @@
 	</target>
 	
 	<target name="dist.linux" if="${ifLinux}" depends="deploy, configure.dist">
-		<copy file="${hbox.client.core.dir}/hyperbox-client.desktop" tofile="${hbox.client.out.build.dir}/hyperbox-client.desktop" overwrite="true" />
+		<copy file="${hbox.client.gui.dir}/hyperbox-client.desktop" tofile="${hbox.client.out.bin.dir}/hyperbox-client.desktop" overwrite="true" />
 		<copy file="${hbox.client.base.dir}/scripts/installer/client-installer.sh" tofile="${hbox.client.out.bin.dir}/client-installer.sh" overwrite="true" />
 		<chmod file="${hbox.client.out.bin.dir}/client-installer.sh" perm="a+rx" />
 		<exec executable="makeself" failonerror="true">
