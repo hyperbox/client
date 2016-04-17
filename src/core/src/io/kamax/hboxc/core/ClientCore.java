@@ -69,8 +69,16 @@ public class ClientCore implements _Core {
         private Integer id = 1;
 
         public String getId() {
+            if (conns.size() == Integer.MAX_VALUE) {
+                throw new HyperboxException("Maximum amount of connectors reached (" + conns.size() + ")");
+            }
+
             while (conns.containsKey(id.toString())) {
-                id++;
+                if (id.equals(Integer.MAX_VALUE)) {
+                    id = 1;
+                } else {
+                    id++;
+                }
             }
             return id.toString();
         }
