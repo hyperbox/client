@@ -47,7 +47,7 @@ public class ConsoleViewerFactory {
             viewers.add(get(".*", "Oracle VM VirtualBox Extension Pack", WINDOWS_REMOTE_DESKTOP, "/v:%SA%:%SP%"));
         }
         if ((new File(LINUX_RDESKTOP)).isFile()) {
-            viewers.add(get(".*", "Oracle VM VirtualBox Extension Pack", LINUX_RDESKTOP, "%SA%:%SP%"));
+            viewers.add(get(".*", "Oracle VM VirtualBox Extension Pack", LINUX_RDESKTOP, "-T %VM_NAME% %SA%:%SP%"));
         }
 
         return viewers;

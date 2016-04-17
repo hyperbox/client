@@ -56,7 +56,6 @@ import io.kamax.hboxc.updater._Updater;
 import io.kamax.tool.ProcessRunner;
 import io.kamax.tool.logging.Logger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -401,10 +400,19 @@ public class ClientCore implements _Core {
         String arg = cView.getArgs();
         arg = arg.replace("%SA%", address);
         arg = arg.replace("%SP%", port);
+        arg = arg.replace("%VM_NAME%", m.getName());
 
         ArrayList<String> args = new ArrayList<>();
         args.add(cView.getViewerPath());
-        args.addAll(Arrays.asList(arg.split(" ")));
+
+        String[] argsRaw = arg.split(" ");
+        for (int i = 0; i < argsRaw.length; i++) {
+            argsRaw[i] = argsRaw[i].replace("%SA%", address);
+            argsRaw[i] = argsRaw[i].replace("%SP%", port);
+            argsRaw[i] = argsRaw[i].replace("%VM_NAME%", m.getName());
+            args.add(argsRaw[i]);
+        }
+
         Logger.info("Starting Console viewer " + cView.getViewerPath() + " for machine " + m.getUuid() + " on server " + srv.getId()
                 + " with arguments: " + arg);
         try {
