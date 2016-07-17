@@ -28,12 +28,14 @@ public final class StoreListTableModel extends AbstractOutputListTableModel<Stor
 
     private static final long serialVersionUID = 7772589603382903388L;
     private final String ID = "ID";
+    private final String IS_VALID = "Valid";
     private final String LABEL = "Label";
     private final String LOC = "Location";
 
     @Override
     protected void addColumns() {
         addColumn(ID);
+        addColumn(IS_VALID);
         addColumn(LABEL);
         addColumn(LOC);
     }
@@ -42,6 +44,9 @@ public final class StoreListTableModel extends AbstractOutputListTableModel<Stor
     protected Object getValueAt(StoreOut obj, String columnName) {
         if (ID.equalsIgnoreCase(columnName)) {
             return obj.getId();
+        }
+        if (IS_VALID.equalsIgnoreCase(columnName)) {
+            return obj.isValid();
         }
         if (LABEL.equalsIgnoreCase(columnName)) {
             return obj.getLabel();
