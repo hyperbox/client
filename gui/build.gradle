@@ -8,8 +8,6 @@ repositories {
 
 dependencies {
     compile project(':hbox-client-core')
-
-    compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'com.miglayout:miglayout-swing:4.2'
 
     testCompile 'junit:junit:4.12'

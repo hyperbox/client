@@ -9,8 +9,5 @@ repositories {
 dependencies {
     compile project(':hbox-api')
 
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'net.engio:mbassador:1.1.10'
-
     testCompile 'junit:junit:4.12'
 }
