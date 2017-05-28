@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':hbox-client-api')
+
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.thoughtworks.xstream:xstream:1.4.9'
+    compile 'com.esotericsoftware:kryonet:2.22.0-RC1'
+
+    testCompile 'junit:junit:4.12'
+}

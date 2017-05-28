@@ -1,0 +1,9 @@
+rootProject.name = 'hbox-client'
+
+include '../api'
+project(':../api').name = 'hbox-api'
+
+include 'api', 'core', 'gui'
+project(':api').name = 'hbox-client-api'
+project(':core').name = 'hbox-client-core'
+project(':gui').name = 'hbox-client-gui'
