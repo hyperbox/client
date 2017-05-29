@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     compile project(':hbox-client-core')
+
     compile 'com.miglayout:miglayout-swing:4.2'
 
     testCompile 'junit:junit:4.12'
