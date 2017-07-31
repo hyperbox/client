@@ -1,8 +1,5 @@
 rootProject.name = 'hbox-client'
 
-include '../api'
-project(':../api').name = 'hbox-api'
-
 include 'modules/api', 'modules/core', 'modules/gui'
 project(':modules/api').name = 'hbox-client-api'
 project(':modules/core').name = 'hbox-client-core'
