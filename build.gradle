@@ -2,11 +2,10 @@ apply plugin: 'base'
 
 evaluationDependsOnChildren()
 
-def apiPath = project.rootDir.toPath().resolve('..').resolve('api')
 def binPath = project.buildDir.toPath().resolve('bin')
 def binDir = 'bin'
-def docDir = 'doc'
 def iconDir = 'icons'
+def imgDir = 'img'
 def libDir = 'lib'
 
 def binCommonPath = binPath.resolve('common')
@@ -26,19 +25,14 @@ task distBinLib(type: Copy) {
     into binCommonPath.resolve(libDir)
 }
 
-task distBinDoc(type: Copy) {
-    from apiPath.resolve(docDir).toFile()
-    into binCommonPath.resolve(docDir)
-}
-
 task distBinIcons(type: Copy) {
     from project('hbox-client-gui').file(iconDir)
-    from apiPath.resolve('media/img').toFile()
+    from project('hbox-client-gui').file(imgDir)
     into binCommonPath.resolve(iconDir)
 }
 
 task distBinCommon {
-    dependsOn distBinJar, distBinLib, distBinDoc, distBinIcons
+    dependsOn distBinJar, distBinLib, distBinIcons
 }
 
 task distBinLinux(type: Copy) {
