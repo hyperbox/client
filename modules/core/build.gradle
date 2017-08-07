@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'maven'
+    id 'com.palantir.git-version' version '0.8.0'
+}
+
+group = 'io.kamax'
+version = gitVersion()
+
+sourceCompatibility = 1.7
+
+String versionInfoFile = "${projectDir}/build/tmp/versionInfo/client.build.properties"
+
+repositories {
+    maven { url "https://kamax.io/maven/releases" }
+    maven { url "https://kamax.io/maven/snapshots" }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':hbox-client-api')
+
+    testCompile 'junit:junit:4.12'
+}
+
+task versionInfo {
+    doLast {
+        File versionFile = new File(versionInfoFile)
+        versionFile.getParentFile().mkdir()
+        versionFile.text = 'version=' + project.version
+    }
+}
+
+jar {
+    dependsOn versionInfo
+    from versionInfoFile
+}

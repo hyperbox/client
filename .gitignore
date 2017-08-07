@@ -1,5 +1,6 @@
-/out/
+# IDEs
+.idea/
 
-src/api/.settings/
-src/core/.settings/
-src/gui/.settings/
+# Build
+.gradle/
+build/

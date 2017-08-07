@@ -23,7 +23,7 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>bin/hbox-client-core.jar</jar>
+    <jar>lib/hbox-client-core.jar</jar>
   <icon>../../../api/media/img/hyperbox.ico</icon>
   <stayAlive>false</stayAlive>
   <classPath>

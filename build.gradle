@@ -1,0 +1,47 @@
+apply plugin: 'base'
+
+evaluationDependsOnChildren()
+
+def binPath = project.buildDir.toPath().resolve('bin')
+def binDir = 'bin'
+def iconDir = 'icons'
+def imgDir = 'img'
+def libDir = 'lib'
+
+def binCommonPath = binPath.resolve('common')
+def binLinuxPath = binPath.resolve('linux')
+
+task distBinJar(type: Copy) {
+    dependsOn subprojects.jar
+
+    from project('hbox-client-gui').jar
+    from project('hbox-client-core').jar
+    into binCommonPath.resolve(binDir)
+}
+
+task distBinLib(type: Copy) {
+    from subprojects.configurations.compile
+    into binCommonPath.resolve(libDir)
+}
+
+task distBinIcons(type: Copy) {
+    from project('hbox-client-gui').file(iconDir)
+    from project('hbox-client-gui').file(imgDir)
+    into binCommonPath.resolve(iconDir)
+}
+
+task distBinCommon {
+    dependsOn distBinJar, distBinLib, distBinIcons
+}
+
+task distBinLinux(type: Copy) {
+    dependsOn distBinCommon
+
+    from project.file('scripts/hyperbox')
+    from binCommonPath.toString() // using a Path creates a Stack Overflow
+    into binLinuxPath
+}
+
+build {
+    dependsOn distBinLinux
+}
