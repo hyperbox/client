@@ -1,6 +1,6 @@
 # IDEs
-**/.idea/
+.idea/
 
 # Build
-**/.gradle/
-**/build/
+.gradle/
+build/

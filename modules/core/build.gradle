@@ -7,12 +7,14 @@ version = 'latest'
 sourceCompatibility = 1.7
 
 repositories {
+    maven { url "https://kamax.io/maven/releases" }
+    maven { url "https://kamax.io/maven/snapshots" }
     mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    compile 'io.kamax:hbox-client-api:latest'
+    compile project(':hbox-client-api')
 
     testCompile 'junit:junit:4.12'
 }

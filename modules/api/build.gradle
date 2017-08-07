@@ -1,18 +1,52 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id 'java'
+    id 'maven'
+    id 'com.palantir.git-version' version '0.8.0'
+}
 
 group = 'io.kamax'
-version = 'latest'
+version = gitVersion()
 
 sourceCompatibility = 1.7
 
+configurations {
+    deployerJars
+}
+
 repositories {
+    maven { url "https://kamax.io/maven/releases" }
+    maven { url "https://kamax.io/maven/snapshots" }
     mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    compile 'io.kamax:hbox-api:latest'
+    compile 'io.kamax:hbox-api:0.0.14'
 
     testCompile 'junit:junit:4.12'
+
+    deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
+}
+
+uploadArchives {
+    gradle.ext.mavenUrl = System.env.MAVEN_URL + (project.version ==~ /\d+\.\d+\.\d+/ ? '/releases' : '/snapshots')
+    gradle.ext.mavenUser = System.env.MAVEN_USER
+    gradle.ext.mavenPassword = System.env.MAVEN_PASS
+    gradle.ext.mavenPrivateKey = System.env.MAVEN_PK
+
+    doLast {
+        println "Published ${project.version} to maven repository ${gradle.mavenUrl} with user ${gradle.mavenUser}"
+    }
+
+    repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+
+        repository(url: gradle.mavenUrl) {
+            authentication(
+                    userName: gradle.mavenUser,
+                    password: gradle.mavenPassword,
+                    privateKey: gradle.mavenPrivateKey
+            )
+        }
+    }
 }
