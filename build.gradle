@@ -12,7 +12,6 @@ def binCommonPath = binPath.resolve('common')
 def binLinuxPath = binPath.resolve('linux')
 
 task distBinJar(type: Copy) {
-    dependsOn ':hbox-client-api:install'
     dependsOn subprojects.jar
 
     from project('hbox-client-gui').jar
@@ -41,4 +40,8 @@ task distBinLinux(type: Copy) {
     from project.file('scripts/hyperbox')
     from binCommonPath.toString() // using a Path creates a Stack Overflow
     into binLinuxPath
+}
+
+build {
+    dependsOn distBinLinux
 }
