@@ -1,4 +1,5 @@
 import java.nio.file.Paths
+import org.gradle.internal.os.OperatingSystem
 
 plugins {
     id 'base'
@@ -19,8 +20,15 @@ def distPath = Paths.get(System.getProperty('distPath', project.buildDir.toPath(
 
 def buildCommonPath = buildPath.resolve('common')
 def buildLinuxPath = buildPath.resolve('linux')
+def buildWinPath = buildPath.resolve('win')
 
-def packageName = "hbox-client-${project.version}-linux_amd64"
+def winExecPath = project.buildDir.toPath().resolve('launch4j').resolve('hyperbox.exe')
+
+String getPackageName(String os) {
+    return "hbox-client-${project.version}-${os}_amd64"
+}
+
+/-------------------- Binaries build and assembly tasks ------------------------------/
 
 task buildBinJar(type: Copy) {
     dependsOn subprojects.jar
@@ -45,7 +53,7 @@ task buildBinCommon {
     dependsOn buildBinJar, buildBinLib, buildBinIcons
 }
 
-task buildBinLinux(type: Copy) {
+task buildLinux(type: Copy) {
     dependsOn buildBinCommon
 
     from project.file('scripts/hyperbox')
@@ -55,11 +63,80 @@ task buildBinLinux(type: Copy) {
     into buildLinuxPath
 }
 
+task buildWinExec(type: Exec) {
+    dependsOn buildBinCommon
+
+    def launch4jXml = project.buildDir.toPath().resolve('launch4j').resolve('hyperbox.xml')
+
+    doFirst {
+        copy {
+            from project.file('scripts/launch4j/hyperbox.xml')
+            into project.buildDir.toPath().resolve('launch4j')
+        }
+
+        ant.replace(
+                file: launch4jXml,
+                token: '@LAUNCH4J_OUT_FILE@',
+                value: winExecPath
+        )
+
+        ant.replace(
+                file: launch4jXml,
+                token: '@LAUNCH4J_JAR@',
+                value: "${binDir}/${project('hbox-client-core').jar.archiveName}"
+        )
+    }
+
+    commandLine '/opt/launch4j/launch4j', launch4jXml
+}
+
+task buildWin(type: Copy) {
+    dependsOn buildWinExec
+
+    from buildCommonPath.toString() // using a Path creates a Stack Overflow
+    from winExecPath.toFile()
+    into buildWinPath.toFile()
+}
+
+task buildLinuxDefault {
+    onlyIf {
+        OperatingSystem.current().isLinux()
+    }
+
+    buildLinux
+}
+
+task buildWinDefault {
+    onlyIf {
+        OperatingSystem.current().isWindows()
+    }
+
+    buildWin
+}
+
 build {
-    dependsOn buildBinLinux
+    dependsOn buildLinuxDefault, buildWinDefault
+}
+
+task buildAll {
+    dependsOn buildLinux, buildWin
+}
+
+/-------- End of Binaries build and assembly --------/
+
+/-------- Distribution build tasks -----------------/
+
+task distLinuxZip(type: Zip) {
+    dependsOn buildLinux
+
+    archiveName = "${getPackageName('linux')}.zip"
+    destinationDir = distPath.toFile()
+
+    from buildLinuxPath.toFile()
 }
 
 task distLinuxInstall(type: Exec) {
+    dependsOn buildLinux
 
     doFirst {
         mkdir distPath
@@ -68,19 +145,16 @@ task distLinuxInstall(type: Exec) {
     commandLine(
             'makeself',
             buildLinuxPath,
-            "${distPath}/${packageName}.run",
+            "${distPath}/${getPackageName('linux')}.run",
             'Hyperbox Client',
             './client-installer.sh'
     )
 }
 
-task distLinuxZip(type: Zip) {
-    archiveName = "${packageName}.zip"
-    destinationDir = distPath.toFile()
-
-    from buildLinuxPath.toFile()
+task distLinux {
+    dependsOn distLinuxZip, distLinuxInstall
 }
 
 task dist {
-    dependsOn distLinuxInstall, distLinuxZip
+    dependsOn distLinux
 }

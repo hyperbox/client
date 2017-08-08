@@ -21,10 +21,11 @@
 -->
 
 <launch4jConfig>
-  <dontWrapJar>true</dontWrapJar>
+  <outfile>@LAUNCH4J_OUT_FILE@</outfile>
   <headerType>gui</headerType>
-    <jar>lib/hbox-client-core.jar</jar>
-  <icon>../../../api/media/img/hyperbox.ico</icon>
+  <jar>@LAUNCH4J_JAR@</jar>
+  <dontWrapJar>true</dontWrapJar>
+  <icon>../../modules/gui/img/hyperbox.ico</icon>
   <stayAlive>false</stayAlive>
   <classPath>
     <mainClass>io.kamax.hboxc.HyperboxClientApplicationStart</mainClass>
