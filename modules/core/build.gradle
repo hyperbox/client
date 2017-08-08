@@ -1,8 +1,6 @@
-plugins {
-    id 'java'
-    id 'maven'
-    id 'com.palantir.git-version' version '0.8.0'
-}
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'com.palantir.git-version'
 
 group = 'io.kamax'
 version = gitVersion()

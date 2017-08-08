@@ -1,47 +1,86 @@
-apply plugin: 'base'
+import java.nio.file.Paths
+
+plugins {
+    id 'base'
+    id 'com.palantir.git-version' version '0.8.0'
+}
+
+version = gitVersion()
 
 evaluationDependsOnChildren()
 
-def binPath = project.buildDir.toPath().resolve('bin')
 def binDir = 'bin'
+def distDir = 'dist'
 def iconDir = 'icons'
 def imgDir = 'img'
 def libDir = 'lib'
+def buildPath = Paths.get(System.getProperty('buildPath', project.buildDir.toPath().resolve(binDir).toAbsolutePath().toString()))
+def distPath = Paths.get(System.getProperty('distPath', project.buildDir.toPath().resolve(distDir).toAbsolutePath().toString()))
 
-def binCommonPath = binPath.resolve('common')
-def binLinuxPath = binPath.resolve('linux')
+def buildCommonPath = buildPath.resolve('common')
+def buildLinuxPath = buildPath.resolve('linux')
 
-task distBinJar(type: Copy) {
+def packageName = "hbox-client-${project.version}-linux_amd64"
+
+task buildBinJar(type: Copy) {
     dependsOn subprojects.jar
 
     from project('hbox-client-gui').jar
     from project('hbox-client-core').jar
-    into binCommonPath.resolve(binDir)
+    into buildCommonPath.resolve(binDir)
 }
 
-task distBinLib(type: Copy) {
+task buildBinLib(type: Copy) {
     from subprojects.configurations.compile
-    into binCommonPath.resolve(libDir)
+    into buildCommonPath.resolve(libDir)
 }
 
-task distBinIcons(type: Copy) {
+task buildBinIcons(type: Copy) {
     from project('hbox-client-gui').file(iconDir)
     from project('hbox-client-gui').file(imgDir)
-    into binCommonPath.resolve(iconDir)
+    into buildCommonPath.resolve(iconDir)
 }
 
-task distBinCommon {
-    dependsOn distBinJar, distBinLib, distBinIcons
+task buildBinCommon {
+    dependsOn buildBinJar, buildBinLib, buildBinIcons
 }
 
-task distBinLinux(type: Copy) {
-    dependsOn distBinCommon
+task buildBinLinux(type: Copy) {
+    dependsOn buildBinCommon
 
     from project.file('scripts/hyperbox')
-    from binCommonPath.toString() // using a Path creates a Stack Overflow
-    into binLinuxPath
+    from project.file('modules/gui/hyperbox-client.desktop')
+    from project.file('scripts/installer/client-installer.sh')
+    from buildCommonPath.toString() // using a Path creates a Stack Overflow
+    into buildLinuxPath
 }
 
 build {
-    dependsOn distBinLinux
+    dependsOn buildBinLinux
+}
+
+task distLinuxInstall(type: Exec) {
+
+    doFirst {
+        mkdir distPath
+    }
+
+    commandLine(
+            'makeself',
+            buildLinuxPath,
+            "${distPath}/${packageName}.run",
+            'Hyperbox Client',
+            './client-installer.sh'
+    )
+}
+
+task distLinuxZip(type: Zip) {
+    archiveName = "${packageName}.zip"
+    destinationDir = distPath.toFile()
+
+    from buildLinuxPath.toFile()
+}
+
+task dist {
+    dependsOn distLinuxInstall, distLinuxZip
 }
