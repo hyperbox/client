@@ -160,6 +160,52 @@ task distLinux {
     dependsOn distLinuxZip, distLinuxInstall
 }
 
+task distWinZip(type: Zip) {
+    dependsOn buildWin
+
+    archiveName = "${getPackageName('win')}.zip"
+    destinationDir = distPath.toFile()
+
+    from buildWinPath.toFile()
+}
+
+task distWinInstall(type: Exec) {
+    dependsOn buildWin
+
+    doFirst {
+        mkdir distPath
+
+        copy {
+            from project.file('scripts/installer/client-installer.nsi')
+            into "${project.buildDir}"
+        }
+
+        ant.replace(
+                file: "${project.buildDir}/client-installer.nsi",
+                token: '@CLIENT_INSTALLER_OUTPUT@',
+                value: "${distPath}/${getPackageName('win')}.exe"
+        )
+
+        ant.replace(
+                file: "${project.buildDir}/client-installer.nsi",
+                token: '@CLIENT_OUT_BIN_DIR@',
+                value: "${buildWinPath}"
+        )
+
+        ant.replace(
+                file: "${project.buildDir}/client-installer.nsi",
+                token: '@CLIENT_INSTALL_DIR@',
+                value: "C:\\Program Files\\Hyperbox\\Client"
+        )
+    }
+
+    commandLine 'makensis', '-DPROJECT_NAME=Hyperbox Client', '-V2', "${project.buildDir}/client-installer.nsi"
+}
+
+task distWin {
+    dependsOn distWinZip, distWinInstall
+}
+
 task dist {
-    dependsOn distLinux
+    dependsOn distLinux, distWin
 }
