@@ -15,8 +15,8 @@ def distDir = 'dist'
 def iconDir = 'icons'
 def imgDir = 'img'
 def libDir = 'lib'
-def buildPath = Paths.get(System.getProperty('buildPath', project.buildDir.toPath().resolve(binDir).toString()))
-def distPath = Paths.get(System.getProperty('distPath', project.buildDir.toPath().resolve(distDir).toString()))
+def buildPath = Paths.get(System.getProperty('buildBinPath', project.buildDir.toPath().resolve(binDir).toString()))
+def distPath = Paths.get(System.getProperty('buildDistPath', project.buildDir.toPath().resolve(distDir).toString()))
 
 def buildCommonPath = buildPath.resolve('common')
 def buildLinuxPath = buildPath.resolve('linux')
@@ -25,7 +25,7 @@ def buildWinPath = buildPath.resolve('win')
 def winExecPath = project.buildDir.toPath().resolve('launch4j').resolve('hyperbox.exe')
 
 String getPackageName(String os) {
-    return "hbox-client-${project.version}-${os}_amd64"
+    return "hbox-client-${project.version}-${os}_x64"
 }
 
 /-------------------- Binaries build and assembly tasks ------------------------------/
@@ -51,6 +51,11 @@ task buildBinIcons(type: Copy) {
 
 task buildBinCommon {
     dependsOn buildBinJar, buildBinLib, buildBinIcons
+
+    doLast {
+        mkdir "${buildCommonPath}/doc"
+        mkdir "${buildCommonPath}/modules"
+    }
 }
 
 task buildLinux(type: Copy) {
