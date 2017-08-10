@@ -30,7 +30,7 @@ String getPackageName(String os) {
 
 /-------------------- Binaries build and assembly tasks ------------------------------/
 
-task buildBinJar(type: Copy) {
+task binJar(type: Copy) {
     dependsOn subprojects.jar
 
     from project('hbox-client-gui').jar
@@ -38,19 +38,19 @@ task buildBinJar(type: Copy) {
     into buildCommonPath.resolve(binDir)
 }
 
-task buildBinLib(type: Copy) {
+task binLib(type: Copy) {
     from subprojects.configurations.compile
     into buildCommonPath.resolve(libDir)
 }
 
-task buildBinIcons(type: Copy) {
+task binIcons(type: Copy) {
     from project('hbox-client-gui').file(iconDir)
     from project('hbox-client-gui').file(imgDir)
     into buildCommonPath.resolve(iconDir)
 }
 
-task buildBinCommon {
-    dependsOn buildBinJar, buildBinLib, buildBinIcons
+task binCommon {
+    dependsOn binJar, binLib, binIcons
 
     doLast {
         mkdir "${buildCommonPath}/doc"
@@ -58,8 +58,8 @@ task buildBinCommon {
     }
 }
 
-task buildLinux(type: Copy) {
-    dependsOn buildBinCommon
+task binLinux(type: Copy) {
+    dependsOn binCommon
 
     from project.file('scripts/hyperbox')
     from project.file('modules/gui/hyperbox-client.desktop')
@@ -68,8 +68,8 @@ task buildLinux(type: Copy) {
     into buildLinuxPath
 }
 
-task buildWinExec(type: Exec) {
-    dependsOn buildBinCommon
+task binWinExec(type: Exec) {
+    dependsOn binCommon
 
     def launch4jXml = project.buildDir.toPath().resolve('launch4j').resolve('hyperbox.xml')
 
@@ -95,36 +95,16 @@ task buildWinExec(type: Exec) {
     commandLine '/opt/launch4j/launch4j', launch4jXml
 }
 
-task buildWin(type: Copy) {
-    dependsOn buildWinExec
+task binWin(type: Copy) {
+    dependsOn binWinExec
 
     from buildCommonPath.toString() // using a Path creates a Stack Overflow
     from winExecPath.toFile()
     into buildWinPath.toFile()
 }
 
-task buildLinuxDefault {
-    onlyIf {
-        OperatingSystem.current().isLinux()
-    }
-
-    buildLinux
-}
-
-task buildWinDefault {
-    onlyIf {
-        OperatingSystem.current().isWindows()
-    }
-
-    buildWin
-}
-
-build {
-    dependsOn buildLinuxDefault, buildWinDefault
-}
-
-task buildAll {
-    dependsOn buildLinux, buildWin
+task bin {
+    dependsOn binLinux, binWin
 }
 
 /-------- End of Binaries build and assembly --------/
@@ -132,7 +112,7 @@ task buildAll {
 /-------- Distribution build tasks -----------------/
 
 task distLinuxZip(type: Zip) {
-    dependsOn buildLinux
+    dependsOn binLinux
 
     archiveName = "${getPackageName('linux')}.zip"
     destinationDir = distPath.toFile()
@@ -141,7 +121,7 @@ task distLinuxZip(type: Zip) {
 }
 
 task distLinuxInstall(type: Exec) {
-    dependsOn buildLinux
+    dependsOn binLinux
 
     doFirst {
         mkdir distPath
@@ -161,7 +141,7 @@ task distLinux {
 }
 
 task distWinZip(type: Zip) {
-    dependsOn buildWin
+    dependsOn binWin
 
     archiveName = "${getPackageName('win')}.zip"
     destinationDir = distPath.toFile()
@@ -170,7 +150,7 @@ task distWinZip(type: Zip) {
 }
 
 task distWinInstall(type: Exec) {
-    dependsOn buildWin
+    dependsOn binWin
 
     doFirst {
         mkdir distPath
@@ -206,6 +186,6 @@ task distWin {
     dependsOn distWinZip, distWinInstall
 }
 
-task dist {
+task distAll {
     dependsOn distLinux, distWin
 }
