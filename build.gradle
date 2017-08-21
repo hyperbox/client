@@ -1,9 +1,14 @@
 import java.nio.file.Paths
-import org.gradle.internal.os.OperatingSystem
 
-plugins {
-    id 'base'
-    id 'com.palantir.git-version' version '0.8.0'
+apply plugin: 'java'
+
+String gitVersion() {
+    ByteArrayOutputStream out = new ByteArrayOutputStream()
+    exec {
+        commandLine = [ 'git', 'describe', '--always', '--dirty' ]
+        standardOutput = out
+    }
+    return out.toString().replace(System.lineSeparator(), '')
 }
 
 version = gitVersion()

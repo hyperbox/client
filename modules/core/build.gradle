@@ -1,6 +1,14 @@
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'com.palantir.git-version'
+
+String gitVersion() {
+    ByteArrayOutputStream out = new ByteArrayOutputStream()
+    exec {
+        commandLine = [ 'git', 'describe', '--always', '--dirty' ]
+        standardOutput = out
+    }
+    return out.toString().replace(System.lineSeparator(), '')
+}
 
 group = 'io.kamax'
 version = gitVersion()
