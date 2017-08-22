@@ -77,7 +77,7 @@ public class Connector implements _Connector {
 
     @Override
     public String getLabel() {
-        return AxStrings.getNonEmpty(label, isConnected() ? getServer().getName() : null, getAddress());
+        return label;
     }
 
     @Override

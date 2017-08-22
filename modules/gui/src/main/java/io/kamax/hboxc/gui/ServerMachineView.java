@@ -57,6 +57,7 @@ import io.kamax.tools.helper.swing.SortedTreeModel;
 import io.kamax.tools.logging.Logger;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -456,7 +457,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                 } else if (node.getUserObject() instanceof ConnectorOutput) {
                     ConnectorOutput conOut = (ConnectorOutput) node.getUserObject();
                     setIcon(IconBuilder.getConnector(conOut));
-                    setText(conOut.getLabel());
+                    setText(StringUtils.defaultIfBlank(conOut.getLabel(), conOut.getAddress()));
                 } else {
                     Logger.warning("Unknown object: " + node.getUserObject().getClass().getName());
                 }
