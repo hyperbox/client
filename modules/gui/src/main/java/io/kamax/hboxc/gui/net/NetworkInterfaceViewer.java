@@ -143,7 +143,7 @@ public class NetworkInterfaceViewer {
                 nicIn.setAttachMode(attachModeValue.getSelectedItem().toString());
                 nicIn.setAttachName(AxStrings.get(attachNameValue.getSelectedItem()));
                 nicIn.setAdapterType(adapterTypeValue.getSelectedItem().toString());
-                nicIn.setMacAddress(macAddrValue.getText());
+                nicIn.setMacAddress(macAddrValue.getText().replaceAll(":", ""));
             }
         }
 
