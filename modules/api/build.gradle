@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.kamax:hbox-api:0.0.14-2-ga95be4c'
+    compile 'io.kamax:hbox-api:0.0.15'
 
     testCompile 'junit:junit:4.12'
 
