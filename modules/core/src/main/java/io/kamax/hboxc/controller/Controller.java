@@ -104,12 +104,6 @@ public final class Controller implements _ClientMessageReceiver {
             }
             Logger.verbose("--------------------------------------");
 
-            Logger.verbose("-------- Classpath entries -----------");
-            for (URL classPathEntry : ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs()) {
-                Logger.verbose(classPathEntry);
-            }
-            Logger.verbose("--------------------------------------");
-
             EventManager.get().start();
 
             loadActions();

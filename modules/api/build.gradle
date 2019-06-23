@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'idea'
 
 String gitVersion() {
     ByteArrayOutputStream out = new ByteArrayOutputStream()
@@ -14,24 +15,25 @@ group = 'io.kamax'
 version = gitVersion()
 
 sourceCompatibility = 1.7
+targetCompatibility = 1.8
 
 configurations {
     deployerJars
 }
 
 repositories {
-    maven { url "https://kamax.io/maven/releases" }
-    maven { url "https://kamax.io/maven/snapshots" }
+    maven { url "https://maven.kamax.io/releases/" }
+    maven { url "https://maven.kamax.io/snapshots/" }
     mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    compile 'io.kamax:hbox-api:0.0.14'
+    compile 'io.kamax:hbox-api:0.0.14-2-ga95be4c'
 
     testCompile 'junit:junit:4.12'
 
-    deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
+    deployerJars 'org.apache.maven.wagon:wagon-ssh:3.3.3'
 }
 
 uploadArchives {

@@ -11,6 +11,7 @@ static String getSysProp(String value, String fallback) {
 import java.nio.file.Paths
 
 apply plugin: 'java'
+apply plugin: 'idea'
 
 String gitVersion() {
     ByteArrayOutputStream out = new ByteArrayOutputStream()
