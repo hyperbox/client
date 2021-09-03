@@ -1,207 +1,243 @@
-static String getSysProp(String value, String fallback) {
+/*
+ * Hyperbox - Virtual Infrastructure Manager
+ * Copyright (C) 2021 Max Dor
+ *
+ * https://apps.kamax.io/hyperbox
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import java.nio.file.Paths
+import java.util.regex.Pattern
+
+String buildVersion() {
+    def versionPattern = Pattern.compile("v(\\d+\\.)?(\\d+\\.)?(\\d+)(-.*)?")
+
+    String version = System.getenv('HBOX_SERVER_BUILD_VERSION')
+    if (version == null || version.size() == 0) {
+        version = sourceVersion()
+    }
+    version = versionPattern.matcher(version).matches() ? version.substring(1) : version
+    println('Version: ' + version)
+    return version
+}
+
+String sourceVersion() {
+    String version = System.getenv('HBOX_SERVER_SOURCE_VERSION')
+    if (version != null && version.size() > 0) {
+        return version
+    }
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream()
+
+    def o = exec {
+        commandLine = ['git', 'describe', '--tags', '--always', '--dirty']
+        standardOutput = out
+        errorOutput = out
+        ignoreExitValue = true
+    }
+
+    if (o.exitValue != 0) {
+        if (o.exitValue != 128) {
+            printf("Unable to determine git version: %s", out.toString())
+        }
+
+        return "UNKNOWN"
+    }
+
+    return out.toString().replace(System.lineSeparator(), '')
+}
+
+static String getSysProp(String value, Object fallback) {
     // This is required as there is a length limitation on System.properties.getProperty(a,b)
 
     if (!System.properties.containsKey(value)) {
-        return fallback
+        return fallback.toString()
     }
 
     return System.properties.get(value)
 }
 
-import java.nio.file.Paths
+apply plugin: 'application'
 
-apply plugin: 'java'
-apply plugin: 'idea'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
-String gitVersion() {
-    ByteArrayOutputStream out = new ByteArrayOutputStream()
-    exec {
-        commandLine = [ 'git', 'describe', '--always', '--dirty' ]
-        standardOutput = out
-    }
-    return out.toString().replace(System.lineSeparator(), '')
-}
+group = 'io.kamax.apps.hbox'
+version = buildVersion()
+mainClassName = 'io.kamax.hboxc.HyperboxClientApplicationStart'
 
-version = gitVersion()
+def buildPath = Paths.get(getSysProp('client.build.bin', layout.buildDirectory.dir('bin').get()))
 
-evaluationDependsOnChildren()
-
-def binDir = 'bin'
-def distDir = 'dist'
-def iconDir = 'icons'
-def imgDir = 'img'
-def libDir = 'lib'
-def buildPath = Paths.get(getSysProp('client.build.bin', project.buildDir.toPath().resolve(binDir).toString()))
-def distPath = Paths.get(getSysProp('client.build.dist', project.buildDir.toPath().resolve(distDir).toString()))
-
-def buildCommonPath = buildPath.resolve('common')
 def buildLinuxPath = buildPath.resolve('linux')
 def buildWinPath = buildPath.resolve('win')
 
-def winExecPath = project.buildDir.toPath().resolve('launch4j').resolve('hyperbox.exe')
+String versionInfoFile = "${projectDir}/build/tmp/versionInfo/client.build.properties"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.kamax.apps.hbox:hbox-api:0.2.0'
+    implementation 'com.miglayout:miglayout-swing:4.2'
+
+    testCompile 'junit:junit:4.13.2'
+}
 
 String getPackageName(String os) {
-    return "hbox-client-${project.version}-${os}_x64"
+    return "hbox-client-${project.version}-${os}"
 }
 
 /-------------------- Binaries build and assembly tasks ------------------------------/
 
-task binJar(type: Copy) {
-    dependsOn subprojects.jar
-
-    from project('hbox-client-gui').jar
-    from project('hbox-client-core').jar
-    into buildCommonPath.resolve(binDir)
-}
-
-task binLib(type: Copy) {
-    from subprojects.configurations.compile
-    into buildCommonPath.resolve(libDir)
-}
-
-task binIcons(type: Copy) {
-    from project('hbox-client-gui').file(iconDir)
-    from project('hbox-client-gui').file(imgDir)
-    into buildCommonPath.resolve(iconDir)
-}
-
-task binCommon {
-    dependsOn binJar, binLib, binIcons
-
+task versionInfo {
     doLast {
-        mkdir "${buildCommonPath}/doc"
-        mkdir "${buildCommonPath}/modules"
+        File versionFile = new File(versionInfoFile)
+        versionFile.getParentFile().mkdir()
+        versionFile.text = 'version=' + project.version
     }
 }
 
-task binLinux(type: Copy) {
-    dependsOn binCommon
-
-    from project.file('scripts/hyperbox')
-    from project.file('modules/gui/hyperbox-client.desktop')
-    from project.file('scripts/installer/client-installer.sh')
-    from buildCommonPath.toString() // using a Path creates a Stack Overflow
-    into buildLinuxPath
+jar {
+    dependsOn versionInfo
+    from versionInfoFile
 }
 
-task binWinExec(type: Exec) {
-    dependsOn binCommon
-
-    def launch4jXml = project.buildDir.toPath().resolve('launch4j').resolve('hyperbox.xml')
-
-    doFirst {
-        copy {
-            from project.file('scripts/launch4j/hyperbox.xml')
-            into project.buildDir.toPath().resolve('launch4j')
+distributions {
+    main {
+        contents {
+            from('src/main/img') {
+                into 'icons'
+            }
+            from ('src/main/icons') {
+                into 'icons'
+            }
         }
-
-        ant.replace(
-                file: launch4jXml,
-                token: '@LAUNCH4J_OUT_FILE@',
-                value: winExecPath
-        )
-
-        ant.replace(
-                file: launch4jXml,
-                token: '@LAUNCH4J_JAR@',
-                value: "${binDir}/${project('hbox-client-core').jar.archiveName}"
-        )
     }
-
-    commandLine '/opt/launch4j/launch4j', launch4jXml
-}
-
-task binWin(type: Copy) {
-    dependsOn binWinExec
-
-    from buildCommonPath.toString() // using a Path creates a Stack Overflow
-    from winExecPath.toFile()
-    into buildWinPath.toFile()
-}
-
-task bin {
-    dependsOn binLinux, binWin
 }
 
 /-------- End of Binaries build and assembly --------/
 
 /-------- Distribution build tasks -----------------/
 
-task distLinuxZip(type: Zip) {
-    dependsOn binLinux
+/----------- Linux ------------/
 
-    archiveName = "${getPackageName('linux')}.zip"
-    destinationDir = distPath.toFile()
+task assembleLinux(type: Copy) {
+    dependsOn distZip, installDist
 
-    from buildLinuxPath.toFile()
+    from "build/install/${project.name}"
+    from 'src/main/scripts/hyperbox'
+    from 'src/main/hyperbox-client.desktop'
+
+    exclude 'bin/hbox-client.bat'
+
+    into buildLinuxPath
 }
 
-task distLinuxInstall(type: Exec) {
-    dependsOn binLinux
+task assembleLinuxDist(type: Copy) {
+    dependsOn assembleLinux
 
-    doFirst {
-        mkdir distPath
-    }
+    from 'src/main/scripts/installer/client-installer.sh'
+    into buildLinuxPath
+}
+
+task distLinuxZip(type: Zip) {
+    dependsOn assembleLinuxDist
+
+    archiveFileName = "${getPackageName('linux')}.zip"
+    destinationDirectory = layout.buildDirectory.dir('distributions')
+
+    from buildLinuxPath
+}
+
+task distLinuxInstaller(type: Exec) {
+    dependsOn assembleLinuxDist
 
     commandLine(
-            'makeself',
-            buildLinuxPath,
-            "${distPath}/${getPackageName('linux')}.run",
-            'Hyperbox Client',
-            './client-installer.sh'
+        'makeself',
+        buildLinuxPath,
+        "build/distributions/${getPackageName('linux')}.run",
+        'Hyperbox Client',
+        './client-installer.sh'
     )
 }
 
-task distLinux {
-    dependsOn distLinuxZip, distLinuxInstall
+/------- Windows -------/
+
+task assembleWin(type: Copy) {
+    dependsOn distZip, installDist
+
+    from "build/install/${project.name}"
+    from 'src/main/scripts/hyperbox.bat'
+
+    exclude 'bin/hbox-client'
+
+    into buildWinPath
 }
 
 task distWinZip(type: Zip) {
-    dependsOn binWin
+    dependsOn assembleWin
 
-    archiveName = "${getPackageName('win')}.zip"
-    destinationDir = distPath.toFile()
+    archiveFileName = "${getPackageName('win')}.zip"
+    destinationDirectory = layout.buildDirectory.dir('distributions')
 
-    from buildWinPath.toFile()
+    from buildWinPath
 }
 
-task distWinInstall(type: Exec) {
-    dependsOn binWin
+task distWinInst(type: Exec) {
+    dependsOn assembleWin
+
+    def distTmp = layout.buildDirectory.dir('tmp/distWinInst').get()
+    def distNsiTmp = distTmp.file('client-installer.nsi').asFile
 
     doFirst {
-        mkdir distPath
-
         copy {
-            from project.file('scripts/installer/client-installer.nsi')
-            into "${project.buildDir}"
+            from project.file('src/main/scripts/installer/client-installer.nsi')
+            into distTmp
         }
 
         ant.replace(
-                file: "${project.buildDir}/client-installer.nsi",
+                file: distNsiTmp,
                 token: '@CLIENT_INSTALLER_OUTPUT@',
-                value: "${distPath}/${getPackageName('win')}.exe"
+                value: project.file("build/distributions/${getPackageName('win')}.exe")
         )
 
         ant.replace(
-                file: "${project.buildDir}/client-installer.nsi",
+                file: distNsiTmp,
                 token: '@CLIENT_OUT_BIN_DIR@',
                 value: "${buildWinPath}"
         )
 
         ant.replace(
-                file: "${project.buildDir}/client-installer.nsi",
+                file: distNsiTmp,
                 token: '@CLIENT_INSTALL_DIR@',
                 value: "C:\\Program Files\\Hyperbox\\Client"
         )
+
+        copy {
+            from distTmp.file('client-installer.nsi')
+            into buildWinPath
+        }
     }
 
-    commandLine 'makensis', '-DPROJECT_NAME=Hyperbox Client', '-V2', "${project.buildDir}/client-installer.nsi"
-}
+    doLast {
+        delete {
+            file buildWinPath.resolve('client-installer.nsi')
+        }
+    }
 
-task distWin {
-    dependsOn distWinZip, distWinInstall
-}
-
-task distAll {
-    dependsOn distLinux, distWin
+    commandLine 'makensis', '-DPROJECT_NAME=Hyperbox Client', '-V2', buildWinPath.resolve('client-installer.nsi').toFile()
 }
