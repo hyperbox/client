@@ -94,7 +94,7 @@ dependencies {
     implementation 'io.kamax.apps.hbox:hbox-api:0.2.0'
     implementation 'com.miglayout:miglayout-swing:4.2'
 
-    testCompile 'junit:junit:4.13.2'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 String getPackageName(String os) {
