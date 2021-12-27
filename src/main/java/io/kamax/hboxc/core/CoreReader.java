@@ -39,14 +39,18 @@ import io.kamax.hboxc.server._ServerReader;
 import io.kamax.hboxc.state.CoreState;
 import io.kamax.hboxc.updater._Updater;
 import io.kamax.tools.AxBooleans;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
+import org.slf4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CoreReader implements _CoreReader {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private _Core core;
     private Map<String, _ServerReader> cachedServerReaders = new HashMap<String, _ServerReader>();
@@ -75,7 +79,7 @@ public class CoreReader implements _CoreReader {
     public synchronized _ServerReader getServerReader(String id) {
         if (AxBooleans.get(Configuration.getSetting(CFGKEY_SERVER_CACHE_USE, CFGVAL_SERVER_CACHE_USE))) {
             if (!cachedServerReaders.containsKey(id)) {
-                Logger.debug("Creating new cache for server " + id);
+                log.debug("Creating new cache for server " + id);
                 cachedServerReaders.put(id, new CachedServerReader(core.getServer(id)));
             }
             return cachedServerReaders.get(id);

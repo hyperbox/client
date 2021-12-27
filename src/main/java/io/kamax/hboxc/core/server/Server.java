@@ -58,12 +58,16 @@ import io.kamax.hboxc.server._Server;
 import io.kamax.hboxc.server.task._Task;
 import io.kamax.hboxc.state.ConnectionState;
 import io.kamax.tools.AxBooleans;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
+import org.slf4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 
 public class Server implements _Server, _AnswerReceiver {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private Map<String, _AnswerReceiver> ansRecv;
     private _Backend backend;
@@ -81,11 +85,11 @@ public class Server implements _Server, _AnswerReceiver {
 
     private void setState(ConnectionState state) {
         if (this.state.equals(state)) {
-            Logger.debug("Ignoring setState(" + state + ") - same as current");
+            log.debug("Ignoring setState(" + state + ") - same as current");
         }
 
         this.state = state;
-        Logger.info("Changed Server #" + id + " object state to " + state);
+        log.info("Changed Server #" + id + " object state to " + state);
     }
 
     @Override
@@ -629,7 +633,7 @@ public class Server implements _Server, _AnswerReceiver {
 
     @Override
     public void putAnswer(Answer ans) {
-        Logger.error("Oprhan answer: " + ans);
+        log.error("Oprhan answer: " + ans);
     }
 
     private void refreshInfo() {
@@ -667,7 +671,7 @@ public class Server implements _Server, _AnswerReceiver {
             backend = BackendFactory.get(backendId);
             backend.start();
             backend.connect(address);
-            Logger.info("Connected to Hyperbox Server");
+            log.info("Connected to Hyperbox Server");
 
             Transaction helloTrans = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.Hello));
             if (!helloTrans.sendAndWait()) {
@@ -683,7 +687,7 @@ public class Server implements _Server, _AnswerReceiver {
                 if (helloOut == null) {
                     throw new HyperboxException("Incompatible protocol version. Make sure client and server are at the same version.");
                 }
-                Logger.info("Server Network Protocol Version: " + helloOut.getProtocolVersion());
+                log.info("Server Network Protocol Version: " + helloOut.getProtocolVersion());
 
                 if (AxBooleans.get(Configuration.getSetting(CFGKEY_SERVER_VALIDATE_VERSION, CFGVAL_SERVER_VALIDATE_VERSION))) {
                     if (!HyperboxAPI.getProtocolVersion().isCompatible(helloOut.getProtocolVersion())) {
@@ -695,11 +699,11 @@ public class Server implements _Server, _AnswerReceiver {
 
             Transaction loginTrans = new Transaction(backend, new Request(Command.HBOX, HyperboxTasks.Login, usrIn));
             if (!loginTrans.sendAndWait()) {
-                Logger.error("Login failure : " + loginTrans.getError());
+                log.error("Login failure : " + loginTrans.getError());
                 disconnect();
                 throw new HyperboxException("Login failure : " + loginTrans.getError());
             } else {
-                Logger.info("Authentication successfull");
+                log.info("Authentication successfull");
             }
 
             refreshInfo();
@@ -721,16 +725,16 @@ public class Server implements _Server, _AnswerReceiver {
                 if ((backend != null) && backend.isConnected()) {
                     Transaction logOffTrans = getTransaction(new Request(Command.HBOX, HyperboxTasks.Logout));
                     if (!logOffTrans.sendAndWait()) {
-                        Logger.warning("Couldn't logout from the server before disconnecting: " + logOffTrans.getError());
+                        log.warn("Couldn't logout from the server before disconnecting: " + logOffTrans.getError());
                     } else {
-                        Logger.verbose("Successful logout from server");
+                        log.debug("Successful logout from server");
                     }
                     backend.disconnect();
                     backend.stop();
                 }
             } catch (Throwable t) {
-                Logger.error("Error in backend when trying to disconnect: " + t.getMessage());
-                Logger.exception(t);
+                log.error("Error in backend when trying to disconnect: " + t.getMessage());
+                log.error("Tracing Exception", t);
             }
             backend = null;
             ansRecv = null;

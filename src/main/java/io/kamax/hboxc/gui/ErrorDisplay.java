@@ -20,19 +20,23 @@
 
 package io.kamax.hboxc.gui;
 
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 import net.engio.mbassy.bus.error.PublicationError;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.invoke.MethodHandles;
 
 public class ErrorDisplay implements IPublicationErrorHandler {
 
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     public static void display(String description, Throwable t) {
-        Logger.exception(t);
+        log.error("Tracing Exception", t);
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
         StringWriter writer = new StringWriter();

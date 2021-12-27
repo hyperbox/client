@@ -45,20 +45,24 @@ import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
 import io.kamax.tools.AxStrings;
 import io.kamax.tools.helper.swing.BorderUtils;
 import io.kamax.tools.helper.swing.JTextFieldUtils;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.*;
 
 public final class VmSummaryView {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private MachineOut mOut;
     private Map<String, StorageControllerOut> controllers;
@@ -433,7 +437,7 @@ public final class VmSummaryView {
                                 } catch (InterruptedException e) {
                                     medLabel.setText("[" + sdaOut.getDeviceType() + "] " + sdaOut.getMediumUuid() + " (Interrupted while fetching info)");
                                 } catch (Throwable e) {
-                                    Logger.error("Error when fetching medium " + sdaOut.getMediumUuid(), e);
+                                    log.error("Error when fetching medium " + sdaOut.getMediumUuid(), e);
                                     medLabel.setText("[" + sdaOut.getDeviceType() + "] " + sdaOut.getMediumUuid() + " (Error while fetching info)");
                                 } finally {
                                     medLabel.setIcon(null);
@@ -574,7 +578,7 @@ public final class VmSummaryView {
                     try {
                         get();
                     } catch (Throwable t) {
-                        Logger.error("Unable to start Console viewer", t);
+                        log.error("Unable to start Console viewer", t);
                         Gui.showError("Unable to start Console viewer: " + t.getMessage());
                     } finally {
                         consoleConnectButton.setEnabled(true);

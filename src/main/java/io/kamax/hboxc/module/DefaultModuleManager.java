@@ -27,15 +27,19 @@ import io.kamax.hbox.exception.ModuleException;
 import io.kamax.hbox.exception.ModuleNotFoundException;
 import io.kamax.hboxc.event.EventManager;
 import io.kamax.tools.AxBooleans;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class DefaultModuleManager implements _ModuleManager {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private boolean isStarted = false;
     private String[] baseDirs = new String[0];
@@ -51,7 +55,7 @@ public class DefaultModuleManager implements _ModuleManager {
         refreshModules();
         isStarted = true;
         EventManager.register(this);
-        Logger.verbose("Module Manager has started");
+        log.debug("Module Manager has started");
     }
 
     @Override
@@ -60,40 +64,40 @@ public class DefaultModuleManager implements _ModuleManager {
         isStarted = false;
         baseDirs = new String[0];
         modules.clear();
-        Logger.verbose("Module manager has stopped");
+        log.debug("Module manager has stopped");
     }
 
     @Override
     public void refreshModules() {
-        Logger.info("Refreshing modules...");
+        log.info("Refreshing modules...");
 
-        Logger.debug("Number of base module directories: " + baseDirs.length);
+        log.debug("Number of base module directories: " + baseDirs.length);
         for (String baseDir : baseDirs) {
             File baseDirFile = new File(baseDir).getAbsoluteFile();
-            Logger.info("Searching in " + baseDirFile.getAbsolutePath() + " for modules...");
+            log.info("Searching in " + baseDirFile.getAbsolutePath() + " for modules...");
             if (!baseDirFile.isDirectory() || !baseDirFile.canRead()) {
-                Logger.warning("Unable to refresh modules for Base Directory " + baseDirFile + ": either not a directory or cannot be read");
+                log.warn("Unable to refresh modules for Base Directory " + baseDirFile + ": either not a directory or cannot be read");
                 continue;
             }
 
-            Logger.debug(baseDirFile.getAbsolutePath() + " is a readable directory, processing...");
+            log.debug(baseDirFile.getAbsolutePath() + " is a readable directory, processing...");
             for (File file : baseDirFile.listFiles()) {
                 if (isRegistered(file.getAbsolutePath())) {
-                    Logger.verbose(file.getAbsolutePath() + " is already registered for " + modules.get(file.getAbsolutePath()).getId());
+                    log.debug(file.getAbsolutePath() + " is already registered for " + modules.get(file.getAbsolutePath()).getId());
                     continue;
                 }
                 if (!file.isDirectory()) {
                     continue;
                 }
                 if (!file.canRead()) {
-                    Logger.verbose(file.getAbsolutePath() + " is not readable, skipping.");
+                    log.debug(file.getAbsolutePath() + " is not readable, skipping.");
                     continue;
                 }
-                Logger.verbose("Module detected: " + file.getAbsolutePath());
+                log.debug("Module detected: " + file.getAbsolutePath());
                 registerModule(file.getAbsolutePath());
             }
         }
-        Logger.info("Finished refreshing modules.");
+        log.info("Finished refreshing modules.");
     }
 
     @Override
@@ -130,9 +134,9 @@ public class DefaultModuleManager implements _ModuleManager {
         if (AxBooleans.get(Configuration.getSetting(CFGKEY_MODULE_AUTOLOAD, CFGVAL_MODULE_AUTOLOAD))) {
             try {
                 mod.load();
-                Logger.info("Module ID " + mod.getId() + " (" + mod.getId() + ") was autoloaded");
+                log.info("Module ID " + mod.getId() + " (" + mod.getId() + ") was autoloaded");
             } catch (ModuleException e) {
-                Logger.warning("Module ID " + mod.getId() + " (" + mod.getId() + ") failed to autoload: " + e.getMessage());
+                log.warn("Module ID " + mod.getId() + " (" + mod.getId() + ") failed to autoload: " + e.getMessage());
             }
         }
 

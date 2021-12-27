@@ -39,8 +39,9 @@ import io.kamax.hboxc.gui.worker.receiver._MachineReceiver;
 import io.kamax.hboxc.gui.workers.MachineGetWorker;
 import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -49,10 +50,13 @@ import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private final String GENERAL = "General";
     private final String SYSTEM = "System";
@@ -310,7 +314,7 @@ public class VmEditDialog implements _Saveable, _Cancelable, _WorkerTracker {
     @Override
     public AxSwingWorker<?, ?, ?> register(AxSwingWorker<?, ?, ?> worker) {
         if (worker.isDone()) {
-            Logger.debug("Skipping registration of already finished worker: " + worker);
+            log.debug("Skipping registration of already finished worker: " + worker);
         }
 
         worker.addPropertyChangeListener(new PropertyChangeListener() {

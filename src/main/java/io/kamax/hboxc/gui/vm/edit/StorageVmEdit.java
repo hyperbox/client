@@ -42,8 +42,9 @@ import io.kamax.hboxc.gui.storage.MediumBrowser;
 import io.kamax.hboxc.gui.storage.StorageControllerViewer;
 import io.kamax.hboxc.gui.storage.StorageDeviceAttachmentViewer;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -55,11 +56,14 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StorageVmEdit {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private Map<StorageControllerIn, DefaultMutableTreeNode> scInToNode;
     private Map<StorageDeviceAttachmentIn, DefaultMutableTreeNode> matInToNode;
@@ -318,7 +322,7 @@ public class StorageVmEdit {
                 }
                 if (node.getUserObject() instanceof StorageDeviceAttachmentIn) {
                     StorageDeviceAttachmentIn matIn = (StorageDeviceAttachmentIn) node.getUserObject();
-                    Logger.debug(matIn);
+                    log.debug("matIn: {}", matIn);
                     StorageControllerIn scIn = (StorageControllerIn) parentNode.getUserObject();
                     addScButton.setEnabled(true);
                     removeScButton.setEnabled(false);
@@ -397,32 +401,32 @@ public class StorageVmEdit {
                 menu.add(addFloppyMenuItem);
                 menu.show(addScButton, 0, addScButton.getHeight());
             } else if (e.getSource().equals(addIdeMenuItem)) {
-                Logger.debug("Adding IDE controller");
+                log.debug("Adding IDE controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.IDE.getId(), StorageControllerType.IDE.getId());
                 scIn.setAction(Action.Create);
                 add(scIn);
             } else if (e.getSource().equals(addSataMenuItem)) {
-                Logger.debug("Adding SATA controller");
+                log.debug("Adding SATA controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SATA.getId(), StorageControllerType.SATA.getId());
                 scIn.setAction(Action.Create);
                 add(scIn);
             } else if (e.getSource().equals(addScsiMenuItem)) {
-                Logger.debug("Adding SCSI controller");
+                log.debug("Adding SCSI controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SCSI.getId(), StorageControllerType.SCSI.getId());
                 scIn.setAction(Action.Create);
                 add(scIn);
             } else if (e.getSource().equals(addSasMenuItem)) {
-                Logger.debug("Adding SAS controller");
+                log.debug("Adding SAS controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.SAS.getId(), StorageControllerType.SAS.getId());
                 scIn.setAction(Action.Create);
                 add(scIn);
             } else if (e.getSource().equals(addFloppyMenuItem)) {
-                Logger.debug("Adding Floppy controller");
+                log.debug("Adding Floppy controller");
                 StorageControllerIn scIn = new StorageControllerIn(mIn.getUuid(), StorageControllerType.Floppy.getId(), StorageControllerType.Floppy.getId());
                 scIn.setAction(Action.Create);
                 add(scIn);
             } else {
-                Logger.error("Unknown source @ AddScListener");
+                log.error("Unknown source @ AddScListener");
             }
         }
 
@@ -451,7 +455,7 @@ public class StorageVmEdit {
                         removeDeviceMenuItem.doClick();
                     }
                 } else {
-                    Logger.error("Unknown user object @ RemoveNodeListener");
+                    log.error("Unknown user object @ RemoveNodeListener");
                 }
             }
         }
@@ -556,7 +560,7 @@ public class StorageVmEdit {
                         treeModel.reload(node);
                     }
                 } else {
-                    Logger.error("Unknown user object @ AddAttachmentListener");
+                    log.error("Unknown user object @ AddAttachmentListener");
                 }
                 treeModel.reload(node);
             }
@@ -605,7 +609,7 @@ public class StorageVmEdit {
                         add(sdaIn);
                     }
                 } else {
-                    Logger.error("Unknown user object @ AddDeviceListener");
+                    log.error("Unknown user object @ AddDeviceListener");
                 }
                 treeModel.reload(node);
             }

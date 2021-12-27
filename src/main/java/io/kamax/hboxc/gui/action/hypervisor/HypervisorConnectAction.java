@@ -30,15 +30,18 @@ import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.gui.hypervisor.HypervisorConnectView;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 
 public class HypervisorConnectAction extends AbstractAction {
 
-    private static final long serialVersionUID = -5412030998497315452L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _SingleServerSelector selector;
 
     public HypervisorConnectAction(_SingleServerSelector selector) {
@@ -57,14 +60,14 @@ public class HypervisorConnectAction extends AbstractAction {
         if (srvOut != null) {
             HypervisorIn hypIn = HypervisorConnectView.getInput(srvOut);
             if (hypIn != null) {
-                Logger.debug("Got user input to connect hypervisor");
+                log.debug("Got user input to connect hypervisor");
                 Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorConnect);
                 req.set(new ServerIn(srvOut.getId()));
                 req.set(hypIn);
                 MessageWorker.execute(req);
             }
         } else {
-            Logger.debug("No server was selected");
+            log.debug("No server was selected");
         }
     }
 

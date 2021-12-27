@@ -26,12 +26,16 @@ import io.kamax.hbox.comm.io.BooleanSettingIO;
 import io.kamax.hbox.comm.out.storage.StorageControllerSubTypeOut;
 import io.kamax.hbox.constant.StorageControllerAttribute;
 import io.kamax.hboxc.gui.Gui;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
+import java.lang.invoke.MethodHandles;
 
 public final class StorageControllerViewer {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private StorageControllerIn scIn;
 
@@ -93,15 +97,15 @@ public final class StorageControllerViewer {
 
         if (scIn.hasSetting(StorageControllerAttribute.SubType)) {
             scSubTypeId = scIn.getSetting(StorageControllerAttribute.SubType).getString();
-            Logger.debug("Selecting " + scSubTypeId + " subType");
+            log.debug("Selecting " + scSubTypeId + " subType");
         } else {
-            Logger.debug("No SubType in the object");
+            log.debug("No SubType in the object");
         }
 
         if (scIn.hasSetting(StorageControllerAttribute.IoCache)) {
             ioCache = scIn.getSetting(StorageControllerAttribute.IoCache).getBoolean();
         } else {
-            Logger.debug("No IoCache in the object");
+            log.debug("No IoCache in the object");
         }
 
         subTypeBox.removeAllItems();

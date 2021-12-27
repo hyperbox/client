@@ -30,16 +30,20 @@ import io.kamax.hboxc.gui.workers.NetworkAttachNameListWorker;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
 import io.kamax.tools.AxStrings;
 import io.kamax.tools.helper.swing.JCheckBoxUtils;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class NetworkInterfaceViewer {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private _WorkerTracker tracker;
 
@@ -160,11 +164,11 @@ public class NetworkInterfaceViewer {
         public void actionPerformed(ActionEvent e) {
             String attachTypeId = attachModeValue.getSelectedItem().toString();
             if (AxStrings.isEmpty(attachTypeId)) {
-                Logger.info("Selected attach mode value is empty, skipping listing of attach type");
+                log.info("Selected attach mode value is empty, skipping listing of attach type");
                 return;
             }
 
-            Logger.info(attachTypeId + " was selected as attachment type, fetching list of attachment names");
+            log.info(attachTypeId + " was selected as attachment type, fetching list of attachment names");
             NetworkAttachNameListWorker.execute(tracker, new NetworkAttachNameReceiver(), srvId, attachTypeId);
         }
     }
@@ -223,7 +227,7 @@ public class NetworkInterfaceViewer {
         @Override
         public void add(List<NetworkAttachNameOut> nanOut) {
             for (NetworkAttachNameOut attachName : nanOut) {
-                Logger.debug("Adding attachment name: " + attachName.getId());
+                log.debug("Adding attachment name: " + attachName.getId());
                 attachNameValue.addItem(attachName.getId());
             }
         }

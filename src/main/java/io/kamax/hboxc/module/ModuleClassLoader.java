@@ -21,12 +21,14 @@
 package io.kamax.hboxc.module;
 
 import io.kamax.hbox.module._ModuleClassLoader;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -43,6 +45,8 @@ import java.util.zip.ZipException;
 // TODO Use the urlList as cache to avoid scanning the file system everytime.
 // TODO do the same for resource (if possible?)
 public class ModuleClassLoader extends ClassLoader implements _ModuleClassLoader {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private File basePathFile;
     private Set<URL> urlList = new HashSet<URL>();
@@ -101,7 +105,7 @@ public class ModuleClassLoader extends ClassLoader implements _ModuleClassLoader
             byte classByte[] = byteStream.toByteArray();
             return defineClass(className, classByte, 0, classByte.length, getDomain(path.toURI().toURL()));
         } catch (ZipException e) {
-            Logger.verbose(path.getAbsoluteFile() + " was skipped due to a JAR error: " + e.getMessage());
+            log.debug(path.getAbsoluteFile() + " was skipped due to a JAR error: " + e.getMessage());
             throw new ClassNotFoundException(className);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -110,7 +114,7 @@ public class ModuleClassLoader extends ClassLoader implements _ModuleClassLoader
                 try {
                     jar.close();
                 } catch (IOException e) {
-                    Logger.warning("Error when trying to close JAR " + jar.getName() + ": " + e.getMessage());
+                    log.warn("Error when trying to close JAR " + jar.getName() + ": " + e.getMessage());
                 }
             }
         }
@@ -167,7 +171,7 @@ public class ModuleClassLoader extends ClassLoader implements _ModuleClassLoader
                 return getURL(path, entry);
             }
         } catch (ZipException e) {
-            Logger.verbose(path.getAbsoluteFile() + " was skipped due to a JAR error: " + e.getMessage());
+            log.debug(path.getAbsoluteFile() + " was skipped due to a JAR error: " + e.getMessage());
             return null;
         } catch (IOException e1) {
             throw new RuntimeException(e1);
@@ -208,7 +212,7 @@ public class ModuleClassLoader extends ClassLoader implements _ModuleClassLoader
             throw new RuntimeException("Not ready, use load() first");
         }
 
-        Logger.debug("Trying to find ressource for: " + ressource);
+        log.debug("Trying to find ressource for: " + ressource);
         URL url = getParent().getResource(ressource);
         return url == null ? findRessource(basePathFile, ressource) : url;
     }

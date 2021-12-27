@@ -30,17 +30,21 @@ import io.kamax.hboxc.gui.utils.RefreshUtil;
 import io.kamax.hboxc.gui.worker.receiver._NetModeListReceiver;
 import io.kamax.hboxc.gui.workers.NetModeListWorker;
 import io.kamax.tools.AxStrings;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private volatile boolean isRefreshing = false;
 
@@ -100,10 +104,10 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
     @Handler
     private void putNetAdaptorEvent(NetAdaptorEventOut ev) {
         if (compModes.containsKey(ev.getNetMode())) {
-            Logger.debug("Refreshing panel for mode " + ev.getNetMode());
+            log.debug("Refreshing panel for mode " + ev.getNetMode());
             compModes.get(ev.getNetMode()).refresh();
         } else {
-            Logger.debug("No panel for mode " + ev.getNetMode() + ", skipping refresh");
+            log.debug("No panel for mode " + ev.getNetMode() + ", skipping refresh");
         }
     }
 
@@ -146,7 +150,7 @@ public class HypervisorNetViewer implements _Refreshable, _NetModeListReceiver {
                 viewer.getComponent().setBorder(BorderFactory.createTitledBorder(modeOut.getLabel()));
                 dataPanel.add(viewer.getComponent(), "growx, pushx, wrap");
             } else {
-                Logger.debug("Skipped Net mode " + modeOut.getLabel() + ": does not support linking to adaptors");
+                log.debug("Skipped Net mode " + modeOut.getLabel() + ": does not support linking to adaptors");
             }
         }
     }

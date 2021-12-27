@@ -31,15 +31,19 @@ import io.kamax.hboxc.gui._Saveable;
 import io.kamax.hboxc.gui.action.CancelAction;
 import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.store.utils.StoreItemChooser;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.invoke.MethodHandles;
 
 public class HarddiskCreateDialog implements _Saveable, _Cancelable {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private static final String MB = "MB";
     private static final String GB = "GB";
@@ -141,7 +145,7 @@ public class HarddiskCreateDialog implements _Saveable, _Cancelable {
         dialog.pack();
         dialog.setLocationRelativeTo(MainView.getMainFrame());
         dialog.setVisible(true);
-        Logger.debug("User input : " + medIn);
+        log.debug("User input : " + medIn);
         return medIn;
     }
 

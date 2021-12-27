@@ -29,13 +29,17 @@ import io.kamax.hbox.constant.AudioDriver;
 import io.kamax.hbox.constant.MachineAttribute;
 import io.kamax.hboxc.gui.workers._WorkerTracker;
 import io.kamax.tools.helper.swing.JCheckBoxUtils;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.invoke.MethodHandles;
 
 public final class AudioVmEdit {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private MachineIn mIn;
     private MachineOut mOut;
@@ -80,7 +84,7 @@ public final class AudioVmEdit {
         if (mOut.hasSetting(MachineAttribute.AudioEnable)) {
             audioEnableBox.setSelected(mOut.getSetting(MachineAttribute.AudioEnable).getBoolean());
         } else {
-            Logger.debug("Setting " + MachineAttribute.AudioEnable + " was not found for " + mOut.toString());
+            log.debug("Setting " + MachineAttribute.AudioEnable + " was not found for " + mOut.toString());
         }
 
         driverBox.removeAllItems();
@@ -91,7 +95,7 @@ public final class AudioVmEdit {
         if (mOut.hasSetting(MachineAttribute.AudioDriver)) {
             driverBox.setSelectedItem(mOut.getSetting(MachineAttribute.AudioDriver).getString());
         } else {
-            Logger.debug("Setting " + MachineAttribute.AudioDriver + " was not found for " + mOut.toString());
+            log.debug("Setting " + MachineAttribute.AudioDriver + " was not found for " + mOut.toString());
         }
 
         controllerBox.removeAllItems();
@@ -102,7 +106,7 @@ public final class AudioVmEdit {
         if (mOut.hasSetting(MachineAttribute.AudioController)) {
             controllerBox.setSelectedItem(mOut.getSetting(MachineAttribute.AudioController).getString());
         } else {
-            Logger.debug("Setting " + MachineAttribute.AudioController + " was not found for " + mOut.toString());
+            log.debug("Setting " + MachineAttribute.AudioController + " was not found for " + mOut.toString());
         }
     }
 

@@ -30,16 +30,20 @@ import io.kamax.hboxc.gui.hypervisor._NetAdaptorConfigureView;
 import io.kamax.hboxc.gui.net.NATNetworkNATRulesDialog;
 import io.kamax.tools.AxStrings;
 import io.kamax.tools.helper.swing.JCheckBoxUtils;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class NATNetworkNicEditor implements _NetAdaptorConfigureView {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private String srvId;
     private String modeId;
@@ -88,7 +92,7 @@ public class NATNetworkNicEditor implements _NetAdaptorConfigureView {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     rules = NATNetworkNATRulesDialog.getInput(srvId, modeId, adaptId);
-                    Logger.debug("Were rules given? " + (rules != null));
+                    log.debug("Were rules given? " + (rules != null));
                 }
 
             });

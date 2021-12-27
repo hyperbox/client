@@ -54,10 +54,11 @@ import io.kamax.hboxc.gui.workers.MessageWorker;
 import io.kamax.hboxc.gui.workers.SnapshotGetWorker;
 import io.kamax.tools.helper.swing.MouseWheelController;
 import io.kamax.tools.helper.swing.SortedTreeModel;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -70,10 +71,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.*;
 
 public final class ServerMachineView implements _MachineSelector, _ServerSelector, _ConnectorSelector, _Refreshable {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private Map<String, DefaultMutableTreeNode> conNodes = new HashMap<String, DefaultMutableTreeNode>();
     private Map<String, Map<String, DefaultMutableTreeNode>> entities;
@@ -161,10 +165,10 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
     public ConnectorOutput getConnector() {
         try {
             ConnectorOutput conOut = ((ConnectorOutput) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject());
-            Logger.debug("Connector ID " + conOut.getId() + " under label " + conOut.getLabel() + " is selected");
+            log.debug("Connector ID " + conOut.getId() + " under label " + conOut.getLabel() + " is selected");
             return conOut;
         } catch (Throwable e) {
-            Logger.debug("No connector is selected");
+            log.debug("No connector is selected");
             return null;
         }
     }
@@ -194,7 +198,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                 return null;
             }
         } catch (Throwable e) {
-            Logger.debug("No connector is selected");
+            log.debug("No connector is selected");
             return null;
         }
     }
@@ -227,12 +231,12 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
         try {
             for (TreePath path : tree.getSelectionPaths()) {
                 ConnectorOutput conOut = ((ConnectorOutput) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject());
-                Logger.debug("Connector ID " + conOut.getId() + " under label " + conOut.getLabel() + " is selected");
+                log.debug("Connector ID " + conOut.getId() + " under label " + conOut.getLabel() + " is selected");
                 conOutList.add(conOut);
             }
             return conOutList;
         } catch (Throwable e) {
-            Logger.debug("Not everything selected is a connector, returning empty list");
+            log.debug("Not everything selected is a connector, returning empty list");
             conOutList.clear();
             return conOutList;
         }
@@ -364,10 +368,10 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
         vmNodes.get(srvOut.getId()).clear();
         treeModel.reload(srvNode);
         if (srvOut.isHypervisorConnected()) {
-            Logger.debug(srvOut.getName() + " is now connected to an hypervisor, refreshing list of VMs");
+            log.debug(srvOut.getName() + " is now connected to an hypervisor, refreshing list of VMs");
             MachineListWorker.execute(new MachineListReceiver(), srvOut.getId());
         } else {
-            Logger.debug(srvOut.getName() + " is not connected to an hypervisor, skipping list of VMs");
+            log.debug(srvOut.getName() + " is not connected to an hypervisor, skipping list of VMs");
         }
     }
 
@@ -383,7 +387,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
             vmCurrentSnaps.remove(id);
             treeModel.removeNodeFromParent(vmNodes.get(serverId).remove(id));
         } else {
-            Logger.warning("Trying to remove machine not in the view: " + serverId + " - " + id);
+            log.warn("Trying to remove machine not in the view: " + serverId + " - " + id);
         }
     }
 
@@ -452,14 +456,14 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                             }
                         }
                     } catch (Throwable t) {
-                        Logger.exception(t);
+                        log.error("Tracing Exception", t);
                     }
                 } else if (node.getUserObject() instanceof ConnectorOutput) {
                     ConnectorOutput conOut = (ConnectorOutput) node.getUserObject();
                     setIcon(IconBuilder.getConnector(conOut));
                     setText(StringUtils.defaultIfBlank(conOut.getLabel(), conOut.getAddress()));
                 } else {
-                    Logger.warning("Unknown object: " + node.getUserObject().getClass().getName());
+                    log.warn("Unknown object: " + node.getUserObject().getClass().getName());
                 }
             }
 
@@ -478,7 +482,7 @@ public final class ServerMachineView implements _MachineSelector, _ServerSelecto
                     if ((node != null) && (node.getUserObject() instanceof ConnectorOutput)) {
                         final ConnectorOutput conOut = (ConnectorOutput) node.getUserObject();
                         if (!conOut.isConnected()) {
-                            Logger.debug("User request: Connect to server using " + conOut);
+                            log.debug("User request: Connect to server using " + conOut);
                             MessageWorker.execute(new Request(ClientTasks.ConnectorConnect, new ConnectorInput(conOut.getId())));
                         }
                     }

@@ -32,10 +32,12 @@ import io.kamax.hboxc.exception.UpdaterScheduleException;
 import io.kamax.tools.AxBooleans;
 import io.kamax.tools.AxStrings;
 import io.kamax.tools.Version;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -52,6 +54,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class Updater implements _Updater {
 
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private boolean isRunning = false;
     private boolean isLastScheduleSuccessful = false;
@@ -62,7 +66,7 @@ public class Updater implements _Updater {
     @Override
     public void start() {
         if (Version.UNKNOWN.equals(Hyperbox.getVersion())) {
-            Logger.info("Updater is disabled, version is not known");
+            log.info("Updater is disabled, version is not known");
             return;
         }
 
@@ -171,7 +175,7 @@ public class Updater implements _Updater {
         @Override
         public void run() {
             if (isRunning) {
-                Logger.debug("Updater working is already running, skipping");
+                log.debug("Updater working is already running, skipping");
             }
 
             isRunning = true;
@@ -181,7 +185,7 @@ public class Updater implements _Updater {
             String repo_extension = Configuration.getSetting(CFGKEY_UPDATER_REPOSITORY_EXTENSION, CFGVAL_UPDATER_REPOSITORY_EXTENSION);
             String repoUrlRaw = rep_base + repo_channel + repo_extension + "?v=" + Hyperbox.getVersion().getFormated();
             try {
-                Logger.info("Checking for update at " + repoUrlRaw);
+                log.info("Checking for update at " + repoUrlRaw);
                 URL repoUrl = new URL(repoUrlRaw);
                 URLConnection repoUrlConn = repoUrl.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(repoUrlConn.getInputStream()));
@@ -192,7 +196,7 @@ public class Updater implements _Updater {
                 }
                 String releaseRaw[] = line.split(" ");
                 if (releaseRaw.length < 4) {
-                    Logger.debug(line);
+                    log.debug(line);
                     throw new UpdaterRepositoryInvalidFormatException("Invalid update data - expected at least 4 values, got " + releaseRaw.length);
                 }
 
@@ -202,7 +206,7 @@ public class Updater implements _Updater {
 
                 Version version = new Version(releaseRaw[0]);
                 if (!version.isValid()) {
-                    Logger.debug(line);
+                    log.debug(line);
                     throw new UpdaterRepositoryInvalidFormatException("Invalid version number: " + releaseRaw[1]);
                 }
 
@@ -211,34 +215,34 @@ public class Updater implements _Updater {
                 try {
                     releaseDate = new Date(Long.parseLong(releaseRaw[2]) * 1000l);
                 } catch (NumberFormatException e) {
-                    Logger.warning("Invalid timestamp: " + releaseRaw[2]);
+                    log.warn("Invalid timestamp: " + releaseRaw[2]);
                 }
 
                 try {
                     downloadUrl = new URL(releaseRaw[3]);
                 } catch (MalformedURLException e) {
-                    Logger.debug(line);
+                    log.debug(line);
                     throw new UpdaterRepositoryInvalidFormatException("Invalid download URL: " + releaseRaw[3]);
                 }
 
                 try {
                     changeLogUrl = new URL(releaseRaw[4]);
                 } catch (MalformedURLException e) {
-                    Logger.warning("Invalid changelog URL: " + releaseRaw[4]);
+                    log.warn("Invalid changelog URL: " + releaseRaw[4]);
                 }
 
                 update = new Release(getChannel(), version, releaseDate, downloadUrl, changeLogUrl);
                 isLastScheduleSuccessful = true;
-                Logger.verbose("Advertised version: " + update.getVersion());
+                log.debug("Advertised version: " + update.getVersion());
                 if (hasUpdate()) {
-                    Logger.info("New update is available: " + getUpdate().getVersion());
+                    log.info("New update is available: " + getUpdate().getVersion());
                     EventManager.post(new UpdaterUpdateAvailableEvent());
                 } else {
-                    Logger.info("No update was found");
+                    log.info("No update was found");
                 }
             } catch (Throwable t) {
-                Logger.exception(t);
-                Logger.warning("Updater check to [ " + repoUrlRaw + " ] failed with " + t.getClass().getSimpleName() + ": " + t.getMessage());
+                log.error("Tracing Exception", t);
+                log.warn("Updater check to [ " + repoUrlRaw + " ] failed with " + t.getClass().getSimpleName() + ": " + t.getMessage());
                 errors.add(t.getMessage());
                 isLastScheduleSuccessful = false;
                 EventManager.post(new UpdaterCheckStopped());

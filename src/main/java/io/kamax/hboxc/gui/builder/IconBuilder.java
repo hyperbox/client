@@ -30,15 +30,19 @@ import io.kamax.hbox.states.MachineStates;
 import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.comm.output.ConnectorOutput;
 import io.kamax.hboxc.controller.ClientTasks;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class IconBuilder {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     public static final String CFGKEY_ICON_BASE_DIR = "client.gui.icon.dir";
     public static final String CFGVAL_ICON_BASE_DIR = "icons/";
@@ -213,7 +217,7 @@ public class IconBuilder {
         if (vbTasks.containsKey(task)) {
             return vbTasks.get(task);
         } else {
-            Logger.debug("No icon found for VirtualboxTask: " + task);
+            log.debug("No icon found for VirtualboxTask: " + task);
             return unknownElement;
         }
     }
@@ -222,7 +226,7 @@ public class IconBuilder {
         if (hbTasks.containsKey(task)) {
             return hbTasks.get(task);
         } else {
-            Logger.debug("No icon found for HyperboxTask: " + task);
+            log.debug("No icon found for HyperboxTask: " + task);
             return unknownElement;
         }
     }
@@ -231,7 +235,7 @@ public class IconBuilder {
         if ((task != null) && clientTasks.containsKey(task)) {
             return clientTasks.get(task);
         } else {
-            Logger.debug("No icon found for ClientTask: " + task);
+            log.debug("No icon found for ClientTask: " + task);
             return unknownElement;
         }
     }
@@ -254,7 +258,7 @@ public class IconBuilder {
         if ((state != null) && machineStates.containsKey(state)) {
             return machineStates.get(state);
         } else {
-            Logger.debug("No icon found for Machine State: " + state);
+            log.debug("No icon found for Machine State: " + state);
             return unknownElement;
         }
     }
@@ -263,7 +267,7 @@ public class IconBuilder {
         if ((type != null) && scTypes.containsKey(type)) {
             return scTypes.get(type);
         } else {
-            Logger.debug("No icon found for Storage Controller Type: " + type);
+            log.debug("No icon found for Storage Controller Type: " + type);
             return unknownScType;
         }
     }
@@ -276,7 +280,7 @@ public class IconBuilder {
         if ((type != null) && entTypes.containsKey(type)) {
             return entTypes.get(type);
         } else {
-            Logger.debug("No icon found for Entity Type: " + type);
+            log.debug("No icon found for Entity Type: " + type);
             return unknownEntType;
         }
     }

@@ -21,9 +21,14 @@
 package io.kamax.hboxc.gui;
 
 import io.kamax.hboxc.event._EventManager;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
+
+import java.lang.invoke.MethodHandles;
 
 public final class ViewEventManager {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private static _EventManager evMgr;
 
@@ -40,12 +45,12 @@ public final class ViewEventManager {
     }
 
     public static void register(Object o) {
-        Logger.debug(o.getClass().getSimpleName() + " has registered");
+        log.debug(o.getClass().getSimpleName() + " has registered");
         evMgr.register(o);
     }
 
     public static void unregister(Object o) {
-        Logger.debug(o.getClass().getSimpleName() + " has unregistered");
+        log.debug(o.getClass().getSimpleName() + " has unregistered");
         evMgr.unregister(o);
     }
 

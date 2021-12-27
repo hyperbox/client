@@ -37,9 +37,10 @@ import io.kamax.hboxc.gui.action.snapshot.SnapshotModifyAction;
 import io.kamax.hboxc.gui.action.snapshot.SnapshotRestoreAction;
 import io.kamax.hboxc.gui.action.snapshot.SnapshotTakeAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -48,12 +49,15 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SnapshotManagementView implements _SnapshotSelector, _Refreshable {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private JPanel mainPanel;
 
@@ -211,7 +215,7 @@ public class SnapshotManagementView implements _SnapshotSelector, _Refreshable {
 
     @Override
     public void refresh() {
-        Logger.debug("Refreshing Snapshot Data for " + vmUuid);
+        log.debug("Refreshing Snapshot Data for " + vmUuid);
 
         refreshProgress.setIndeterminate(true);
         refreshProgress.setVisible(true);
@@ -231,7 +235,7 @@ public class SnapshotManagementView implements _SnapshotSelector, _Refreshable {
                     get();
                     refreshDisplay();
                 } catch (Throwable t) {
-                    Logger.exception(t);
+                    log.error("Tracing Exception", t);
                 } finally {
                     refreshProgress.setIndeterminate(false);
                     refreshProgress.setVisible(false);

@@ -27,14 +27,17 @@ import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hboxc.gui.server.ServerEditorDialog;
 import io.kamax.hboxc.gui.server._ServerSelector;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 public class ServerConfigureAction extends AbstractAction {
 
-    private static final long serialVersionUID = 4982724588848783344L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _ServerSelector selector;
 
     public ServerConfigureAction(_ServerSelector selector) {
@@ -44,12 +47,12 @@ public class ServerConfigureAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Logger.info("Action: Server Configure for Server #" + selector.getServer().getId());
+        log.info("Action: Server Configure for Server #" + selector.getServer().getId());
         ServerIn srvIn = ServerEditorDialog.getInput(selector.getServer().getId());
         if (srvIn == null) {
-            Logger.info("No server info was returned");
+            log.info("No server info was returned");
         } else {
-            Logger.info("Server info was returned, sending data");
+            log.info("Server info was returned, sending data");
             MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.ServerConfigure, srvIn));
         }
     }

@@ -32,7 +32,6 @@ import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.host.HostViewer;
 import io.kamax.hboxc.gui.hypervisor.HypervisorNetViewer;
-import io.kamax.hboxc.gui.module.ModuleListView;
 import io.kamax.hboxc.gui.security.user.UserListView;
 import io.kamax.hboxc.gui.store.StoreListView;
 import io.kamax.hboxc.gui.tasks.ServerTaskListView;
@@ -57,7 +56,6 @@ public class ConnectorDetailedView implements _Refreshable {
     private ServerTaskListView taskViewer;
     private StoreListView storeView;
     private UserListView userView;
-    private ModuleListView modView;
 
     public ConnectorDetailedView(String conId) {
         Validate.notEmpty(conId);
@@ -70,7 +68,6 @@ public class ConnectorDetailedView implements _Refreshable {
         taskViewer = new ServerTaskListView();
         storeView = new StoreListView();
         userView = new UserListView();
-        modView = new ModuleListView();
 
         tabs = new JTabbedPane();
         tabs.addTab("Summary", IconBuilder.getEntityType(EntityType.Server), summaryView.getComponent());
@@ -79,7 +76,6 @@ public class ConnectorDetailedView implements _Refreshable {
         tabs.addTab("Tasks", IconBuilder.getEntityType(EntityType.Task), taskViewer.getComponent());
         tabs.addTab("Stores", IconBuilder.getEntityType(EntityType.Store), storeView.getComponent());
         tabs.addTab("Users", IconBuilder.getEntityType(EntityType.User), userView.getComponent());
-        tabs.addTab("Modules", IconBuilder.getEntityType(EntityType.Module), modView.getComponent());
 
         loadingLabel = new JLabel("Loading...");
         loadingLabel.setVisible(false);
@@ -99,7 +95,6 @@ public class ConnectorDetailedView implements _Refreshable {
         tabs.setEnabledAt(tabs.indexOfTab("Tasks"), conOut.isConnected());
         tabs.setEnabledAt(tabs.indexOfTab("Stores"), conOut.isConnected());
         tabs.setEnabledAt(tabs.indexOfTab("Users"), conOut.isConnected());
-        tabs.setEnabledAt(tabs.indexOfTab("Modules"), conOut.isConnected());
 
         summaryView.update(conOut);
         if (conOut.isConnected()) {
@@ -107,7 +102,6 @@ public class ConnectorDetailedView implements _Refreshable {
             taskViewer.refresh(conOut.getServerId());
             storeView.show(conOut.getServer());
             userView.show(conOut.getServer());
-            modView.show(conOut.getServerId());
             if (hypOut != null) {
                 netViewer.refresh(conOut.getServerId(), hypOut.getId());
             } else {
@@ -133,7 +127,7 @@ public class ConnectorDetailedView implements _Refreshable {
             }
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
                 conOut = Gui.getReader().getConnector(conId);
                 if (conOut.isConnected()) {
                     if (Gui.getReader().getServerReader(conOut.getServerId()).isHypervisorConnected()) {

@@ -22,19 +22,22 @@ package io.kamax.hboxc.gui;
 
 import io.kamax.hboxc.event.updater.UpdaterUpdateAvailableEvent;
 import io.kamax.hboxc.gui.notification.UpdateAvailableNotification;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class NotificationPanel extends JPanel {
 
-    private static final long serialVersionUID = 3064525253691111344L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private volatile Map<Enum<?>, Component> notifications = new HashMap<Enum<?>, Component>();
 
     public NotificationPanel() {
@@ -46,7 +49,7 @@ public class NotificationPanel extends JPanel {
     @Handler
     private void putUpdateAvailableEvent(UpdaterUpdateAvailableEvent ev) {
         if (notifications.containsKey(ev.getEventId())) {
-            Logger.debug("Update available panel is already added, skipping");
+            log.debug("Update available panel is already added, skipping");
         } else {
             Component updateLabel = new UpdateAvailableNotification(Gui.getReader().getUpdater().getUpdate());
             notifications.put(ev.getEventId(), updateLabel);

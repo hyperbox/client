@@ -50,12 +50,16 @@ import io.kamax.hboxc.state.ConnectionState;
 import io.kamax.hboxc.state.CoreState;
 import io.kamax.hboxc.updater._Updater;
 import io.kamax.tools.ProcessRunner;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
+import org.slf4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 
 public class ClientCore implements _Core {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private class ConnectorIdGenerator {
 
@@ -92,11 +96,11 @@ public class ClientCore implements _Core {
 
     private void setState(CoreState state) {
         if (!this.state.equals(state)) {
-            Logger.verbose("Changing Core State to " + state);
+            log.debug("Changing Core State to " + state);
             this.state = state;
             EventManager.post(new CoreStateEvent(this.state));
         } else {
-            Logger.debug("Ignoring new state, same as old: " + state);
+            log.debug("Ignoring new state, same as old: " + state);
         }
     }
 
@@ -174,7 +178,7 @@ public class ClientCore implements _Core {
                 try {
                     disconnect(connId);
                 } catch (Throwable t) {
-                    Logger.warning("Failed to disconnect servers during client shutdown: " + t.getMessage());
+                    log.warn("Failed to disconnect servers during client shutdown: " + t.getMessage());
                 }
             }
 
@@ -414,7 +418,7 @@ public class ClientCore implements _Core {
             args.add(argsRaw[i]);
         }
 
-        Logger.info("Starting Console viewer " + cView.getViewerPath() + " for machine " + m.getUuid() + " on server " + srv.getId()
+        log.info("Starting Console viewer " + cView.getViewerPath() + " for machine " + m.getUuid() + " on server " + srv.getId()
                 + " with arguments: " + arg);
         try {
             ProcessRunner.runHeadless(new ProcessBuilder(args).start());

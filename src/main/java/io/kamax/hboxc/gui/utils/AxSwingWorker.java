@@ -23,11 +23,13 @@ package io.kamax.hboxc.gui.utils;
 
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.worker.receiver._WorkerDataReceiver;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -36,6 +38,8 @@ import java.util.concurrent.ExecutionException;
  * @param <V> Progress return value
  */
 public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends SwingWorker<T, V> {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private K recv;
     private boolean failed = false;
@@ -77,7 +81,7 @@ public abstract class AxSwingWorker<K extends _WorkerDataReceiver, T, V> extends
             try {
                 recv.loadingFinished(true, null);
             } catch (Throwable t) {
-                Logger.exception(t);
+                log.error("Tracing Exception", t);
                 Gui.showError(t);
             }
         } catch (ExecutionException e) {

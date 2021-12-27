@@ -28,14 +28,17 @@ import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.net.NetAdaptorDialog;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 public class NetAdaptorEditAction extends AbstractAction {
 
-    private static final long serialVersionUID = 1227441578681565462L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private String srvId;
     private String hypId;
     private String modeId;
@@ -57,7 +60,7 @@ public class NetAdaptorEditAction extends AbstractAction {
             req.set(ServerIn.class, new ServerIn(srvId));
             MessageWorker.execute(req);
         } else {
-            Logger.debug("Net Adaptor creation: null input returned");
+            log.debug("Net Adaptor creation: null input returned");
         }
     }
 

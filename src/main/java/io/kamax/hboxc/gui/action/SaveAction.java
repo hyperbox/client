@@ -22,15 +22,18 @@ package io.kamax.hboxc.gui.action;
 
 import io.kamax.hboxc.HyperboxClient;
 import io.kamax.hboxc.gui._Saveable;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 
 public class SaveAction extends AbstractAction {
 
-    private static final long serialVersionUID = -5885429669111924805L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _Saveable obj;
 
     public SaveAction(_Saveable obj) {
@@ -47,7 +50,7 @@ public class SaveAction extends AbstractAction {
         try {
             obj.save();
         } catch (Throwable t) {
-            Logger.exception(t);
+            log.error("Tracing Exception", t);
             HyperboxClient.getView().postError(t, "Cannot save: " + t.getMessage());
         }
     }

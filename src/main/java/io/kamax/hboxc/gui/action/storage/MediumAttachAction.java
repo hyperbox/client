@@ -34,14 +34,17 @@ import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.storage.MediumBrowser;
 import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 public class MediumAttachAction extends AbstractAction {
 
-    private static final long serialVersionUID = -3492903531451947151L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _AnswerWorkerReceiver recv;
     private String serverId;
     private StorageDeviceAttachmentOut sdaOut;
@@ -62,11 +65,11 @@ public class MediumAttachAction extends AbstractAction {
     public void actionPerformed(ActionEvent ae) {
         MediumOut medOut = MediumBrowser.browse(new ServerOut(serverId), sdaOut.getDeviceType());
         if (medOut == null) {
-            Logger.debug("No medium was choosen to be mounted");
+            log.debug("No medium was choosen to be mounted");
             return;
         }
 
-        Logger.debug("Medium was choosen to be mounted: " + medOut.getName() + " - " + medOut.getLocation());
+        log.debug("Medium was choosen to be mounted: " + medOut.getName() + " - " + medOut.getLocation());
         Request req = new Request(Command.VBOX, HypervisorTasks.MediumMount);
         req.set(new ServerIn(serverId));
         req.set(new MachineIn(sdaOut.getMachineUuid()));

@@ -37,14 +37,17 @@ import io.kamax.hboxc.core.CoreReader;
 import io.kamax.hboxc.event.EventManager;
 import io.kamax.hboxc.front._Front;
 import io.kamax.hboxc.front.minimal.MiniUI;
-import io.kamax.tools.logging.LogLevel;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class Controller implements _ClientMessageReceiver {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private ClientCore core;
     private _Front front = new MiniUI();
@@ -54,21 +57,12 @@ public final class Controller implements _ClientMessageReceiver {
     static {
         try {
             PreferencesManager.init();
-
-            String defaultLogFilePath = PreferencesManager.getUserPrefPath() + File.separator + "log" + File.separator + "hbox.log";
-            String logFile = Configuration.getSetting("log.file", defaultLogFilePath);
-            if (!logFile.toLowerCase().contentEquals("none")) {
-                Logger.log(logFile, 4);
-            }
-
-            String logLevel = Configuration.getSetting("log.level", LogLevel.Info.toString());
-            Logger.setLevel(LogLevel.valueOf(logLevel));
-
-            Logger.raw(getHeader());
+            // FIXME reconfigure logging behaviour
+            System.out.println(getHeader());
             if (new File(Hyperbox.getConfigFilePath()).exists()) {
                 Configuration.init(Hyperbox.getConfigFilePath());
             } else {
-                Logger.debug("Default config file does not exist, skipping: " + Hyperbox.getConfigFilePath());
+                log.debug("Default config file does not exist, skipping: " + Hyperbox.getConfigFilePath());
             }
         } catch (Throwable e) {
             e.printStackTrace();
@@ -92,22 +86,22 @@ public final class Controller implements _ClientMessageReceiver {
 
     public void start() throws HyperboxException {
         try {
-            Logger.verbose("-------- Environment variables -------");
+            log.debug("-------- Environment variables -------");
             for (String name : System.getenv().keySet()) {
                 if (name.startsWith(Configuration.CFG_ENV_PREFIX + Configuration.CFG_ENV_SEPERATOR)) {
-                    Logger.verbose(name + " | " + System.getenv(name));
+                    log.debug(name + " | " + System.getenv(name));
                 } else {
-                    Logger.debug(name + " | " + System.getenv(name));
+                    log.debug(name + " | " + System.getenv(name));
                 }
             }
-            Logger.verbose("--------------------------------------");
+            log.debug("--------------------------------------");
 
             EventManager.get().start();
 
             loadActions();
 
             String classToLoad = Configuration.getSetting("view.class", "io.kamax.hboxc.gui.Gui");
-            Logger.info("Loading frontend class: " + classToLoad);
+            log.info("Loading frontend class: " + classToLoad);
             _Front front = ClassManager.loadClass(_Front.class, classToLoad);
             front.start();
             front.setRequestReceiver(this);
@@ -121,7 +115,7 @@ public final class Controller implements _ClientMessageReceiver {
 
             HyperboxClient.initView(front);
         } catch (Throwable t) {
-            Logger.exception(t);
+            log.error("Tracing exception", t);
             try {
                 front.postError(t);
             } catch (Throwable t1) {
@@ -138,19 +132,19 @@ public final class Controller implements _ClientMessageReceiver {
                 core.stop();
                 core.destroy();
             }
-            Logger.debug("Core was stopped");
+            log.debug("Core was stopped");
             if (front != null) {
                 front.stop();
             }
-            Logger.debug("Front-end was stopped");
+            log.debug("Front-end was stopped");
 
             EventManager.get().stop();
-            Logger.debug("EventManager was stopped");
-            Logger.info("Exiting");
+            log.debug("EventManager was stopped");
+            log.info("Exiting");
             System.exit(0);
         } catch (Throwable t) {
-            Logger.warning("Exception while stopping the client", t);
-            Logger.info("Exiting");
+            log.warn("Exception while stopping the client", t);
+            log.info("Exiting");
             System.exit(1);
         }
     }
@@ -174,7 +168,7 @@ public final class Controller implements _ClientMessageReceiver {
                 }
             }
         } catch (RuntimeException e) {
-            Logger.error("Unable to perform the request [ " + req.getName() + " ]", e);
+            log.error("Unable to perform the request [ " + req.getName() + " ]", e);
             throw e;
         }
     }

@@ -35,8 +35,9 @@ import io.kamax.hboxc.gui.action.SaveAction;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.utils.CancelableUtils;
 import io.kamax.hboxc.gui.utils.StoreItemOutputComparator;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -48,10 +49,13 @@ import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 
 public class StoreItemChooser implements _Saveable, _Cancelable {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private static final int FILE_NEW = 1;
     private static final int FILE_EXIST = 2;
@@ -419,7 +423,7 @@ public class StoreItemChooser implements _Saveable, _Cancelable {
 
         private StoreItemOut getSelection() {
             int selectedRow = storeItemTable.getSelectedRow();
-            Logger.debug("Selected row: " + selectedRow);
+            log.debug("Selected row: " + selectedRow);
 
             if (selectedRow == -1) {
                 return null;

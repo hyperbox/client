@@ -24,14 +24,18 @@ package io.kamax.hboxc;
 import io.kamax.hbox.Configuration;
 import io.kamax.hbox.exception.HyperboxException;
 import io.kamax.tools.JProperties;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 public class PreferencesManager {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private static String defaultPerfExtention = ".pref";
     private static File userPrefPath;
@@ -74,9 +78,9 @@ public class PreferencesManager {
 
         userPrefFile = new File(userPrefPath.getAbsolutePath() + File.separator + userPrefFilename);
         userPref = loadPref(userPrefFile);
-        Logger.verbose("Default Preference Extention: " + defaultPerfExtention);
-        Logger.verbose("User Preference Path: " + userPrefPath.getAbsolutePath());
-        Logger.verbose("User Global Preference File: " + userPrefFile.getAbsolutePath());
+        log.debug("Default Preference Extention: " + defaultPerfExtention);
+        log.debug("User Preference Path: " + userPrefPath.getAbsolutePath());
+        log.debug("User Global Preference File: " + userPrefFile.getAbsolutePath());
     }
 
     private static void initUserPrefAll(String homePath) throws HyperboxException {
@@ -115,10 +119,10 @@ public class PreferencesManager {
 
     public static void savePref() {
         try {
-            Logger.verbose("Saving global user preferences to " + userPrefFile);
+            log.debug("Saving global user preferences to " + userPrefFile);
             userPref.store(new FileWriter(userPrefFile), "");
         } catch (IOException e) {
-            Logger.error("Unable to save user preferences: " + e.getMessage());
+            log.error("Unable to save user preferences: " + e.getMessage());
         }
     }
 

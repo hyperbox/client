@@ -44,7 +44,7 @@ public interface _Updater {
     public final String CFGVAL_UPDATER_INTERVAL = "60";
 
     public final String CFGKEY_UPDATER_REPOSITORY_LOCATION = "updater.repository.location";
-    public final String CFGVAL_UPDATER_REPOSITORY_LOCATION = "https://apps.kamax.io/hyperboxupdate/";
+    public final String CFGVAL_UPDATER_REPOSITORY_LOCATION = "https://apps.kamax.io/hyperbox/version/latest";
 
     public final String CFGKEY_UPDATER_REPOSITORY_EXTENSION = "updater.repository.extension";
     public final String CFGVAL_UPDATER_REPOSITORY_EXTENSION = "";

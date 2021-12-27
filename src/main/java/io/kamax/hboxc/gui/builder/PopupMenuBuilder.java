@@ -21,7 +21,6 @@
 
 package io.kamax.hboxc.gui.builder;
 
-import io.kamax.hbox.comm.out.ModuleOut;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hbox.comm.out.StoreOut;
 import io.kamax.hbox.comm.out.hypervisor.MachineOut;
@@ -35,7 +34,6 @@ import io.kamax.hboxc.gui.action.hypervisor.HypervisorConfigureAction;
 import io.kamax.hboxc.gui.action.hypervisor.HypervisorConnectAction;
 import io.kamax.hboxc.gui.action.hypervisor.HypervisorDisconnectAction;
 import io.kamax.hboxc.gui.action.machine.*;
-import io.kamax.hboxc.gui.action.module.ModuleLoadAction;
 import io.kamax.hboxc.gui.action.server.ServerConfigureAction;
 import io.kamax.hboxc.gui.action.server.ServerShutdownAction;
 import io.kamax.hboxc.gui.action.storage.HypervisorToolsMediumAttachAction;
@@ -45,7 +43,6 @@ import io.kamax.hboxc.gui.action.store.StoreBrowseAction;
 import io.kamax.hboxc.gui.action.store.StoreDeleteAction;
 import io.kamax.hboxc.gui.action.store.StoreUnregisterAction;
 import io.kamax.hboxc.gui.connector._ConnectorSelector;
-import io.kamax.hboxc.gui.module._ModuleSelector;
 import io.kamax.hboxc.gui.server._ServerSelector;
 import io.kamax.hboxc.gui.store._StoreSelector;
 import io.kamax.hboxc.gui.vm._MachineSelector;
@@ -132,16 +129,6 @@ public class PopupMenuBuilder {
         actions.add(new JMenuItem(unregister));
         actions.add(new JMenuItem(delete));
         return actions;
-    }
-
-    public static JPopupMenu get(_ModuleSelector modSelect, ModuleOut modOut) {
-        if (modOut.isLoaded()) {
-            return null;
-        } else {
-            JPopupMenu actions = new JPopupMenu();
-            actions.add(new JMenuItem(new ModuleLoadAction(modSelect)));
-            return actions;
-        }
     }
 
 }

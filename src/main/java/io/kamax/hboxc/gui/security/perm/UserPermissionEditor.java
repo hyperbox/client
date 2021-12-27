@@ -34,17 +34,21 @@ import io.kamax.hboxc.gui.ViewEventManager;
 import io.kamax.hboxc.gui._Refreshable;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserPermissionEditor implements _Refreshable {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private String serverId;
     private ServerOut srvOut;
@@ -190,13 +194,13 @@ public class UserPermissionEditor implements _Refreshable {
     }
 
     public void save() {
-        Logger.debug("Permissions to add: " + addPermInList.size());
+        log.debug("Permissions to add: " + addPermInList.size());
         ServerIn srvIn = new ServerIn(srvOut);
         UserIn usrIn = new UserIn(usrOut);
         for (PermissionIn permIn : addPermInList) {
             MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.PermissionSet, srvIn, usrIn, permIn));
         }
-        Logger.debug("Permissions to remove: " + delPermInList.size());
+        log.debug("Permissions to remove: " + delPermInList.size());
         for (PermissionIn permIn : delPermInList) {
             MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.PermissionDelete, srvIn, usrIn, permIn));
         }

@@ -32,15 +32,18 @@ import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.security.user.UserEditor;
 import io.kamax.hboxc.gui.security.user._UserSelector;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 public class UserModifyAction extends AbstractAction {
 
-    private static final long serialVersionUID = 7869635770846824715L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _UserSelector selector;
 
     public UserModifyAction(_UserSelector selector) {
@@ -63,7 +66,7 @@ public class UserModifyAction extends AbstractAction {
             UserOut usrOut = Gui.getReader().getServerReader(selector.getServerId()).getUser(new UserIn(selector.getSelection().get(0)));
             UserIn usrIn = UserEditor.getInput(selector.getServerId(), usrOut);
             if (usrIn != null) {
-                Logger.debug("Got user input");
+                log.debug("Got user input");
                 MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.UserModify, new ServerIn(selector.getServerId()), usrIn));
             }
         }

@@ -21,19 +21,23 @@
 package io.kamax.hboxc.event;
 
 import io.kamax.hbox.exception.HyperboxException;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 import net.engio.mbassy.bus.error.PublicationError;
+import org.slf4j.Logger;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class DefaultEventManager implements _EventManager, Runnable, UncaughtExceptionHandler {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private String label;
 
@@ -57,7 +61,7 @@ public class DefaultEventManager implements _EventManager, Runnable, UncaughtExc
         try {
             worker.join(1000);
         } catch (InterruptedException e) {
-            Logger.exception(e);
+            log.error("Tracing Exception", e);
         }
     }
 
@@ -70,26 +74,26 @@ public class DefaultEventManager implements _EventManager, Runnable, UncaughtExc
 
     @Override
     public void uncaughtException(Thread arg0, Throwable arg1) {
-        Logger.error("Event Manager " + label + " Worker Thread has crashed: " + arg1.getMessage());
+        log.error("Event Manager " + label + " Worker Thread has crashed: " + arg1.getMessage());
         stopWorker();
         startWorker();
     }
 
     @Override
     public void start() throws HyperboxException {
-        Logger.verbose("Event Manager - " + label + " - is starting");
+        log.debug("Event Manager - " + label + " - is starting");
         eventBus = new MBassador<Object>(BusConfiguration.Default());
         eventBus.addErrorHandler(new IPublicationErrorHandler() {
 
             @Override
             public void handleError(PublicationError error) {
-                Logger.error("Failed to dispatch event " + error.getPublishedObject(), error.getCause());
+                log.error("Failed to dispatch event " + error.getPublishedObject(), error.getCause());
             }
 
         });
         eventsQueue = new LinkedBlockingQueue<Object>();
         startWorker();
-        Logger.verbose("Event Manager - " + label + " - has started");
+        log.debug("Event Manager - " + label + " - has started");
     }
 
     @Override
@@ -101,10 +105,10 @@ public class DefaultEventManager implements _EventManager, Runnable, UncaughtExc
     @Override
     public void stop() {
         if (running) {
-            Logger.verbose("Event Manager - " + label + " - is stopping");
+            log.debug("Event Manager - " + label + " - is stopping");
             stopWorker();
             eventsQueue = null;
-            Logger.verbose("Event Manager - " + label + " - has stopped");
+            log.debug("Event Manager - " + label + " - has stopped");
         }
     }
 
@@ -122,10 +126,10 @@ public class DefaultEventManager implements _EventManager, Runnable, UncaughtExc
     public void post(Object o) {
         if (eventsQueue != null) {
             if (!eventsQueue.offer(o)) {
-                Logger.error("Event Manager - " + label + " queue is full, cannot add " + o.getClass().getSimpleName());
+                log.error("Event Manager - " + label + " queue is full, cannot add " + o.getClass().getSimpleName());
             }
         } else {
-            Logger.error("Event Manager - " + label + " was not started, event ignored");
+            log.error("Event Manager - " + label + " was not started, event ignored");
         }
     }
 
@@ -139,24 +143,24 @@ public class DefaultEventManager implements _EventManager, Runnable, UncaughtExc
 
     @Override
     public void run() {
-        Logger.debug("Event Manager - " + label + " Worker Started");
+        log.debug("Event Manager - " + label + " Worker Started");
         running = true;
         while (running) {
             try {
                 Object event = eventsQueue.take();
-                Logger.debug("Processing Event " + event.getClass().getSimpleName() + ": " + event.toString());
+                log.debug("Processing Event " + event.getClass().getSimpleName() + ": " + event.toString());
                 publish(event);
                 for (_EventProcessor postProcessor : postProcessors) {
                     postProcessor.post(event);
                 }
             } catch (InterruptedException e) {
-                Logger.debug("Interupted, halting...");
+                log.debug("Interupted, halting...");
             } catch (Throwable e) {
-                Logger.error("Error while trying to dispatch event");
-                Logger.exception(e);
+                log.error("Error while trying to dispatch event");
+                log.error("Tracing Exception", e);
             }
         }
-        Logger.debug("Event Manager - " + label + " Worker halted.");
+        log.debug("Event Manager - " + label + " Worker halted.");
     }
 
     @Override

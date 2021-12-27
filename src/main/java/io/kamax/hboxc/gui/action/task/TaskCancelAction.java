@@ -26,14 +26,17 @@ import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.tasks._TaskSelector;
 import io.kamax.hboxc.gui.utils.AxSwingWorker;
 import io.kamax.hboxc.gui.worker.receiver.WorkerDataReceiver;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 public final class TaskCancelAction extends AbstractAction {
 
-    private static final long serialVersionUID = -3637856813203244386L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _TaskSelector selector;
 
     public TaskCancelAction(_TaskSelector selector) {
@@ -50,7 +53,7 @@ public final class TaskCancelAction extends AbstractAction {
 
                 @Override
                 protected Void innerDoInBackground() throws Exception {
-                    Logger.debug("Canceling Task #" + tIn.getId());
+                    log.debug("Canceling Task #" + tIn.getId());
                     Gui.getServer(tOut.getServerId()).getTask(tOut.getId()).cancel();
                     return null;
                 }

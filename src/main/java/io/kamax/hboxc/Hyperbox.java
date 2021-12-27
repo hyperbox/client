@@ -25,14 +25,18 @@ import io.kamax.hbox.Configuration;
 import io.kamax.hbox.HyperboxAPI;
 import io.kamax.hbox.exception.HyperboxException;
 import io.kamax.tools.Version;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 import java.util.Set;
 
 public class Hyperbox {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private static Properties buildProperties = new Properties();
     private static Version version;
@@ -43,8 +47,8 @@ public class Hyperbox {
 
     private static void failedToLoad(Exception e) {
         version = Version.UNKNOWN;
-        Logger.error("Unable to access the build.properties file: " + e.getMessage());
-        Logger.error("Version and revision will not be accurate");
+        log.error("Unable to access the build.properties file: " + e.getMessage());
+        log.error("Version and revision will not be accurate");
     }
 
     private static void loadVersions() {
@@ -55,8 +59,8 @@ public class Hyperbox {
                 version = rawVersion;
             } else {
                 version = Version.UNKNOWN;
-                Logger.error("Invalid client version in properties: " + rawVersion);
-                Logger.error("Failing back to " + version);
+                log.error("Invalid client version in properties: " + rawVersion);
+                log.error("Failing back to " + version);
             }
         } catch (IOException e) {
             failedToLoad(e);

@@ -30,14 +30,17 @@ import io.kamax.hboxc.exception.ServerDisconnectedException;
 import io.kamax.hboxc.gui.MainView;
 import io.kamax.hboxc.gui.server._ServerSelector;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 public class ServerShutdownAction extends AbstractAction {
 
-    private static final long serialVersionUID = -8124327272371691374L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _ServerSelector selector;
 
     public ServerShutdownAction(_ServerSelector selector) {
@@ -47,9 +50,9 @@ public class ServerShutdownAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Logger.verbose("Will send shutdown signal to " + selector.getServers().size() + " servers");
+        log.debug("Will send shutdown signal to " + selector.getServers().size() + " servers");
         for (ServerOut srvOut : selector.getServers()) {
-            Logger.info("Prompting user for shutdown of " + srvOut);
+            log.info("Prompting user for shutdown of " + srvOut);
             int info = JOptionPane.showConfirmDialog(
                     MainView.getMainFrame(),
                     "This will shutdown the Hyperbox Server, canceling all running and pending tasks and disconnect all users.\n"
@@ -59,7 +62,7 @@ public class ServerShutdownAction extends AbstractAction {
                     JOptionPane.WARNING_MESSAGE,
                     JOptionPane.OK_CANCEL_OPTION);
             if (info == JOptionPane.YES_OPTION) {
-                Logger.info("User accepted, sending shutdown signal to " + srvOut);
+                log.info("User accepted, sending shutdown signal to " + srvOut);
                 try {
                     MessageWorker.execute(new Request(Command.HBOX, HyperboxTasks.ServerShutdown, new ServerIn(srvOut.getId())));
                 } catch (ServerDisconnectedException e) {
@@ -67,7 +70,7 @@ public class ServerShutdownAction extends AbstractAction {
                     // TODO make sure the server sends finishing signals to everything so the disconnect is clean
                 }
             } else {
-                Logger.info("User didn't proceed with shutdown of " + srvOut);
+                log.info("User didn't proceed with shutdown of " + srvOut);
             }
         }
     }

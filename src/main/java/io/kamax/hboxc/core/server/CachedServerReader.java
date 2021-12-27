@@ -69,13 +69,17 @@ import io.kamax.hboxc.server._Machine;
 import io.kamax.hboxc.server._ServerReader;
 import io.kamax.hboxc.server.task._Task;
 import io.kamax.tools.AxStrings;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
+import org.slf4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CachedServerReader implements _ServerReader {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private _ServerReader reader;
 
@@ -106,7 +110,7 @@ public class CachedServerReader implements _ServerReader {
     }
 
     private void reset() {
-        Logger.info("Clearing cache for server " + toString());
+        log.info("Clearing cache for server " + toString());
         mOutListCache = new ConcurrentHashMap<String, MachineOut>();
         mOutListCacheUpdate = -1L;
         mOutCache = new ConcurrentHashMap<String, MachineOut>();
@@ -146,7 +150,7 @@ public class CachedServerReader implements _ServerReader {
             SnapshotOut snapOut = reader.getSnapshot(vmUuid, snapUuid);
             insertSnapshot(vmUuid, snapOut);
         } catch (Throwable t) {
-            Logger.error("Unable to refresh Snapshot #" + snapUuid + " of VM #" + vmUuid + ": " + t.getMessage());
+            log.error("Unable to refresh Snapshot #" + snapUuid + " of VM #" + vmUuid + ": " + t.getMessage());
         }
     }
 
@@ -362,24 +366,24 @@ public class CachedServerReader implements _ServerReader {
     }
 
     private void deleteMedium(MediumIn medIn) {
-        Logger.debug("Removing Medium ID " + medIn.getId() + " from cache");
+        log.debug("Removing Medium ID " + medIn.getId() + " from cache");
         invalidMedOutSet.add(medIn.getUuid());
         medOutCache.remove(medIn.getUuid());
         medOutCache.remove(medIn.getLocation());
     }
 
     private void refreshMedium(MediumIn medIn) {
-        Logger.debug("Refreshing medium ID " + medIn.getId());
+        log.debug("Refreshing medium ID " + medIn.getId());
         try {
             if (!medOutCache.containsKey(medIn.getId())) {
-                Logger.debug("Unknown medium, fetching data & adding to cache");
+                log.debug("Unknown medium, fetching data & adding to cache");
                 insertMedium(medIn);
             } else {
-                Logger.debug("Known medium, updating cache");
+                log.debug("Known medium, updating cache");
                 updateMedium(medIn);
             }
         } catch (HyperboxException e) {
-            Logger.debug("Cannot fetch information from server, removing from cache if exists");
+            log.debug("Cannot fetch information from server, removing from cache if exists");
             deleteMedium(medIn);
         }
     }

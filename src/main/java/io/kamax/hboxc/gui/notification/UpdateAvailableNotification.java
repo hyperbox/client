@@ -22,19 +22,22 @@ package io.kamax.hboxc.gui.notification;
 
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.updater._Release;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 
 public class UpdateAvailableNotification extends NotificationInfo {
 
-    private static final long serialVersionUID = 2225815399285702337L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private URL downloadUrl;
 
     public UpdateAvailableNotification(_Release release) {
@@ -57,10 +60,10 @@ public class UpdateAvailableNotification extends NotificationInfo {
                     Desktop.getDesktop().browse(downloadUrl.toURI());
                 } catch (IOException e) {
                     Gui.showError("Unable to browse to download location: " + e.getMessage());
-                    Logger.exception(e);
+                    log.error("Tracing Exception", e);
                 } catch (URISyntaxException e) {
                     Gui.showError("Unable to browse to download location: " + e.getMessage());
-                    Logger.exception(e);
+                    log.error("Tracing Exception", e);
                 }
             }
         }

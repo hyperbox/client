@@ -30,15 +30,19 @@ import io.kamax.hboxc.core._ConsoleViewer;
 import io.kamax.hboxc.core.connector.Connector;
 import io.kamax.hboxc.core.connector._Connector;
 import io.kamax.hboxc.core.console.viewer.ConsoleViewer;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserProfileCoreStorage implements _CoreStorage {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private static final String CONSOLE_VIEWER_ID = "consoleViewer";
     private static final String CONSOLE_VIEWERS_FILE = "consoleViewers.xml";
@@ -65,7 +69,7 @@ public class UserProfileCoreStorage implements _CoreStorage {
 
     @Override
     public void init() throws HyperboxException {
-        Logger.debug("Initializing Data Manager");
+        log.debug("Initializing Data Manager");
 
         try {
             storage = new XStream();
@@ -87,7 +91,7 @@ public class UserProfileCoreStorage implements _CoreStorage {
             storage.omitField(Connector.class, "server");
             storage.omitField(Connector.class, "state");
 
-            Logger.verbose("Initiated storage serializer");
+            log.debug("Initiated storage serializer");
         } catch (Throwable t) {
             throw new HyperboxException("Unable to storage serializer: " + t.getMessage());
         }
@@ -101,7 +105,7 @@ public class UserProfileCoreStorage implements _CoreStorage {
         consoleViewersFile = new File(userDataFolder.getAbsolutePath() + File.separator + CONSOLE_VIEWERS_FILE);
         connectorFile = new File(userDataFolder.getAbsolutePath() + File.separator + CONNECTORS_FILE);
 
-        Logger.info("Initiated data directory: " + userDataFolder.getAbsolutePath());
+        log.info("Initiated data directory: " + userDataFolder.getAbsolutePath());
     }
 
     @Override
@@ -122,9 +126,9 @@ public class UserProfileCoreStorage implements _CoreStorage {
     @Override
     public void storeViewers(Collection<_ConsoleViewer> viewers) {
         if (viewers.isEmpty() && !hasConsoleViewers()) {
-            Logger.debug("Nothing was created, skipping");
+            log.debug("Nothing was created, skipping");
         } else {
-            Logger.debug("Saving " + viewers.size() + " console viewers to " + consoleViewersFile.getAbsolutePath());
+            log.debug("Saving " + viewers.size() + " console viewers to " + consoleViewersFile.getAbsolutePath());
             try {
                 OutputStream fileStream = new FileOutputStream(consoleViewersFile);
                 try {
@@ -141,9 +145,9 @@ public class UserProfileCoreStorage implements _CoreStorage {
     @Override
     public void storeConnectors(Collection<_Connector> conns) {
         if (conns.isEmpty() && !hasConnectors()) {
-            Logger.debug("Nothing was created, skipping");
+            log.debug("Nothing was created, skipping");
         } else {
-            Logger.debug("Saving " + conns.size() + " connectors to " + connectorFile.getAbsolutePath());
+            log.debug("Saving " + conns.size() + " connectors to " + connectorFile.getAbsolutePath());
             try {
                 OutputStream fileStream = new FileOutputStream(connectorFile);
                 try {
@@ -170,14 +174,14 @@ public class UserProfileCoreStorage implements _CoreStorage {
     @SuppressWarnings("unchecked")
     @Override
     public Collection<_ConsoleViewer> loadViewers() {
-        Logger.debug("Loading console viewers from " + consoleViewersFile.getAbsolutePath());
+        log.debug("Loading console viewers from " + consoleViewersFile.getAbsolutePath());
         return (Collection<_ConsoleViewer>) storage.fromXML(consoleViewersFile);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Collection<_Connector> loadConnectors() {
-        Logger.debug("Loading connectors from " + connectorFile.getAbsolutePath());
+        log.debug("Loading connectors from " + connectorFile.getAbsolutePath());
         return (Collection<_Connector>) storage.fromXML(connectorFile);
     }
 
@@ -185,7 +189,7 @@ public class UserProfileCoreStorage implements _CoreStorage {
     public void storeConnectorCredentials(String id, UserIn usrIn) {
         try {
             OutputStream fileStream = new FileOutputStream(connectorCredFolder.getAbsolutePath() + File.separator + id + ".xml");
-            Logger.debug("Saving Connector ID " + id + " credentials to " + connectorCredFolder.getAbsolutePath() + File.separator + id + ".xml");
+            log.debug("Saving Connector ID " + id + " credentials to " + connectorCredFolder.getAbsolutePath() + File.separator + id + ".xml");
             try {
                 storage.toXML(usrIn, fileStream);
             } finally {
@@ -198,7 +202,7 @@ public class UserProfileCoreStorage implements _CoreStorage {
 
     @Override
     public UserIn loadConnectorCredentials(String id) {
-        Logger.debug("Loading Connector ID " + id + " credentials from " + connectorCredFolder.getAbsolutePath() + File.separator + id + ".xml");
+        log.debug("Loading Connector ID " + id + " credentials from " + connectorCredFolder.getAbsolutePath() + File.separator + id + ".xml");
         return (UserIn) storage.fromXML(new File(connectorCredFolder.getAbsolutePath() + File.separator + id + ".xml"));
     }
 

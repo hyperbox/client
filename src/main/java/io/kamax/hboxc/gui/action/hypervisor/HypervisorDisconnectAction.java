@@ -28,15 +28,18 @@ import io.kamax.hbox.comm.in.ServerIn;
 import io.kamax.hbox.comm.out.ServerOut;
 import io.kamax.hboxc.gui.server._SingleServerSelector;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 
 public class HypervisorDisconnectAction extends AbstractAction {
 
-    private static final long serialVersionUID = 6849363439923397210L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _SingleServerSelector selector;
 
     public HypervisorDisconnectAction(_SingleServerSelector selector) {
@@ -55,7 +58,7 @@ public class HypervisorDisconnectAction extends AbstractAction {
             Request req = new Request(Command.HBOX, HyperboxTasks.HypervisorDisconnect, new ServerIn(srvOut.getId()));
             MessageWorker.execute(req);
         } else {
-            Logger.debug("No server was selected");
+            log.debug("No server was selected");
         }
 
     }

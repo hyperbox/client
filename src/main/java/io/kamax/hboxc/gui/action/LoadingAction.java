@@ -1,15 +1,18 @@
 package io.kamax.hboxc.gui.action;
 
 import io.kamax.hboxc.gui.builder.IconBuilder;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 
 public class LoadingAction extends AbstractAction {
 
-    private static final long serialVersionUID = 8384934950347892029L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private static LoadingAction action = new LoadingAction();
 
     public LoadingAction() {
@@ -23,7 +26,7 @@ public class LoadingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Logger.exception(new Exception("Trying to use the loading action!"));
+        log.error("Tracing Exception", new Exception("Trying to use the loading action!"));
     }
 
     public static LoadingAction get() {

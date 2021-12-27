@@ -33,14 +33,17 @@ import io.kamax.hboxc.controller.MessageInput;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.worker.receiver._AnswerWorkerReceiver;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 public class HypervisorToolsMediumAttachAction extends AbstractAction {
 
-    private static final long serialVersionUID = 9031406546855623059L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _AnswerWorkerReceiver recv;
     private String serverId;
     private StorageDeviceAttachmentOut sdaOut;
@@ -79,7 +82,7 @@ public class HypervisorToolsMediumAttachAction extends AbstractAction {
                     get();
                     setEnabled(true);
                 } catch (Throwable t) {
-                    Logger.warning("Error checking on Hypervisor tools: " + t.getMessage());
+                    log.warn("Error checking on Hypervisor tools: " + t.getMessage());
                 } finally {
                     putValue(Action.SMALL_ICON, oldIcon);
                 }

@@ -32,15 +32,19 @@ import io.kamax.hboxc.event.EventManager;
 import io.kamax.hboxc.event.backend.BackendStateEvent;
 import io.kamax.hboxc.exception.ServerDisconnectedException;
 import io.kamax.tools.AxStrings;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
+import org.slf4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
 public final class Transaction implements _AnswerReceiver {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private _Backend b;
 
@@ -143,13 +147,12 @@ public final class Transaction implements _AnswerReceiver {
             return !hasFailed();
         } finally {
             endTime = System.currentTimeMillis();
-            Logger.debug("Transaction ID " + request.getName() + " took " + (endTime - startTime) + "ms");
+            log.debug("Transaction ID " + request.getName() + " took " + (endTime - startTime) + "ms");
         }
     }
 
     public boolean sendAndWaitForTask() throws ServerDisconnectedException {
-
-        Logger.verbose("Waiting until task is finished");
+        log.debug("Waiting until task is finished");
         EventManager.get().register(this);
         try {
             if (!sendAndWait()) {
@@ -168,7 +171,7 @@ public final class Transaction implements _AnswerReceiver {
                     }
                 }
             }
-            Logger.verbose("Task seems finished");
+            log.debug("Task seems finished");
             // TODO improve and add tag to the TaskState
             if (evOut.getTask().getState().equals(TaskState.Canceled) || evOut.getTask().getState().equals(TaskState.Failed)) {
                 return false;
@@ -177,7 +180,7 @@ public final class Transaction implements _AnswerReceiver {
             }
         } finally {
             endTime = System.currentTimeMillis();
-            Logger.debug("Transaction took " + (endTime - startTime) + "ms");
+            log.debug("Transaction took " + (endTime - startTime) + "ms");
             EventManager.get().unregister(this);
         }
     }
@@ -188,26 +191,25 @@ public final class Transaction implements _AnswerReceiver {
 
     @Override
     public void putAnswer(Answer ans) {
-
         if (AxStrings.isEmpty(ans.getExchangeId()) || ans.getExchangeId().contentEquals(request.getExchangeId())) {
             lastMessageTime = System.currentTimeMillis();
             if (ans.isExchangeStarted()) {
-                Logger.debug("Got start message for ExchangeID " + ans.getExchangeId());
+                log.debug("Got start message for ExchangeID " + ans.getExchangeId());
                 start = ans;
             }
             if (ans.isExchangeInProgress()) {
-                Logger.debug("Got progress message for ExchangeID " + ans.getExchangeId());
+                log.debug("Got progress message for ExchangeID " + ans.getExchangeId());
                 mainQ.offer(ans);
             }
             if (ans.isExchangedFinished()) {
-                Logger.debug("Got final message for ExchangeID " + ans.getExchangeId());
+                log.debug("Got final message for ExchangeID " + ans.getExchangeId());
                 end = ans;
             }
             synchronized (this) {
                 notifyAll();
             }
         } else {
-            Logger.error("Received message from another request : " + request.getExchangeId() + " vs " + ans.getExchangeId());
+            log.error("Received message from another request : " + request.getExchangeId() + " vs " + ans.getExchangeId());
         }
     }
 
@@ -224,7 +226,7 @@ public final class Transaction implements _AnswerReceiver {
     @Handler
     public void post(TaskStateEventOut tsEvOut) {
         if (tsEvOut.getTask().getId().contentEquals(taskId)) {
-            Logger.debug("Got event for TaskState: " + tsEvOut.getTask().getState());
+            log.debug("Got event for TaskState: " + tsEvOut.getTask().getState());
             if (tsEvOut.getTask().getState().isFinishing()) {
                 this.evOut = tsEvOut;
                 taskFinished = true;

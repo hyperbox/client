@@ -33,10 +33,15 @@ import io.kamax.hboxc.factory.ServerFactory;
 import io.kamax.hboxc.server._Server;
 import io.kamax.hboxc.state.ConnectionState;
 import io.kamax.tools.AxStrings;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.engio.mbassy.listener.Handler;
+import org.slf4j.Logger;
+
+import java.lang.invoke.MethodHandles;
 
 public class Connector implements _Connector {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private String id;
     private String label;
@@ -66,7 +71,7 @@ public class Connector implements _Connector {
                 EventManager.post(new ConnectorStateChangedEvent(ConnectorIoFactory.get(this), state));
             }
         } else {
-            Logger.debug("Ignoring setState() - " + getState() + " is same as current");
+            log.debug("Ignoring setState() - " + getState() + " is same as current");
         }
     }
 
@@ -141,7 +146,7 @@ public class Connector implements _Connector {
     @Override
     public void disconnect() {
         if (!getState().equals(ConnectionState.Connected) && !getState().equals(ConnectionState.Connecting)) {
-            Logger.debug("Ignoring disconnect call, already in " + getState() + " state");
+            log.debug("Ignoring disconnect call, already in " + getState() + " state");
             return;
         }
 

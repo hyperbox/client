@@ -28,13 +28,17 @@ import io.kamax.hbox.comm.out.storage.StorageControllerTypeOut;
 import io.kamax.hbox.constant.MediumAttribute;
 import io.kamax.hboxc.gui.Gui;
 import io.kamax.tools.FileSizeNumber;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.invoke.MethodHandles;
 
 public class StorageDeviceAttachmentViewer {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private String srvId;
     private StorageDeviceAttachmentIn sdaIn;
@@ -123,7 +127,7 @@ public class StorageDeviceAttachmentViewer {
     }
 
     public void refresh() {
-        Logger.debug(sdaIn);
+        log.debug("sdaIn: {}", sdaIn);
         attachTypeValue.setText(sdaIn.getDeviceType());
         portCountBox.removeAllItems();
         StorageControllerTypeOut sctOut = Gui.getServer(srvId).getStorageControllerType(new StorageControllerTypeIn(scTypeId));
@@ -174,7 +178,7 @@ public class StorageDeviceAttachmentViewer {
             baseLocationValue.setVisible(medIn.hasParent());
             if (medIn.hasParent()) {
                 MediumOut medOut = Gui.getServer(srvId).getMedium(medIn);
-                Logger.debug("Requesting medium with UUID " + medOut.getBaseUuid());
+                log.debug("Requesting medium with UUID " + medOut.getBaseUuid());
                 MediumOut baseMedOut = Gui.getServer(srvId).getMedium(new MediumIn(medOut.getBaseUuid()));
                 baseLocationValue.setText(baseMedOut.getLocation());
             }

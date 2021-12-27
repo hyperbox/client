@@ -30,14 +30,17 @@ import io.kamax.hboxc.gui.MainView;
 import io.kamax.hboxc.gui.builder.IconBuilder;
 import io.kamax.hboxc.gui.snapshot._SnapshotSelector;
 import io.kamax.hboxc.gui.workers.MessageWorker;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.invoke.MethodHandles;
 
 public class SnapshotDeleteAction extends AbstractAction {
 
-    private static final long serialVersionUID = -3490141907188974126L;
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
+
     private _SnapshotSelector selector;
 
     public SnapshotDeleteAction(String label, Icon icon, String toolTip, _SnapshotSelector selector) {
@@ -65,7 +68,7 @@ public class SnapshotDeleteAction extends AbstractAction {
                     Request req = new Request(Command.VBOX, HypervisorTasks.SnapshotDelete);
                     req.set(new MachineIn(selector.getMachine()));
                     req.set(new SnapshotIn(snapOut.getUuid()));
-                    Logger.info("Deleting snapshot " + snapOut.getUuid() + " on machine " + selector.getMachine());
+                    log.info("Deleting snapshot " + snapOut.getUuid() + " on machine " + selector.getMachine());
                     MessageWorker.execute(req);
                 }
             }

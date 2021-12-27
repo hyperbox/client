@@ -39,12 +39,16 @@ import io.kamax.hboxc.event.backend.BackendConnectionStateEvent;
 import io.kamax.hboxc.event.backend.BackendStateEvent;
 import io.kamax.hboxc.state.BackendConnectionState;
 import io.kamax.hboxc.state.BackendStates;
-import io.kamax.tools.logging.Logger;
+import io.kamax.tools.logging.KxLog;
+import org.slf4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class KryonetClientBack implements _Backend {
+
+    private static final Logger log = KxLog.make(MethodHandles.lookup().lookupClass());
 
     private Map<String, _AnswerReceiver> ansReceivers;
     private Client client;
@@ -59,10 +63,10 @@ public final class KryonetClientBack implements _Backend {
     private void setState(BackendStates state) {
         if ((state != null) && !this.state.equals(state)) {
             this.state = state;
-            Logger.info("Kryonet Connector state: " + state);
+            log.info("Kryonet Connector state: " + state);
             EventManager.post(new BackendStateEvent(this, state));
         } else {
-            Logger.debug("Got a null state or state matches current one");
+            log.debug("Got a null state or state matches current one");
         }
     }
 
@@ -71,7 +75,7 @@ public final class KryonetClientBack implements _Backend {
             this.connState = connState;
             EventManager.post(new BackendConnectionStateEvent(this, connState));
         } else {
-            Logger.debug("Got a null state or state matches current one");
+            log.debug("Got a null state or state matches current one");
         }
     }
 
@@ -79,7 +83,7 @@ public final class KryonetClientBack implements _Backend {
     public void start() throws HyperboxException {
         setState(BackendStates.Starting);
         try {
-            Logger.info("Backend Init Sequence started");
+            log.info("Backend Init Sequence started");
             ansReceivers = new HashMap<String, _AnswerReceiver>();
             int netBufferWriteSize = Integer.parseInt(Configuration.getSetting(KryonetDefaultSettings.CFGKEY_KRYO_NET_WRITE_BUFFER_SIZE,
                     KryonetDefaultSettings.CFGVAL_KRYO_NET_WRITE_BUFFER_SIZE));
@@ -89,10 +93,10 @@ public final class KryonetClientBack implements _Backend {
             client.start();
             client.addListener(new MainListener());
             KryoRegister.register(client.getKryo());
-            Logger.info("Backend Init Sequence completed");
+            log.info("Backend Init Sequence completed");
             setState(BackendStates.Started);
         } catch (NumberFormatException e) {
-            Logger.error("Invalid configuration value");
+            log.error("Invalid configuration value");
             stop(e);
         } catch (Throwable e) {
             stop(e);
@@ -101,7 +105,7 @@ public final class KryonetClientBack implements _Backend {
     }
 
     private void stop(Throwable e) throws HyperboxException {
-        Logger.error("Backend Init Sequence failed");
+        log.error("Backend Init Sequence failed");
         stop();
         throw new HyperboxException("Unable to connect to init Kryonet backend : " + e.getMessage());
     }
@@ -171,16 +175,16 @@ public final class KryonetClientBack implements _Backend {
     @Override
     public void putRequest(Request req) {
         if (!isConnected()) {
-            Logger.debug("Tried to send a message but client is not connected");
+            log.debug("Tried to send a message but client is not connected");
             throw new HyperboxException("Client is not connected to a server");
         }
 
         try {
-            Logger.debug("Sending request");
+            log.debug("Sending request");
             client.sendTCP(req);
-            Logger.debug("Send request");
+            log.debug("Send request");
         } catch (Throwable t) {
-            Logger.exception(t);
+            log.error("Tracing Exception", t);
         }
     }
 
@@ -188,7 +192,7 @@ public final class KryonetClientBack implements _Backend {
 
         @Override
         public void connected(Connection connection) {
-            Logger.info(connection.getRemoteAddressTCP().getAddress() + " connected.");
+            log.info(connection.getRemoteAddressTCP().getAddress() + " connected.");
             setState(BackendConnectionState.Connected);
         }
 
@@ -196,14 +200,14 @@ public final class KryonetClientBack implements _Backend {
         public void received(Connection connection, Object object) {
             if (object.getClass().equals(Answer.class)) {
                 Answer ans = (Answer) object;
-                Logger.debug("Received answer from server : " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
+                log.debug("Received answer from server : " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
                 if (ansReceivers.containsKey(ans.getExchangeId())) {
                     ansReceivers.get(ans.getExchangeId()).putAnswer(ans);
                     if (ans.isExchangedFinished() && !ans.getType().equals(AnswerType.QUEUED)) {
                         ansReceivers.remove(ans.getExchangeId());
                     }
                 } else {
-                    Logger.warning("Oprhan answer: " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
+                    log.warn("Oprhan answer: " + ans.getExchangeId() + " - " + ans.getType() + " - " + ans.getCommand() + " - " + ans.getName());
                 }
             }
             if (object instanceof EventOut) {
@@ -222,7 +226,7 @@ public final class KryonetClientBack implements _Backend {
             }
             */
 
-            Logger.info("Disconnected from Hyperbox server");
+            log.info("Disconnected from Hyperbox server");
             disconnect();
         }
     }
