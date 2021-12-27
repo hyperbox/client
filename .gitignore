@@ -4,3 +4,5 @@
 # Build
 .gradle/
 build/
+out/
+lib/
